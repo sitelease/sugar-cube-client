@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace yii\gitea\models;
+namespace Gitea\Models;
 
 use Enum\{EnumTrait};
 
