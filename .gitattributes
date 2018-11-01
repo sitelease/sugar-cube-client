@@ -1,0 +1,18 @@
+* text=auto
+
+.* text
+.semver text eol=lf
+
+*.info text
+*.json text
+*.md text
+*.neon text
+*.php text diff=php
+*.txt text
+*.xml text
+*.yml text
+
+*.ico binary
+*.jpg binary
+*.pdf binary
+*.png binary
