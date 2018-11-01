@@ -1,17 +1,16 @@
 <?php
 declare(strict_types=1);
-namespace yii\gitea\models;
+namespace Gitea\Models;
 
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
-use yii\base\{Model};
 
 /**
  * Represents a commit.
  * @property \DateTime|null $timestamp The commit date.
  * @property UriInterface|null $url The URL to the commit's history.
  */
-class PayloadCommit extends Model {
+class PayloadCommit {
 
   /**
    * @var PayloadUser|null The person who authored the commit.
@@ -95,16 +94,6 @@ class PayloadCommit extends Model {
    */
   function getUrl(): ?UriInterface {
     return $this->url;
-  }
-
-  /**
-   * Returns the validation rules for attributes.
-   * @return array[] The validation rules.
-   */
-  function rules(): array {
-    return [
-      [['id', 'message'], 'trim']
-    ];
   }
 
   /**

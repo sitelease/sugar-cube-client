@@ -1,13 +1,11 @@
 <?php
 declare(strict_types=1);
-namespace yii\gitea\models;
-
-use yii\base\{Model};
+namespace Gitea\Models;
 
 /**
  * Represents a set of permissions.
  */
-class Permission extends Model {
+class Permission {
 
   /**
    * @var bool Value indicating whether administrator access is allowed.
@@ -35,15 +33,5 @@ class Permission extends Model {
       'pull' => isset($map->pull) && is_bool($map->pull) ? $map->pull : false,
       'push' => isset($map->push) && is_bool($map->push) ? $map->push : false
     ]);
-  }
-
-  /**
-   * Returns the validation rules for attributes.
-   * @return array[] The validation rules.
-   */
-  function rules(): array {
-    return [
-      [['admin', 'pull', 'push'], 'boolean', 'falseValue' => false, 'trueValue' => true]
-    ];
   }
 }

@@ -1,13 +1,11 @@
 <?php
 declare(strict_types=1);
-namespace yii\gitea\models;
-
-use yii\base\{Model};
+namespace Gitea\Models;
 
 /**
  * Represents the author or committer of a commit.
  */
-class PayloadUser extends Model {
+class PayloadUser {
 
   /**
    * @var string The mail address.
@@ -35,17 +33,5 @@ class PayloadUser extends Model {
       'name' => isset($map->name) && is_string($map->name) ? $map->name : '',
       'username' => isset($map->username) && is_string($map->username) ? $map->username : ''
     ]);
-  }
-
-  /**
-   * Returns the validation rules for attributes.
-   * @return array[] The validation rules.
-   */
-  function rules(): array {
-    return [
-      [['email', 'name', 'username'], 'trim'],
-      ['email', 'filter', 'filter' => 'mb_strtolower'],
-      ['email', 'email']
-    ];
   }
 }

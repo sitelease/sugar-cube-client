@@ -1,13 +1,11 @@
 <?php
 declare(strict_types=1);
-namespace yii\gitea\models;
-
-use yii\base\{Model};
+namespace Gitea\Models;
 
 /**
  * Represents the GPG verification of a commit.
  */
-class PayloadCommitVerification extends Model {
+class PayloadCommitVerification {
 
   /**
    * @var bool Value indicating whether the verification has succeeded.
@@ -53,17 +51,6 @@ class PayloadCommitVerification extends Model {
       'reason',
       'signature',
       'verified' => 'isVerified'
-    ];
-  }
-
-  /**
-   * Returns the validation rules for attributes.
-   * @return array[] The validation rules.
-   */
-  function rules(): array {
-    return [
-      [['payload', 'reason', 'signature'], 'trim'],
-      ['isVerified', 'boolean', 'falseValue' => false, 'trueValue' => true]
     ];
   }
 }
