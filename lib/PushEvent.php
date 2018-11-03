@@ -8,45 +8,18 @@ use Psr\Http\Message\{UriInterface};
 
 /**
  * Represents a Gitea push event.
- * @property \ArrayObject $commits The revision commits.
- * @property UriInterface|null $compareUrl The URL for comparing the revisions.
  */
-class PushEvent {
+class PushEvent implements \JsonSerializable {
 
   /**
    * @var string The hash of the new Git revision.
    */
-  public $after = '';
+  private $after = '';
 
   /**
    * @var string The hash of the previous Git revision.
    */
-  public $before = '';
-
-  /**
-   * @var User|null The user who pushed the commits.
-   */
-  public $pusher;
-
-  /**
-   * @var string The Git reference.
-   */
-  public $ref = '';
-
-  /**
-   * @var Repository|null The repository where the commits were pushed.
-   */
-  public $repository;
-
-  /**
-   * @var string The secret used to validate this event.
-   */
-  public $secret = '';
-
-  /**
-   * @var User|null The user who sent this event.
-   */
-  public $sender;
+  private $before = '';
 
   /**
    * @var \ArrayObject The revision commits.
@@ -57,6 +30,31 @@ class PushEvent {
    * @var UriInterface|null The URL for comparing the revisions.
    */
   private $compareUrl;
+
+  /**
+   * @var User|null The user who pushed the commits.
+   */
+  private $pusher;
+
+  /**
+   * @var string The Git reference.
+   */
+  private $ref = '';
+
+  /**
+   * @var Repository|null The repository where the commits were pushed.
+   */
+  private $repository;
+
+  /**
+   * @var string The secret used to validate this event.
+   */
+  private $secret = '';
+
+  /**
+   * @var User|null The user who sent this event.
+   */
+  private $sender;
 
   /**
    * Creates a new event.
@@ -86,20 +84,19 @@ class PushEvent {
   }
 
   /**
-   * Returns the list of fields that should be returned by default.
-   * @return array The list of field names or field definitions.
+   * Gets the hash of the new Git revision.
+   * @return string The hash of the new Git revision.
    */
-  function fields(): array {
-    return [
-      'after',
-      'before',
-      'compare_url' => function(self $model) { return ($url = $model->getCompareUrl()) ? (string) $url : null; },
-      'commits',
-      'pusher',
-      'ref',
-      'repository',
-      'sender'
-    ];
+  function getAfter(): string {
+    return $this->after;
+  }
+
+  /**
+   * Gets the hash of the new previous revision.
+   * @return string The hash of the previous Git revision.
+   */
+  function getBefore(): string {
+    return $this->before;
   }
 
   /**
@@ -119,6 +116,59 @@ class PushEvent {
   }
 
   /**
+   * Gets the Git reference.
+   * @return string The Git reference.
+   */
+  function getRef(): string {
+    return $this->ref;
+  }
+
+  /**
+   * Gets the secret used to validate this event.
+   * @return string The secret used to validate this event.
+   */
+  function getSecret(): string {
+    return $this->secret;
+  }
+
+  /**
+   * Converts this object to a map in JSON format.
+   * @return \stdClass The map in JSON format corresponding to this object.
+   */
+  function jsonSerialize(): \stdClass {
+    return (object) [
+      'after' => $this->getAfter(),
+      'before' => $this->getBefore(),
+      'compare_url' => ($url = $this->getCompareUrl()) ? (string) $url : null,
+      'commits' => array_map(function(PayloadCommit $commit) { return $commit->jsonSerialize(); }, $this->getCommits()->getArrayCopy()),
+      'pusher',
+      'ref' => $this->getRef(),
+      'repository',
+      'sender'
+    ];
+  }
+
+  /**
+   * Sets the hash of the new Git revision.
+   * @param string $value The hash of the new Git revision.
+   * @return $this This instance.
+   */
+  function setAfter(string $value): self {
+    $this->after = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the hash of the new previous revision.
+   * @param string $value The hash of the new previous revision.
+   * @return $this This instance.
+   */
+  function setBefore(string $value): self {
+    $this->before = $value;
+    return $this;
+  }
+
+  /**
    * Sets the revision commits.
    * @param PayloadCommit[] $values The revision commits.
    * @return $this This instance.
@@ -135,6 +185,26 @@ class PushEvent {
    */
   function setCompareUrl($value): self {
     $this->compareUrl = is_string($value) ? new Uri($value) : $value;
+    return $this;
+  }
+
+  /**
+   * Sets the Git reference.
+   * @param string $value The new Git reference.
+   * @return $this This instance.
+   */
+  function setRef(string $value): self {
+    $this->ref = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the secret used to validate this event.
+   * @param string $value The new secret used to validate this event.
+   * @return $this This instance.
+   */
+  function setSecret(string $value): self {
+    $this->secret = $value;
     return $this;
   }
 }

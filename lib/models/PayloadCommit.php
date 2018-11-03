@@ -7,10 +7,8 @@ use Psr\Http\Message\{UriInterface};
 
 /**
  * Represents a commit.
- * @property \DateTime|null $timestamp The commit date.
- * @property UriInterface|null $url The URL to the commit's history.
  */
-class PayloadCommit {
+class PayloadCommit implements \JsonSerializable {
 
   /**
    * @var PayloadUser|null The person who authored the commit.
@@ -65,22 +63,6 @@ class PayloadCommit {
   }
 
   /**
-   * Returns the list of fields that should be returned by default.
-   * @return array The list of field names or field definitions.
-   */
-  function fields(): array {
-    return [
-      'author',
-      'committer',
-      'id',
-      'message',
-      'timestamp' => function(PayloadCommit $model) { return ($date = $model->getTimestamp()) ? $date->format('c') : null; },
-      'url' => function(self $model) { return ($url = $model->getUrl()) ? (string) $url : null; },
-      'verification'
-    ];
-  }
-
-  /**
    * Gets the commit date.
    * @return \DateTime|null The commit date.
    */
@@ -94,6 +76,22 @@ class PayloadCommit {
    */
   function getUrl(): ?UriInterface {
     return $this->url;
+  }
+
+  /**
+   * Converts this object to a map in JSON format.
+   * @return \stdClass The map in JSON format corresponding to this object.
+   */
+  function jsonSerialize(): \stdClass {
+    return (object) [
+      'author',
+      'committer',
+      'id',
+      'message',
+      'timestamp' => ($date = $this->getTimestamp()) ? $date->format('c') : null,
+      'url' => ($url = $this->getUrl()) ? (string) $url : null,
+      'verification'
+    ];
   }
 
   /**

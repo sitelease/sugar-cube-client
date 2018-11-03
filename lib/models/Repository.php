@@ -7,14 +7,8 @@ use Psr\Http\Message\{UriInterface};
 
 /**
  * Represents a repository.
- * @property UriInterface|null $cloneUrl The HTTP-based URL for cloning this repository.
- * @property \DateTime|null $createdAt The date the repository was created.
- * @property UriInterface|null $htmlUrl The Gitea URL of this repository.
- * @property UriInterface|null $sshUrl The SSH-based URL for cloning this repository.
- * @property \DateTime|null $updatedAt The date the repository was updated.
- * @property UriInterface|null $website The URL of the repository website.
  */
-class Repository {
+class Repository implements \JsonSerializable {
 
   /**
    * @var string The name of the default branch.
@@ -165,38 +159,6 @@ class Repository {
   }
 
   /**
-   * Returns the list of fields that should be returned by default.
-   * @return array The list of field names or field definitions.
-   */
-  function fields(): array {
-    return [
-      'clone_url' => function(self $model) { return ($url = $model->getCloneUrl()) ? (string) $url : null; },
-      'created_at' => function(Repository $model) { return ($date = $model->getCreatedAt()) ? $date->format('c') : null; },
-      'default_branch' => 'defaultBranch',
-      'description',
-      'empty' => 'isEmpty',
-      'fork' => 'isFork',
-      'forks_count' => 'forksCount',
-      'full_name' => 'fullName',
-      'html_url' => function(self $model) { return ($url = $model->getHtmlUrl()) ? (string) $url : null; },
-      'id',
-      'mirror' => 'isMirror',
-      'name',
-      'open_issues_count' => 'openIssuesCount',
-      'owner',
-      'parent',
-      'permissions',
-      'private' => 'isPrivate',
-      'size',
-      'ssh_url' => function(self $model) { return ($url = $model->getSshUrl()) ? (string) $url : null; },
-      'stars_count' => 'starsCount',
-      'updated_at' => function(Repository $model) { return ($date = $model->getUpdatedAt()) ? $date->format('c') : null; },
-      'watchers_count' => 'watchersCount',
-      'website' => function(self $model) { return ($url = $model->getWebsite()) ? (string) $url : null; },
-    ];
-  }
-
-  /**
    * Gets the HTTP-based URL for cloning this repository.
    * @return UriInterface|null The HTTP-based URL for cloning this repository.
    */
@@ -242,6 +204,38 @@ class Repository {
    */
   function getWebsite(): ?UriInterface {
     return $this->website;
+  }
+
+  /**
+   * Converts this object to a map in JSON format.
+   * @return \stdClass The map in JSON format corresponding to this object.
+   */
+  function jsonSerialize(): \stdClass {
+    return (object) [
+      'clone_url' => ($url = $this->getCloneUrl()) ? (string) $url : null,
+      'created_at' => ($date = $this->getCreatedAt()) ? $date->format('c') : null,
+      'default_branch' => 'defaultBranch',
+      'description',
+      'empty' => 'isEmpty',
+      'fork' => 'isFork',
+      'forks_count' => 'forksCount',
+      'full_name' => 'fullName',
+      'html_url' => ($url = $this->getHtmlUrl()) ? (string) $url : null,
+      'id',
+      'mirror' => 'isMirror',
+      'name',
+      'open_issues_count' => 'openIssuesCount',
+      'owner',
+      'parent',
+      'permissions',
+      'private' => 'isPrivate',
+      'size',
+      'ssh_url' => ($url = $this->getSshUrl()) ? (string) $url : null,
+      'stars_count' => 'starsCount',
+      'updated_at' => ($date = $this->getUpdatedAt()) ? $date->format('c') : null,
+      'watchers_count' => 'watchersCount',
+      'website' => ($url = $this->getWebsite()) ? (string) $url : null,
+    ];
   }
 
   /**

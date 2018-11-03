@@ -5,7 +5,7 @@ namespace Gitea\Models;
 /**
  * Represents the GPG verification of a commit.
  */
-class PayloadCommitVerification {
+class PayloadCommitVerification implements \JsonSerializable {
 
   /**
    * @var bool Value indicating whether the verification has succeeded.
@@ -42,11 +42,11 @@ class PayloadCommitVerification {
   }
 
   /**
-   * Returns the list of fields that should be returned by default.
-   * @return array The list of field names or field definitions.
+   * Converts this object to a map in JSON format.
+   * @return \stdClass The map in JSON format corresponding to this object.
    */
-  function fields(): array {
-    return [
+  function jsonSerialize(): \stdClass {
+    return (object) [
       'payload',
       'reason',
       'signature',

@@ -7,39 +7,38 @@ use Psr\Http\Message\{UriInterface};
 
 /**
  * Represents a Gitea user.
- * @property UriInterface|null $avatarUrl The URL of the avatar image.
  */
-class User {
-
-  /**
-   * @var string The mail address.
-   */
-  public $email = '';
-
-  /**
-   * @var string The full name.
-   */
-  public $fullName = '';
-
-  /**
-   * @var int The user identifier.
-   */
-  public $id = -1;
-
-  /**
-   * @var string The user locale.
-   */
-  public $language = '';
-
-  /**
-   * @var string The name of the Gitea account.
-   */
-  public $login = '';
+class User implements \JsonSerializable {
 
   /**
    * @var UriInterface|null The URL to the user's avatar.
    */
   private $avatarUrl;
+
+  /**
+   * @var string The mail address.
+   */
+  private $email = '';
+
+  /**
+   * @var string The full name.
+   */
+  private $fullName = '';
+
+  /**
+   * @var int The user identifier.
+   */
+  private $id = -1;
+
+  /**
+   * @var string The user locale.
+   */
+  private $language = '';
+
+  /**
+   * @var string The name of the Gitea account.
+   */
+  private $login = '';
 
   /**
    * Creates a new user from the specified JSON map.
@@ -58,26 +57,66 @@ class User {
   }
 
   /**
-   * Returns the list of fields that should be returned by default.
-   * @return array The list of field names or field definitions.
-   */
-  function fields(): array {
-    return [
-      'avatar_url' => function(self $model) { return ($url = $model->getAvatarUrl()) ? (string) $url : null; },
-      'email',
-      'full_name' => 'fullName',
-      'id',
-      'language',
-      'login'
-    ];
-  }
-
-  /**
    * Gets the URL of the avatar image.
    * @return UriInterface|null The URL of the avatar image.
    */
   function getAvatarUrl(): ?UriInterface {
     return $this->avatarUrl;
+  }
+
+  /**
+   * Gets the mail address.
+   * @return string The mail address.
+   */
+  function getEmail(): string {
+    return $this->email;
+  }
+
+  /**
+   * Gets the full name.
+   * @return string The full name.
+   */
+  function getFullName(): string {
+    return $this->fullName;
+  }
+
+  /**
+   * Gets the user identifier.
+   * @return int The user identifier.
+   */
+  function getId(): int {
+    return $this->id;
+  }
+
+  /**
+   * Gets the user locale.
+   * @return string The user locale.
+   */
+  function getLanguage(): string {
+    return $this->language;
+  }
+
+  /**
+   * Gets the name of the Gitea account.
+   * @return string The name of the Gitea account.
+   */
+  function getLogin(): string {
+    return $this->login;
+  }
+
+  /**
+   * Converts this object to a map in JSON format.
+   * @return \stdClass The map in JSON format corresponding to this object.
+   */
+  function jsonSerialize(): \stdClass {
+    return (object) [
+      'avatar_url' => ($url = $this->getAvatarUrl()) ? (string) $url : null,
+      'email' => $this->getEmail(),
+      'full_name' => $this->getFullName(),
+      'id' => $this->getId(),
+      'language' => $this->getLanguage(),
+      'login' => $this->getLogin()
+    ];
   }
 
   /**
@@ -87,6 +126,56 @@ class User {
    */
   function setAvatarUrl($value): self {
     $this->avatarUrl = is_string($value) ? new Uri($value) : $value;
+    return $this;
+  }
+
+  /**
+   * Sets the mail address.
+   * @param string $value The new mail address.
+   * @return $this This instance.
+   */
+  function setEmail(string $value): self {
+    $this->email = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the full name.
+   * @param string $value The new full name.
+   * @return $this This instance.
+   */
+  function setFullName(string $value): self {
+    $this->fullName = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the user identifier.
+   * @param int $value The new user identifier.
+   * @return $this This instance.
+   */
+  function setId(int $value): self {
+    $this->id = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the user locale.
+   * @param string $value The new user locale.
+   * @return $this This instance.
+   */
+  function setLanguage(string $value): self {
+    $this->language = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the name of the Gitea account.
+   * @param string $value The new Gitea account.
+   * @return $this This instance.
+   */
+  function setLogin(string $value): self {
+    $this->login = $value;
     return $this;
   }
 }
