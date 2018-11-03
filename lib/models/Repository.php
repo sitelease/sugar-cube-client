@@ -273,7 +273,7 @@ class Repository implements \JsonSerializable {
    * @param UriInterface|string|null $value The new URL for cloning this repository.
    * @return $this This instance.
    */
-  function setSshlUrl($value): self {
+  function setSshUrl($value): self {
     $this->sshUrl = is_string($value) ? new Uri($value) : $value;
     return $this;
   }
