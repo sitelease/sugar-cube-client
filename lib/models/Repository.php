@@ -13,87 +13,87 @@ class Repository implements \JsonSerializable {
   /**
    * @var string The name of the default branch.
    */
-  public $defaultBranch = '';
+  private $defaultBranch = '';
 
   /**
    * @var string The repository description.
    */
-  public $description = '';
+  private $description = '';
 
   /**
    * @var int The number of forks of this repository.
    */
-  public $forksCount = 0;
+  private $forksCount = 0;
 
   /**
    * @var string The full name.
    */
-  public $fullName = '';
+  private $fullName = '';
 
   /**
    * @var int The repository identifier.
    */
-  public $id = -1;
+  private $id = -1;
 
   /**
    * @var bool Value indicating whether this repository is empty.
    */
-  public $isEmpty = false;
+  private $isEmpty = false;
 
   /**
    * @var bool Value indicating whether this repository is a fork.
    */
-  public $isFork = false;
+  private $isFork = false;
 
   /**
    * @var bool Value indicating whether this repository is a mirror.
    */
-  public $isMirror = false;
+  private $isMirror = false;
 
   /**
    * @var bool Value indicating whether this repository is private.
    */
-  public $isPrivate = false;
+  private $isPrivate = false;
 
   /**
    * @var string The repository name.
    */
-  public $name = '';
+  private $name = '';
 
   /**
    * @var int The number of open issues of this repository.
    */
-  public $openIssuesCount = 0;
+  private $openIssuesCount = 0;
 
   /**
    * @var User|null The repository owner.
    */
-  public $owner;
+  private $owner;
 
   /**
    * @var Repository|null The parent repository, if this repository is a fork or a mirror.
    */
-  public $parent;
+  private $parent;
 
   /**
    * @var Permission|null The repository permissions.
    */
-  public $permissions;
+  private $permissions;
 
   /**
    * @var int The repository size, in kilobytes.
    */
-  public $size = 0;
+  private $size = 0;
 
   /**
    * @var int The number of stars of this repository.
    */
-  public $starsCount = 0;
+  private $starsCount = 0;
 
   /**
    * @var int The number of watchers of this repository.
    */
-  public $watchersCount = 0;
+  private $watchersCount = 0;
 
   /**
    * @var UriInterface|null The HTTP-based URL for cloning this repository.

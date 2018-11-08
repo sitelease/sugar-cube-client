@@ -5,22 +5,22 @@ namespace Gitea\Models;
 /**
  * Represents the author or committer of a commit.
  */
-class PayloadUser {
+class PayloadUser implements \JsonSerializable {
 
   /**
    * @var string The mail address.
    */
-  public $email = '';
+  private $email = '';
 
   /**
    * @var string The full name.
    */
-  public $name = '';
+  private $name = '';
 
   /**
    * @var string The name of the Gitea account.
    */
-  public $username = '';
+  private $username = '';
 
   /**
    * Creates a new user from the specified JSON map.
@@ -33,5 +33,22 @@ class PayloadUser {
       'name' => isset($map->name) && is_string($map->name) ? $map->name : '',
       'username' => isset($map->username) && is_string($map->username) ? $map->username : ''
     ]);
+  }
+
+  /**
+   * Converts this object to a map in JSON format.
+   * @return \stdClass The map in JSON format corresponding to this object.
+   */
+  function jsonSerialize(): \stdClass {
+    return (object) [
+      'after' => $this->getAfter(),
+      'before' => $this->getBefore(),
+      'compare_url' => ($url = $this->getCompareUrl()) ? (string) $url : null,
+      'commits' => array_map(function(PayloadCommit $commit) { return $commit->jsonSerialize(); }, $this->getCommits()->getArrayCopy()),
+      'pusher',
+      'ref' => $this->getRef(),
+      'repository',
+      'sender'
+    ];
   }
 }

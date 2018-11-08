@@ -28,7 +28,7 @@ class User implements \JsonSerializable {
   /**
    * @var int The user identifier.
    */
-  private $id = -1;
+  private $id;
 
   /**
    * @var string The user locale.
@@ -38,7 +38,17 @@ class User implements \JsonSerializable {
   /**
    * @var string The name of the Gitea account.
    */
-  private $login = '';
+  private $login;
+
+  /**
+   * Creates a new user.
+   * @param int $id The user identifier.
+   * @param string $login The name of the Gitea account.
+   */
+  function __construct(int $id, string $login) {
+    $this->id = $id;
+    $this->setLogin($login);
+  }
 
   /**
    * Creates a new user from the specified JSON map.
@@ -46,14 +56,11 @@ class User implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return new static([
-      'avatarUrl' => isset($map->avatar_url) && is_string($map->avatar_url) ? $map->avatar_url : null,
-      'email' => isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '',
-      'fullName' => isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '',
-      'id' => isset($map->id) && is_int($map->id) ? $map->id : -1,
-      'language' => isset($map->language) && is_string($map->language) ? $map->language : '',
-      'login' => isset($map->login) && is_string($map->login) ? $map->login : ''
-    ]);
+    return (new static(isset($map->id) && is_int($map->id) ? $map->id : -1, isset($map->login) && is_string($map->login) ? $map->login : ''))
+      ->setAvatarUrl(isset($map->avatar_url) && is_string($map->avatar_url) ? $map->avatar_url : null)
+      ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
+      ->setFullName(isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '')
+      ->setLanguage(isset($map->language) && is_string($map->language) ? $map->language : '');
   }
 
   /**
@@ -146,16 +153,6 @@ class User implements \JsonSerializable {
    */
   function setFullName(string $value): self {
     $this->fullName = $value;
-    return $this;
-  }
-
-  /**
-   * Sets the user identifier.
-   * @param int $value The new user identifier.
-   * @return $this This instance.
-   */
-  function setId(int $value): self {
-    $this->id = $value;
     return $this;
   }
 

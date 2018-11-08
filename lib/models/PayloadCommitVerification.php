@@ -10,22 +10,29 @@ class PayloadCommitVerification implements \JsonSerializable {
   /**
    * @var bool Value indicating whether the verification has succeeded.
    */
-  public $isVerified = false;
+  private $isVerified = false;
 
   /**
    * @var string A custom message sent with the verification request.
    */
-  public $payload = '';
+  private $payload = '';
 
   /**
    * @var string A message providing details about the verification.
    */
-  public $reason = '';
+  private $reason = '';
 
   /**
    * @var string The signing key used for the verification.
    */
-  public $signature = '';
+  private $signature = '';
+
+  /**
+   * Creates a new verification of a payload commit.
+   */
+  function __construct(bool $isVerified = false) {
+    // TODO $this->setVerified($isVerified);
+  }
 
   /**
    * Creates a new commit from the specified JSON map.
@@ -42,15 +49,47 @@ class PayloadCommitVerification implements \JsonSerializable {
   }
 
   /**
+   * Gets the custom message sent with the verification request.
+   * @return string The custom message sent with the verification request.
+   */
+  function getPayload(): string {
+    return $this->payload;
+  }
+
+  /**
+   * Gets the message providing details about the verification.
+   * @return string The message providing details about the verification.
+   */
+  function getReason(): string {
+    return $this->reason;
+  }
+
+  /**
+   * Gets the signing key used for the verification.
+   * @return string The signing key used for the verification.
+   */
+  function getSignature(): string {
+    return $this->signature;
+  }
+
+  /**
+   * TODO
+   * @return bool
+   */
+  function isVerified(): bool {
+    return $this->isVerified;
+  }
+
+  /**
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
   function jsonSerialize(): \stdClass {
     return (object) [
-      'payload',
-      'reason',
-      'signature',
-      'verified' => 'isVerified'
+      'payload' => $this->getPayload(),
+      'reason' => $this->getReason(),
+      'signature' => $this->getSignature(),
+      'verified' => $this->isVerified()
     ];
   }
 }

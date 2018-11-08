@@ -13,27 +13,22 @@ class PayloadCommit implements \JsonSerializable {
   /**
    * @var PayloadUser|null The person who authored the commit.
    */
-  public $author;
+  private $author;
 
   /**
    * @var PayloadUser|null The person who committed the code.
    */
-  public $committer;
+  private $committer;
 
   /**
    * @var string The commit hash.
    */
-  public $id = '';
+  private $id;
 
   /**
    * @var string The commit message.
    */
-  public $message = '';
-
-  /**
-   * @var PayloadCommitVerification|null The GPG verification of this commit.
-   */
-  public $verification;
+  private $message;
 
   /**
    * @var \DateTime|null The commit date.
@@ -46,20 +41,64 @@ class PayloadCommit implements \JsonSerializable {
   private $url;
 
   /**
+   * @var PayloadCommitVerification|null The GPG verification of this commit.
+   */
+  private $verification;
+
+  /**
+   * Creates a new payload commit.
+   * @param string $id The commit hash.
+   * @param string $message The commit message.
+   */
+  function __construct(string $id, string $message) {
+    $this->id = $id;
+    $this->setMessage($message);
+  }
+
+  /**
    * Creates a new commit from the specified JSON map.
    * @param object $map A JSON map representing a commit.
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return new static([
-      'author' => isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($map->author) : null,
-      'committer' => isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($map->committer) : null,
-      'id' => isset($map->id) && is_string($map->id) ? $map->id : '',
-      'message' => isset($map->message) && is_string($map->message) ? $map->message : '',
-      'timestamp' => isset($map->timestamp) && is_string($map->timestamp) ? $map->timestamp : null,
-      'url' => isset($map->url) && is_string($map->url) ? $map->url : null,
-      'verification' => isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($map->verification) : null
-    ]);
+    return (new static(isset($map->id) && is_string($map->id) ? $map->id : '', isset($map->message) && is_string($map->message) ? $map->message : ''))
+      ->setAuthor(isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($map->author) : null)
+      ->setCommitter(isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($map->committer) : null)
+      ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? $map->timestamp : null)
+      ->setUrl(isset($map->url) && is_string($map->url) ? $map->url : null)
+      ->setVerification(isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($map->verification) : null);
+  }
+
+  /**
+   * Gets the person who authored the commit.
+   * @return PayloadUser|null The person who authored the commit.
+   */
+  function getAuthor(): ?PayloadUser {
+    return $this->author;
+  }
+
+  /**
+   * Gets the person who committed the code.
+   * @return PayloadUser|null The person who committed the code.
+   */
+  function getCommitter(): ?PayloadUser {
+    return $this->committer;
+  }
+
+  /**
+   * Gets the commit hash.
+   * @return string The commit hash.
+   */
+  function getId(): string {
+    return $this->id;
+  }
+
+  /**
+   * Gets the commit message.
+   * @return string The commit message.
+   */
+  function getMessage(): string {
+    return $this->message;
   }
 
   /**
@@ -79,19 +118,57 @@ class PayloadCommit implements \JsonSerializable {
   }
 
   /**
+   * Gets the GPG verification of this commit.
+   * @return UriInterface|null The GPG verification of this commit.
+   */
+  function getVerification(): ?PayloadCommitVerification {
+    return $this->verification;
+  }
+
+  /**
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
   function jsonSerialize(): \stdClass {
     return (object) [
-      'author',
-      'committer',
-      'id',
-      'message',
+      'author' => ($author = $this->getAuthor()) ? $author->jsonSerialize() : null,
+      'committer' => ($committer = $this->getCommitter()) ? $committer->jsonSerialize() : null,
+      'id' => $this->getId(),
+      'message' => $this->getMessage(),
       'timestamp' => ($date = $this->getTimestamp()) ? $date->format('c') : null,
       'url' => ($url = $this->getUrl()) ? (string) $url : null,
-      'verification'
+      'verification' => ($verification = $this->getVerification()) ? $verification->jsonSerialize() : null
     ];
+  }
+
+  /**
+   * Sets the person who authored the commit.
+   * @param PayloadUser|null $value The new author.
+   * @return $this This instance.
+   */
+  function setAuthor(?PayloadUser $value): self {
+    $this->author = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the person who committed the code.
+   * @param PayloadUser|null $value The new committer.
+   * @return $this This instance.
+   */
+  function setCommitter(?PayloadUser $value): self {
+    $this->committer = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the commit message.
+   * @param string $value The new message.
+   * @return $this This instance.
+   */
+  function setMessage(string $value): self {
+    $this->message = $value;
+    return $this;
   }
 
   /**
@@ -111,6 +188,16 @@ class PayloadCommit implements \JsonSerializable {
    */
   function setUrl($value): self {
     $this->url = is_string($value) ? new Uri($value) : $value;
+    return $this;
+  }
+
+  /**
+   * Sets the commit message.
+   * @param PayloadCommitVerification|null $value The new message.
+   * @return $this This instance.
+   */
+  function setVerification(?PayloadCommitVerification $value): self {
+    $this->verification = $value;
     return $this;
   }
 }
