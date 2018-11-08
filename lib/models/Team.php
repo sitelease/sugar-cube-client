@@ -32,7 +32,7 @@ class Team implements \JsonSerializable {
    * @param int $id The team identifier.
    * @param string $name The team name.
    */
-  function __construct(int $id, string $name = '') {
+  function __construct(int $id, string $name) {
     $this->id = $id;
     $this->setName($name);
   }

@@ -10,7 +10,7 @@ class PayloadCommitVerification implements \JsonSerializable {
   /**
    * @var bool Value indicating whether the verification has succeeded.
    */
-  private $isVerified = false;
+  private $isVerified;
 
   /**
    * @var string A custom message sent with the verification request.
@@ -29,9 +29,10 @@ class PayloadCommitVerification implements \JsonSerializable {
 
   /**
    * Creates a new verification of a payload commit.
+   * @param bool $isVerified Value indicating whether the verification has succeeded.
    */
   function __construct(bool $isVerified = false) {
-    // TODO $this->setVerified($isVerified);
+    $this->setVerified($isVerified);
   }
 
   /**
@@ -40,12 +41,10 @@ class PayloadCommitVerification implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return new static([
-      'isVerified' => isset($map->verified) && is_bool($map->verified) ? $map->verified : false,
-      'payload' => isset($map->payload) && is_string($map->payload) ? $map->payload : '',
-      'reason' => isset($map->reason) && is_string($map->reason) ? $map->reason : '',
-      'signature' => isset($map->signature) && is_string($map->signature) ? $map->signature : ''
-    ]);
+    return (new static(isset($map->verified) && is_bool($map->verified) ? $map->verified : false))
+      ->setPayload(isset($map->payload) && is_string($map->payload) ? $map->payload : '')
+      ->setReason(isset($map->reason) && is_string($map->reason) ? $map->reason : '')
+      ->setSignature(isset($map->signature) && is_string($map->signature) ? $map->signature : '');
   }
 
   /**
@@ -73,8 +72,8 @@ class PayloadCommitVerification implements \JsonSerializable {
   }
 
   /**
-   * TODO
-   * @return bool
+   * Gets a value indicating whether the verification has succeeded.
+   * @return bool `true` if the verification has succeeded, otherwise `false`.
    */
   function isVerified(): bool {
     return $this->isVerified;
@@ -91,5 +90,45 @@ class PayloadCommitVerification implements \JsonSerializable {
       'signature' => $this->getSignature(),
       'verified' => $this->isVerified()
     ];
+  }
+
+  /**
+   * Sets the custom message sent with the verification request.
+   * @param string $value A new custom message.
+   * @return $this This instance.
+   */
+  function setPayload(string $value): self {
+    $this->payload = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the message providing details about the verification.
+   * @param string $value A new message providing details about the verification.
+   * @return $this This instance.
+   */
+  function setReason(string $value): self {
+    $this->reason = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the signing key used for the verification.
+   * @param string $value The new signing key.
+   * @return $this This instance.
+   */
+  function setSignature(string $value): self {
+    $this->signature = $value;
+    return $this;
+  }
+
+  /**
+   * Sets a value indicating whether the verification has succeeded.
+   * @param bool $value `true` if the verification has succeeded, otherwise `false`.
+   * @return $this This instance.
+   */
+  function setVerified(bool $value): self {
+    $this->isVerified = $value;
+    return $this;
   }
 }

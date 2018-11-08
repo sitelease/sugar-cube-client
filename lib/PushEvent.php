@@ -58,9 +58,8 @@ class PushEvent implements \JsonSerializable {
 
   /**
    * Creates a new event.
-   * @param array $config Name-value pairs that will be used to initialize the object properties.
    */
-  function __construct(array $config = []) {
+  function __construct() {
     $this->commits = new \ArrayObject;
   }
 
@@ -70,17 +69,16 @@ class PushEvent implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return new static([
-      'after' => isset($map->after) && is_string($map->after) ? $map->after : '',
-      'before' => isset($map->before) && is_string($map->before) ? $map->before : '',
-      'compareUrl' => isset($map->compare_url) && is_string($map->compare_url) ? new Uri($map->compare_url) : null,
-      'commits' => isset($map->commits) && is_array($map->commits) ? array_map([PayloadCommit::class, 'fromJson'], $map->commits) : [],
-      'pusher' => isset($map->pusher) && is_object($map->pusher) ? User::fromJson($map->pusher) : null,
-      'ref' => isset($map->ref) && is_string($map->ref) ? $map->ref : '',
-      'repository' => isset($map->repository) && is_object($map->repository) ? Repository::fromJson($map->repository) : null,
-      'secret' => isset($map->secret) && is_string($map->secret) ? $map->secret : '',
-      'sender' => isset($map->sender) && is_object($map->sender) ? User::fromJson($map->sender) : null
-    ]);
+    return (new static)
+      ->setAfter(isset($map->after) && is_string($map->after) ? $map->after : '')
+      ->setBefore(isset($map->before) && is_string($map->before) ? $map->before : '')
+      ->setCompareUrl(isset($map->compare_url) && is_string($map->compare_url) ? new Uri($map->compare_url) : null)
+      ->setCommits(isset($map->commits) && is_array($map->commits) ? array_map([PayloadCommit::class, 'fromJson'], $map->commits) : [])
+      // TODO: 'pusher' => isset($map->pusher) && is_object($map->pusher) ? User::fromJson($map->pusher) : null)
+      ->setRef(isset($map->ref) && is_string($map->ref) ? $map->ref : '')
+      // TODO: 'repository' => isset($map->repository) && is_object($map->repository) ? Repository::fromJson($map->repository) : null)
+      ->setSecret(isset($map->secret) && is_string($map->secret) ? $map->secret : '');
+      // TODO: 'sender' => isset($map->sender) && is_object($map->sender) ? User::fromJson($map->sender) : null):
   }
 
   /**
@@ -141,10 +139,10 @@ class PushEvent implements \JsonSerializable {
       'before' => $this->getBefore(),
       'compare_url' => ($url = $this->getCompareUrl()) ? (string) $url : null,
       'commits' => array_map(function(PayloadCommit $commit) { return $commit->jsonSerialize(); }, $this->getCommits()->getArrayCopy()),
-      'pusher',
+      'pusher' => 'TODO',
       'ref' => $this->getRef(),
-      'repository',
-      'sender'
+      'repository' => 'TODO',
+      'sender' => 'TODO'
     ];
   }
 

@@ -20,7 +20,15 @@ class PayloadUser implements \JsonSerializable {
   /**
    * @var string The name of the Gitea account.
    */
-  private $username = '';
+  private $username;
+
+  /**
+   * Creates a new payload user.
+   * @param string $username The name of the Gitea account.
+   */
+  function __construct(string $username) {
+    $this->username = $username;
+  }
 
   /**
    * Creates a new user from the specified JSON map.
@@ -28,11 +36,33 @@ class PayloadUser implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return new static([
-      'email' => isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '',
-      'name' => isset($map->name) && is_string($map->name) ? $map->name : '',
-      'username' => isset($map->username) && is_string($map->username) ? $map->username : ''
-    ]);
+    return (new static(isset($map->username) && is_string($map->username) ? $map->username : ''))
+      ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
+      ->setName(isset($map->name) && is_string($map->name) ? $map->name : '');
+  }
+
+  /**
+   * Gets the mail address.
+   * @return string The mail address.
+   */
+  function getEmail(): string {
+    return $this->email;
+  }
+
+  /**
+   * Gets the full name.
+   * @return string The full name.
+   */
+  function getName(): string {
+    return $this->name;
+  }
+
+  /**
+   * Gets the name of the Gitea account.
+   * @return string The name of the Gitea account.
+   */
+  function getUsername(): string {
+    return $this->username;
   }
 
   /**
@@ -41,14 +71,29 @@ class PayloadUser implements \JsonSerializable {
    */
   function jsonSerialize(): \stdClass {
     return (object) [
-      'after' => $this->getAfter(),
-      'before' => $this->getBefore(),
-      'compare_url' => ($url = $this->getCompareUrl()) ? (string) $url : null,
-      'commits' => array_map(function(PayloadCommit $commit) { return $commit->jsonSerialize(); }, $this->getCommits()->getArrayCopy()),
-      'pusher',
-      'ref' => $this->getRef(),
-      'repository',
-      'sender'
+      'email' => $this->getEmail(),
+      'name' => $this->getName(),
+      'username' => $this->getUsername()
     ];
+  }
+
+  /**
+   * Sets the mail address.
+   * @param string $value The new mail address.
+   * @return $this This instance.
+   */
+  function setEmail(string $value): self {
+    $this->email = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the full name.
+   * @param string $value The new full name.
+   * @return $this This instance.
+   */
+  function setName(string $value): self {
+    $this->name = $value;
+    return $this;
   }
 }
