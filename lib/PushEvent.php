@@ -163,10 +163,10 @@ class PushEvent implements \JsonSerializable {
       'before' => $this->getBefore(),
       'compare_url' => ($url = $this->getCompareUrl()) ? (string) $url : null,
       'commits' => array_map(function(PayloadCommit $commit) { return $commit->jsonSerialize(); }, $this->getCommits()->getArrayCopy()),
-      'pusher' => 'TODO',
+      'pusher' => ($user = $this->getPusher()) ? $user->jsonSerialize() : null,
       'ref' => $this->getRef(),
-      'repository' => 'TODO',
-      'sender' => 'TODO'
+      'repository' => ($repository = $this->getRepository()) ? $repository->jsonSerialize() : null,
+      'sender' => ($user = $this->getSender()) ? $user->jsonSerialize() : null
     ];
   }
 
