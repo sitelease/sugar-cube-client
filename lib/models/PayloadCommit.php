@@ -119,7 +119,7 @@ class PayloadCommit implements \JsonSerializable {
 
   /**
    * Gets the GPG verification of this commit.
-   * @return UriInterface|null The GPG verification of this commit.
+   * @return PayloadCommitVerification|null The GPG verification of this commit.
    */
   function getVerification(): ?PayloadCommitVerification {
     return $this->verification;

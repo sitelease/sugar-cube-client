@@ -256,7 +256,7 @@ class Repository implements \JsonSerializable {
 
   /**
    * Gets the parent repository, if this repository is a fork or a mirror.
-   * @return User|null The parent repository, if this repository is a fork or a mirror.
+   * @return Repository|null The parent repository, if this repository is a fork or a mirror.
    */
   function getParent(): ?Repository {
     return $this->parent;
