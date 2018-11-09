@@ -74,11 +74,11 @@ class PushEvent implements \JsonSerializable {
       ->setBefore(isset($map->before) && is_string($map->before) ? $map->before : '')
       ->setCompareUrl(isset($map->compare_url) && is_string($map->compare_url) ? new Uri($map->compare_url) : null)
       ->setCommits(isset($map->commits) && is_array($map->commits) ? array_map([PayloadCommit::class, 'fromJson'], $map->commits) : [])
-      // TODO: 'pusher' => isset($map->pusher) && is_object($map->pusher) ? User::fromJson($map->pusher) : null)
+      ->setPusher(isset($map->pusher) && is_object($map->pusher) ? User::fromJson($map->pusher) : null)
       ->setRef(isset($map->ref) && is_string($map->ref) ? $map->ref : '')
-      // TODO: 'repository' => isset($map->repository) && is_object($map->repository) ? Repository::fromJson($map->repository) : null)
-      ->setSecret(isset($map->secret) && is_string($map->secret) ? $map->secret : '');
-      // TODO: 'sender' => isset($map->sender) && is_object($map->sender) ? User::fromJson($map->sender) : null):
+      ->setRepository(isset($map->repository) && is_object($map->repository) ? Repository::fromJson($map->repository) : null)
+      ->setSecret(isset($map->secret) && is_string($map->secret) ? $map->secret : '')
+      ->setSender(isset($map->sender) && is_object($map->sender) ? User::fromJson($map->sender) : null);
   }
 
   /**
@@ -114,6 +114,14 @@ class PushEvent implements \JsonSerializable {
   }
 
   /**
+   * Gets the user who pushed the commits.
+   * @return User|null The user who pushed the commits.
+   */
+  function getPusher(): ?User {
+    return $this->pusher;
+  }
+
+  /**
    * Gets the Git reference.
    * @return string The Git reference.
    */
@@ -122,11 +130,27 @@ class PushEvent implements \JsonSerializable {
   }
 
   /**
+   * Gets the repository where the commits were pushed.
+   * @return Repository|null The repository where the commits were pushed.
+   */
+  function getRepository(): ?Repository {
+    return $this->repository;
+  }
+
+  /**
    * Gets the secret used to validate this event.
    * @return string The secret used to validate this event.
    */
   function getSecret(): string {
     return $this->secret;
+  }
+
+  /**
+   * Gets the user who sent this event.
+   * @return User|null The user who sent this event.
+   */
+  function getSender(): ?User {
+    return $this->sender;
   }
 
   /**
@@ -187,6 +211,16 @@ class PushEvent implements \JsonSerializable {
   }
 
   /**
+   * Sets the user who pushed the commits.
+   * @param User|null $value The new pusher.
+   * @return $this This instance.
+   */
+  function setPusher(?User $value): self {
+    $this->pusher = $value;
+    return $this;
+  }
+
+  /**
    * Sets the Git reference.
    * @param string $value The new Git reference.
    * @return $this This instance.
@@ -197,12 +231,32 @@ class PushEvent implements \JsonSerializable {
   }
 
   /**
+   * Sets the repository where the commits were pushed.
+   * @param Repository|null $value The new repository.
+   * @return $this This instance.
+   */
+  function setRepository(?Repository $value): self {
+    $this->repository = $value;
+    return $this;
+  }
+
+  /**
    * Sets the secret used to validate this event.
    * @param string $value The new secret used to validate this event.
    * @return $this This instance.
    */
   function setSecret(string $value): self {
     $this->secret = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the user who sent this event.
+   * @param User|null $value The new sender.
+   * @return $this This instance.
+   */
+  function setSender(?User $value): self {
+    $this->sender = $value;
     return $this;
   }
 }
