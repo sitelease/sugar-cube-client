@@ -3,11 +3,14 @@
 
 [Gitea](https://gitea.io) client library, in [PHP](https://secure.php.net).
 
-## Resources
-- [Documentation](https://github.com/sab-international/gitea.php/wiki)
-- [API reference](https://sab-international.github.io/gitea.php)
+## Documentation
+- [User guide](https://dev.sabcomputer.com/gitea.php)
+- [API reference](https://dev.sabcomputer.com/gitea.php/api)
+
+## Development
+- [Git repository](https://github.com/sab-international/gitea.php)
 - [Packagist package](https://packagist.org/packages/sab-international/gitea)
-- [GitHub repository](https://github.com/sab-international/gitea.php)
+- [Submit an issue](https://github.com/sab-international/gitea.php/issues)
 
 ## License
-[Gitea for PHP](https://github.com/sab-international/gitea.php) is distributed under the MIT License.
+[Gitea for PHP](https://dev.sabcomputer.com/gitea.php) is distributed under the MIT License.

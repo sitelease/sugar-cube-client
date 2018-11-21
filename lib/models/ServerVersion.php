@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Gitea\Models;
 
 /**
- * Warps the version of the Gitea server.
+ * Wraps the version of the Gitea server.
  */
 class ServerVersion implements \JsonSerializable {
 

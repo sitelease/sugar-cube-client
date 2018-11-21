@@ -38,7 +38,12 @@ class RoboFile extends Tasks {
    * Builds the documentation.
    */
   function doc(): void {
-    $this->_exec('phpdoc');
+    $this->taskFilesystemStack()
+      ->copy('CHANGELOG.md', 'doc/about/changelog.md')
+      ->copy('LICENSE.md', 'doc/about/license.md')
+      ->run();
+
+    $this->_exec('mkdocs build');
   }
 
   /**

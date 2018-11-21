@@ -21,7 +21,7 @@ final class StatusState {
   const FAILURE = 'failure';
 
   /**
-   * @var string The status is a pending.
+   * @var string The status is pending.
    */
   const PENDING = 'pending';
 

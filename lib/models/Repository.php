@@ -244,7 +244,7 @@ class Repository implements \JsonSerializable {
    */
   function getName(): string {
     if (mb_strlen($this->name)) return $this->name;
-    return mb_strlen($fullName = $this->getFullName()) ? explode('/', $fullName, 2)[0] : '';
+    return mb_strlen($fullName = $this->getFullName()) ? explode('/', $fullName)[1] : '';
   }
 
   /**
