@@ -1,8 +1,6 @@
 * text=auto
 
 .* text
-.semver text eol=lf
-
 *.info text
 *.json text
 *.md text
