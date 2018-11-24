@@ -13,6 +13,5 @@ function main(): PushEvent {
 
   $data = json_decode((string) file_get_contents('php://input'));
   if (!is_object($data)) throw new UnexpectedValueException('Invalid payload data.');
-
   return PushEvent::fromJson($data);
 }
