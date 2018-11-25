@@ -53,7 +53,7 @@ class TrackedTime implements \JsonSerializable {
 
   /**
    * Creates a new entry from the specified JSON map.
-   * @param object $map A JSON map representing a entry.
+   * @param object $map A JSON map representing an entry.
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
