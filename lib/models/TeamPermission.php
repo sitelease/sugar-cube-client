@@ -5,7 +5,7 @@ namespace Gitea\Models;
 use Enum\{EnumTrait};
 
 /**
- * Defines the permission of a Gitea status.
+ * Defines the permission of a team.
  */
 final class TeamPermission {
   use EnumTrait;
