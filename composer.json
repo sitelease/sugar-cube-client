@@ -4,10 +4,10 @@
   "license": "MIT",
   "name": "sab-international/gitea",
   "type": "library",
-  "authors": [{
-    "email": "contact@sabcomputer.com",
-    "name": "SAB International"
-  }],
+  "authors": [
+    {"email": "contact@sabcomputer.com", "name": "SAB International", "homepage": "http://www.sabcomputer.com", "role": "Developer"},
+    {"email": "cedric@belin.io", "name": "Cédric Belin", "homepage": "https://belin.io", "role": "Developer"}
+  ],
   "autoload": {
     "psr-4": {"Gitea\\": "lib/"}
   },
