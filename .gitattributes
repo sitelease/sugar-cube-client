@@ -1,6 +1,7 @@
 * text=auto
 
 .* text
+*.http text
 *.info text
 *.json text
 *.md text
