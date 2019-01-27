@@ -10,6 +10,6 @@
 - [Code coverage](https://coveralls.io/github/sab-international/gitea.php/)
 
 ## Other implementations
-- Dart: [Gitea for Dart](https://dev.belin.io/gitea.dart)
-- JavaScript: [Gitea for JS](https://dev.belin.io/gitea.js)
+- Dart: [Gitea for Dart](https://dev.sabcomputer.com/gitea.dart)
+- JavaScript: [Gitea for JS](https://dev.sabcomputer.com/gitea.js)
 - Yii Framework: [Gitea for Yii](https://dev.sabcomputer.com/yii2-gitea)
