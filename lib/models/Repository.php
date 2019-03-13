@@ -457,7 +457,7 @@ class Repository implements \JsonSerializable {
    * @return $this This instance.
    */
   function setForksCount(int $value): self {
-    $this->forksCount = $value;
+    $this->forksCount = max(0, $value);
     return $this;
   }
 
@@ -507,7 +507,7 @@ class Repository implements \JsonSerializable {
    * @return $this This instance.
    */
   function setOpenIssuesCount(int $value): self {
-    $this->openIssuesCount = $value;
+    $this->openIssuesCount = max(0, $value);
     return $this;
   }
 
@@ -577,7 +577,7 @@ class Repository implements \JsonSerializable {
    * @return $this This instance.
    */
   function setStarsCount(int $value): self {
-    $this->starsCount = $value;
+    $this->starsCount = max(0, $value);
     return $this;
   }
 
@@ -597,7 +597,7 @@ class Repository implements \JsonSerializable {
    * @return $this This instance.
    */
   function setWatchersCount(int $value): self {
-    $this->watchersCount = $value;
+    $this->watchersCount = max(0, $value);
     return $this;
   }
 
