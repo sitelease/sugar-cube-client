@@ -73,8 +73,8 @@ class PayloadCommit implements \JsonSerializable {
     return (new static(isset($map->id) && is_string($map->id) ? $map->id : '', isset($map->message) && is_string($map->message) ? $map->message : ''))
       ->setAuthor(isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($map->author) : null)
       ->setCommitter(isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($map->committer) : null)
-      ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? $map->timestamp : null)
-      ->setUrl(isset($map->url) && is_string($map->url) ? $map->url : null)
+      ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? new \DateTime($map->timestamp) : null)
+      ->setUrl(isset($map->url) && is_string($map->url) ? new Uri($map->url) : null)
       ->setVerification(isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($map->verification) : null);
   }
 
@@ -182,21 +182,21 @@ class PayloadCommit implements \JsonSerializable {
 
   /**
    * Sets the commit date.
-   * @param \DateTime|string|null $value The new commit date.
+   * @param \DateTime|null $value The new commit date.
    * @return $this This instance.
    */
-  function setTimestamp($value): self {
-    $this->timestamp = is_string($value) ? new \DateTime($value) : $value;
+  function setTimestamp(?\DateTime $value): self {
+    $this->timestamp = $value;
     return $this;
   }
 
   /**
    * Sets the URL to the commit's history.
-   * @param UriInterface|string|null $value The new commit URL.
+   * @param UriInterface|null $value The new commit URL.
    * @return $this This instance.
    */
-  function setUrl($value): self {
-    $this->url = is_string($value) ? new Uri($value) : $value;
+  function setUrl(?UriInterface $value): self {
+    $this->url = $value;
     return $this;
   }
 

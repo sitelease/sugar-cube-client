@@ -211,11 +211,11 @@ class PushEvent implements \JsonSerializable {
 
   /**
    * Sets the URL for comparing the revisions.
-   * @param UriInterface|string|null $value The URL for comparing the revisions.
+   * @param UriInterface|null $value The URL for comparing the revisions.
    * @return $this This instance.
    */
-  function setCompareUrl($value): self {
-    $this->compareUrl = is_string($value) ? new Uri($value) : $value;
+  function setCompareUrl(?UriInterface $value): self {
+    $this->compareUrl = $value;
     return $this;
   }
 

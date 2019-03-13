@@ -393,21 +393,21 @@ class Repository implements \JsonSerializable {
 
   /**
    * Sets the HTTP-based URL for cloning this repository.
-   * @param UriInterface|string|null $value The new URL for cloning this repository.
+   * @param UriInterface|null $value The new URL for cloning this repository.
    * @return $this This instance.
    */
-  function setCloneUrl($value): self {
-    $this->cloneUrl = is_string($value) ? new Uri($value) : $value;
+  function setCloneUrl(?UriInterface $value): self {
+    $this->cloneUrl = $value;
     return $this;
   }
 
   /**
    * Sets the date the repository was created.
-   * @param \DateTime|string|null $value The new date of creation.
+   * @param \DateTime|null $value The new date of creation.
    * @return $this This instance.
    */
-  function setCreatedAt($value): self {
-    $this->createdAt = is_string($value) ? new \DateTime($value) : $value;
+  function setCreatedAt(?\DateTime $value): self {
+    $this->createdAt = $value;
     return $this;
   }
 
@@ -473,11 +473,11 @@ class Repository implements \JsonSerializable {
 
   /**
    * Sets the Gitea URL of this repository.
-   * @param UriInterface|string|null $value The new Gitea URL.
+   * @param UriInterface|null $value The new Gitea URL.
    * @return $this This instance.
    */
-  function setHtmlUrl($value): self {
-    $this->htmlUrl = is_string($value) ? new Uri($value) : $value;
+  function setHtmlUrl(?UriInterface $value): self {
+    $this->htmlUrl = $value;
     return $this;
   }
 
@@ -563,11 +563,11 @@ class Repository implements \JsonSerializable {
 
   /**
    * Sets the SSH-based URL for cloning this repository.
-   * @param UriInterface|string|null $value The new URL for cloning this repository.
+   * @param UriInterface|null $value The new URL for cloning this repository.
    * @return $this This instance.
    */
-  function setSshUrl($value): self {
-    $this->sshUrl = is_string($value) ? new Uri($value) : $value;
+  function setSshUrl(?UriInterface $value): self {
+    $this->sshUrl = $value;
     return $this;
   }
 
@@ -583,11 +583,11 @@ class Repository implements \JsonSerializable {
 
   /**
    * Sets the date the repository was updated.
-   * @param \DateTime|string|null $value The new date of update.
+   * @param \DateTime|null $value The new date of update.
    * @return $this This instance.
    */
-  function setUpdatedAt($value): self {
-    $this->updatedAt = is_string($value) ? new \DateTime($value) : $value;
+  function setUpdatedAt(?\DateTime $value): self {
+    $this->updatedAt = $value;
     return $this;
   }
 
@@ -603,11 +603,11 @@ class Repository implements \JsonSerializable {
 
   /**
    * Sets the URL of the repository website.
-   * @param UriInterface|string|null $value The new repository website.
+   * @param UriInterface|null $value The new repository website.
    * @return $this This instance.
    */
-  function setWebsite($value): self {
-    $this->website = is_string($value) ? new Uri($value) : $value;
+  function setWebsite(?UriInterface $value): self {
+    $this->website = $value;
     return $this;
   }
 }

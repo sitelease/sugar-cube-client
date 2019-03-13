@@ -58,7 +58,7 @@ class TrackedTime implements \JsonSerializable {
    */
   static function fromJson(object $map): self {
     return (new static(isset($map->id) && is_int($map->id) ? $map->id : -1, isset($map->time) && is_int($map->time) ? $map->time : 0))
-      ->setCreatedAt(isset($map->created) && is_string($map->created) ? $map->created : null)
+      ->setCreatedAt(isset($map->created) && is_string($map->created) ? new \DateTime($map->created) : null)
       ->setIssueId(isset($map->issue_id) && is_int($map->issue_id) ? $map->issue_id : -1)
       ->setUserId(isset($map->user_id) && is_int($map->user_id) ? $map->user_id : -1);
   }
@@ -119,11 +119,11 @@ class TrackedTime implements \JsonSerializable {
 
   /**
    * Sets the date the entry was created.
-   * @param \DateTime|string|null $value The new date of creation.
+   * @param \DateTime|null $value The new date of creation.
    * @return $this This instance.
    */
-  function setCreatedAt($value): self {
-    $this->createdAt = is_string($value) ? new \DateTime($value) : $value;
+  function setCreatedAt(?\DateTime $value): self {
+    $this->createdAt = $value;
     return $this;
   }
 

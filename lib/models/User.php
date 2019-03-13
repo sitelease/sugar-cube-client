@@ -66,7 +66,7 @@ class User implements \JsonSerializable {
    */
   static function fromJson(object $map): self {
     return (new static(isset($map->id) && is_int($map->id) ? $map->id : -1, isset($map->login) && is_string($map->login) ? $map->login : ''))
-      ->setAvatarUrl(isset($map->avatar_url) && is_string($map->avatar_url) ? $map->avatar_url : null)
+      ->setAvatarUrl(isset($map->avatar_url) && is_string($map->avatar_url) ? new Uri($map->avatar_url) : null)
       ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
       ->setFullName(isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '')
       ->setLanguage(isset($map->language) && is_string($map->language) ? $map->language : '');
@@ -137,11 +137,11 @@ class User implements \JsonSerializable {
 
   /**
    * Sets the URL of the avatar image.
-   * @param UriInterface|string|null $value The new avatar URL.
+   * @param UriInterface|null $value The new avatar URL.
    * @return $this This instance.
    */
-  function setAvatarUrl($value): self {
-    $this->avatarUrl = is_string($value) ? new Uri($value) : $value;
+  function setAvatarUrl(?UriInterface $value): self {
+    $this->avatarUrl = $value;
     return $this;
   }
 
