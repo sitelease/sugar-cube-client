@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 namespace Gitea;
 
 use Gitea\Models\{PayloadCommit, Repository, User};

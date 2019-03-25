@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 namespace Gitea\Models;
 
 use GuzzleHttp\Psr7\{Uri};
