@@ -9,7 +9,7 @@
     {"email": "cedric@belin.io", "name": "Cédric Belin", "homepage": "https://belin.io"}
   ],
   "autoload": {
-    "psr-4": {"Gitea\\": "lib/"}
+    "psr-4": {"Gitea\\": "src/"}
   },
   "autoload-dev": {
     "files": ["vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"],
