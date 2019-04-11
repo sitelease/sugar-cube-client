@@ -3,8 +3,8 @@ site_description: Gitea client library, in PHP.
 site_author: SAB International - contact@sabcomputer.com
 site_url: https://dev.sabcomputer.com/gitea.php
 
-docs_dir: doc
-site_dir: web
+docs_dir: .
+site_dir: ../web
 
 repo_name: GitHub
 repo_url: https://github.com/sab-international/gitea.php
