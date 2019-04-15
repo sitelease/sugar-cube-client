@@ -8,17 +8,17 @@ final class StatusState {
   use EnumTrait;
 
   /** @var string The status is an error. */
-  const ERROR = 'error';
+  const error = 'error';
 
   /** @var string The status is a failure. */
-  const FAILURE = 'failure';
+  const failure = 'failure';
 
   /** @var string The status is pending. */
-  const PENDING = 'pending';
+  const pending = 'pending';
 
   /** @var string The status is a success. */
-  const SUCCESS = 'success';
+  const success = 'success';
 
   /** @var string The status is a warning. */
-  const WARNING = 'warning';
+  const warning = 'warning';
 }

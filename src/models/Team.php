@@ -14,7 +14,7 @@ class Team implements \JsonSerializable {
   private $name;
 
   /** @var string The team permission. */
-  private $permission = TeamPermission::NONE;
+  private $permission = TeamPermission::none;
 
   /**
    * Creates a new team.
@@ -34,7 +34,7 @@ class Team implements \JsonSerializable {
   static function fromJson(object $map): self {
     return (new static(isset($map->id) && is_int($map->id) ? $map->id : -1, isset($map->name) && is_string($map->name) ? $map->name : ''))
       ->setDescription(isset($map->description) && is_string($map->description) ? $map->description : '')
-      ->setPermission(isset($map->permission) && is_string($map->permission) ? $map->permission : TeamPermission::NONE);
+      ->setPermission(isset($map->permission) && is_string($map->permission) ? $map->permission : TeamPermission::none);
   }
 
   /**
@@ -108,7 +108,7 @@ class Team implements \JsonSerializable {
    * @return $this This instance.
    */
   function setPermission(string $value): self {
-    $this->permission = TeamPermission::coerce($value, TeamPermission::NONE);
+    $this->permission = TeamPermission::coerce($value, TeamPermission::none);
     return $this;
   }
 }
