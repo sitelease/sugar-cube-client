@@ -1,14 +1,10 @@
 <?php declare(strict_types=1);
 namespace Gitea\Models;
 
-/**
- * Wraps the version of the Gitea server.
- */
+/** Wraps the version of the Gitea server. */
 class ServerVersion implements \JsonSerializable {
 
-  /**
-   * @var string The version number.
-   */
+  /** @var string The version number. */
   private $version;
 
   /**

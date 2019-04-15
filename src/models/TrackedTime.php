@@ -1,34 +1,22 @@
 <?php declare(strict_types=1);
 namespace Gitea\Models;
 
-/**
- * Represents the worked time for an issue or pull request.
- */
+/** Represents the worked time for an issue or pull request. */
 class TrackedTime implements \JsonSerializable {
 
-  /**
-   * @var \DateTime|null The date the entry was created.
-   */
+  /** @var \DateTime|null The date the entry was created. */
   private $createdAt;
 
-  /**
-   * @var int The entry identifier.
-   */
+  /** @var int The entry identifier. */
   private $id;
 
-  /**
-   * @var int The identifier of the associated issue or pull request.
-   */
+  /** @var int The identifier of the associated issue or pull request. */
   private $issueId = -1;
 
-  /**
-   * @var int The elapsed time, in seconds.
-   */
+  /** @var int The elapsed time, in seconds. */
   private $time;
 
-  /**
-   * @var int The identifier of the initiating user.
-   */
+  /** @var int The identifier of the initiating user. */
   private $userId = -1;
 
   /**

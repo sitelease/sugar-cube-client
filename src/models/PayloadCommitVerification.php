@@ -1,29 +1,19 @@
 <?php declare(strict_types=1);
 namespace Gitea\Models;
 
-/**
- * Represents the GPG verification of a commit.
- */
+/** Represents the GPG verification of a commit. */
 class PayloadCommitVerification implements \JsonSerializable {
 
-  /**
-   * @var bool Value indicating whether the verification has succeeded.
-   */
+  /** @var bool Value indicating whether the verification has succeeded. */
   private $isVerified;
 
-  /**
-   * @var string A custom message sent with the verification request.
-   */
+  /** @var string A custom message sent with the verification request. */
   private $payload = '';
 
-  /**
-   * @var string A message providing details about the verification.
-   */
+  /** @var string A message providing details about the verification. */
   private $reason = '';
 
-  /**
-   * @var string The signing key used for the verification.
-   */
+  /** @var string The signing key used for the verification. */
   private $signature = '';
 
   /**

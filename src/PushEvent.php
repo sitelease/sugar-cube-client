@@ -5,59 +5,37 @@ use Gitea\Models\{PayloadCommit, Repository, User};
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
-/**
- * Represents a Gitea push event.
- */
+/** Represents a Gitea push event. */
 class PushEvent implements \JsonSerializable {
 
-  /**
-   * @var string The hash of the new Git revision.
-   */
+  /** @var string The hash of the new Git revision. */
   private $after = '';
 
-  /**
-   * @var string The hash of the previous Git revision.
-   */
+  /** @var string The hash of the previous Git revision. */
   private $before = '';
 
-  /**
-   * @var \ArrayObject The revision commits.
-   */
+  /** @var \ArrayObject The revision commits. */
   private $commits;
 
-  /**
-   * @var UriInterface|null The URL for comparing the revisions.
-   */
+  /** @var UriInterface|null The URL for comparing the revisions. */
   private $compareUrl;
 
-  /**
-   * @var User|null The user who pushed the commits.
-   */
+  /** @var User|null The user who pushed the commits. */
   private $pusher;
 
-  /**
-   * @var string The Git reference.
-   */
+  /** @var string The Git reference. */
   private $ref = '';
 
-  /**
-   * @var Repository|null The repository where the commits were pushed.
-   */
+  /** @var Repository|null The repository where the commits were pushed. */
   private $repository;
 
-  /**
-   * @var string The secret used to validate this event.
-   */
+  /** @var string The secret used to validate this event. */
   private $secret = '';
 
-  /**
-   * @var User|null The user who sent this event.
-   */
+  /** @var User|null The user who sent this event. */
   private $sender;
 
-  /**
-   * Creates a new event.
-   */
+  /** Creates a new event. */
   function __construct() {
     $this->commits = new \ArrayObject;
   }

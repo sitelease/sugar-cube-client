@@ -1,24 +1,16 @@
 <?php declare(strict_types=1);
 namespace Gitea\Models;
 
-/**
- * Represents a set of permissions.
- */
+/** Represents a set of permissions. */
 class Permission implements \JsonSerializable {
 
-  /**
-   * @var bool Value indicating whether administrator access is allowed.
-   */
+  /** @var bool Value indicating whether administrator access is allowed. */
   private $admin;
 
-  /**
-   * @var bool Value indicating whether pull is allowed.
-   */
+  /** @var bool Value indicating whether pull is allowed. */
   private $pull;
 
-  /**
-   * @var bool Value indicating whether push is allowed.
-   */
+  /** @var bool Value indicating whether push is allowed. */
   private $push;
 
   /**

@@ -4,39 +4,25 @@ namespace Gitea\Models;
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
-/**
- * Represents a Gitea user.
- */
+/** Represents a Gitea user. */
 class User implements \JsonSerializable {
 
-  /**
-   * @var UriInterface|null The URL to the user's avatar.
-   */
+  /** @var UriInterface|null The URL to the user's avatar. */
   private $avatarUrl;
 
-  /**
-   * @var string The mail address.
-   */
+  /** @var string The mail address. */
   private $email = '';
 
-  /**
-   * @var string The full name.
-   */
+  /** @var string The full name. */
   private $fullName = '';
 
-  /**
-   * @var int The user identifier.
-   */
+  /** @var int The user identifier. */
   private $id;
 
-  /**
-   * @var string The user locale.
-   */
+  /** @var string The user locale. */
   private $language = '';
 
-  /**
-   * @var string The name of the Gitea account.
-   */
+  /** @var string The name of the Gitea account. */
   private $login;
 
   /**

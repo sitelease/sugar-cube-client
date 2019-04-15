@@ -1,24 +1,16 @@
 <?php declare(strict_types=1);
 namespace Gitea\Models;
 
-/**
- * Represents the author or committer of a commit.
- */
+/** Represents the author or committer of a commit. */
 class PayloadUser implements \JsonSerializable {
 
-  /**
-   * @var string The mail address.
-   */
+  /** @var string The mail address. */
   private $email = '';
 
-  /**
-   * @var string The full name.
-   */
+  /** @var string The full name. */
   private $name = '';
 
-  /**
-   * @var string The name of the Gitea account.
-   */
+  /** @var string The name of the Gitea account. */
   private $username;
 
   /**

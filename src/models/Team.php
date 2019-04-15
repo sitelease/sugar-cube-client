@@ -1,29 +1,19 @@
 <?php declare(strict_types=1);
 namespace Gitea\Models;
 
-/**
- * Represents a team in an organization.
- */
+/** Represents a team in an organization. */
 class Team implements \JsonSerializable {
 
-  /**
-   * @var string The team description.
-   */
+  /** @var string The team description. */
   private $description = '';
 
-  /**
-   * @var int The team identifier.
-   */
+  /** @var int The team identifier. */
   private $id;
 
-  /**
-   * @var string The team name.
-   */
+  /** @var string The team name. */
   private $name;
 
-  /**
-   * @var string The team permission.
-   */
+  /** @var string The team permission. */
   private $permission = TeamPermission::NONE;
 
   /**

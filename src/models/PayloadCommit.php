@@ -4,44 +4,28 @@ namespace Gitea\Models;
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
-/**
- * Represents a commit.
- */
+/** Represents a commit. */
 class PayloadCommit implements \JsonSerializable {
 
-  /**
-   * @var PayloadUser|null The person who authored the commit.
-   */
+  /** @var PayloadUser|null The person who authored the commit. */
   private $author;
 
-  /**
-   * @var PayloadUser|null The person who committed the code.
-   */
+  /** @var PayloadUser|null The person who committed the code. */
   private $committer;
 
-  /**
-   * @var string The commit hash.
-   */
+  /** @var string The commit hash. */
   private $id;
 
-  /**
-   * @var string The commit message.
-   */
+  /** @var string The commit message. */
   private $message;
 
-  /**
-   * @var \DateTime|null The commit date.
-   */
+  /** @var \DateTime|null The commit date. */
   private $timestamp;
 
-  /**
-   * @var UriInterface|null The URL to the commit's history.
-   */
+  /** @var UriInterface|null The URL to the commit's history. */
   private $url;
 
-  /**
-   * @var PayloadCommitVerification|null The GPG verification of this commit.
-   */
+  /** @var PayloadCommitVerification|null The GPG verification of this commit. */
   private $verification;
 
   /**

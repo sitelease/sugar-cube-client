@@ -4,124 +4,76 @@ namespace Gitea\Models;
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
-/**
- * Represents a repository.
- */
+/** Represents a repository. */
 class Repository implements \JsonSerializable {
 
-  /**
-   * @var UriInterface|null The HTTP-based URL for cloning this repository.
-   */
+  /** @var UriInterface|null The HTTP-based URL for cloning this repository. */
   private $cloneUrl;
 
-  /**
-   * @var \DateTime|null The date the repository was created.
-   */
+  /** @var \DateTime|null The date the repository was created. */
   private $createdAt;
 
-  /**
-   * @var string The name of the default branch.
-   */
+  /** @var string The name of the default branch. */
   private $defaultBranch = '';
 
-  /**
-   * @var string The repository description.
-   */
+  /** @var string The repository description. */
   private $description = '';
 
-  /**
-   * @var int The number of forks of this repository.
-   */
+  /** @var int The number of forks of this repository. */
   private $forksCount = 0;
 
-  /**
-   * @var string The full name.
-   */
+  /** @var string The full name. */
   private $fullName;
 
-  /**
-   * @var UriInterface|null The Gitea URL of this repository.
-   */
+  /** @var UriInterface|null The Gitea URL of this repository. */
   private $htmlUrl;
 
-  /**
-   * @var int The repository identifier.
-   */
+  /** @var int The repository identifier. */
   private $id;
 
-  /**
-   * @var bool Value indicating whether this repository is empty.
-   */
+  /** @var bool Value indicating whether this repository is empty. */
   private $isEmpty = true;
 
-  /**
-   * @var bool Value indicating whether this repository is a fork.
-   */
+  /** @var bool Value indicating whether this repository is a fork. */
   private $isFork = false;
 
-  /**
-   * @var bool Value indicating whether this repository is a mirror.
-   */
+  /** @var bool Value indicating whether this repository is a mirror. */
   private $isMirror = false;
 
-  /**
-   * @var bool Value indicating whether this repository is private.
-   */
+  /** @var bool Value indicating whether this repository is private. */
   private $isPrivate = false;
 
-  /**
-   * @var string The repository name.
-   */
+  /** @var string The repository name. */
   private $name = '';
 
-  /**
-   * @var int The number of open issues of this repository.
-   */
+  /** @var int The number of open issues of this repository. */
   private $openIssuesCount = 0;
 
-  /**
-   * @var User|null The repository owner.
-   */
+  /** @var User|null The repository owner. */
   private $owner;
 
-  /**
-   * @var Repository|null The parent repository, if this repository is a fork or a mirror.
-   */
+  /** @var Repository|null The parent repository, if this repository is a fork or a mirror. */
   private $parent;
 
-  /**
-   * @var Permission|null The repository permissions.
-   */
+  /** @var Permission|null The repository permissions. */
   private $permissions;
 
-  /**
-   * @var int The repository size, in kilobytes.
-   */
+  /** @var int The repository size, in kilobytes. */
   private $size = 0;
 
-  /**
-   * @var UriInterface|null The SSH-based URL for cloning this repository.
-   */
+  /** @var UriInterface|null The SSH-based URL for cloning this repository. */
   private $sshUrl;
 
-  /**
-   * @var int The number of stars of this repository.
-   */
+  /** @var int The number of stars of this repository. */
   private $starsCount = 0;
 
-  /**
-   * @var \DateTime|null The date the repository was updated.
-   */
+  /** @var \DateTime|null The date the repository was updated. */
   private $updatedAt;
 
-  /**
-   * @var int The number of watchers of this repository.
-   */
+  /** @var int The number of watchers of this repository. */
   private $watchersCount = 0;
 
-  /**
-   * @var UriInterface|null The URL of the repository website.
-   */
+  /** @var UriInterface|null The URL of the repository website. */
   private $website;
 
   /**
