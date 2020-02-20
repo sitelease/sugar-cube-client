@@ -6,7 +6,7 @@ use GuzzleHttp\Exception\ServerException;
 
 use Gitea\Client;
 use Gitea\Collections\ApiItemCollection;
-use Gitea\Models\Repository;
+use Gitea\Model\Repository;
 
 use Gitea\Api\Abstracts\AbstractAllApi;
 

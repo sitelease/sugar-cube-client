@@ -5,7 +5,7 @@ namespace Gitea\Api;
 use GuzzleHttp\Psr7\Response;
 
 use Gitea\Client;
-use Gitea\Models\Organization;
+use Gitea\Model\Organization;
 
 use Gitea\Api\Abstracts\AbstractApi;
 
