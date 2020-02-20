@@ -1,6 +1,6 @@
 <?php
 
-namespace Gitea\Collections;
+namespace Gitea\Collections\Interfaces;
 
 use Gitea\Api\AbstractApi;
 

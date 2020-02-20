@@ -2,7 +2,7 @@
 
 namespace Gitea\Collections;
 
-use Gitea\Collections\ApiCollectionInterface;
+use Gitea\Collections\Interfaces\ApiCollectionInterface;
 
 use \Countable;
 use \IteratorAggregate;
