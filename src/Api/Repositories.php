@@ -2,57 +2,29 @@
 
 namespace Gitea\Api;
 
+use GuzzleHttp\Exception\ServerException;
+
 use Gitea\Client;
 use Gitea\Collections\ApiItemCollection;
 use Gitea\Models\Repository;
 
-use Gitea\Api\AbstractApi;
+use Gitea\Api\Abstracts\AbstractAllApi;
 
-class Repositories extends AbstractApi
+class Repositories extends AbstractAllApi
 {
-
     /**
-     * The maximum number of pages to process when
-     * retrieving all repositories
-     *
-     * NOTE: Each page will contain the number of items
-     * set in the $maxPageCount property (50 by default).
-     * So you can get the number of records that this will equate to
-     * by multiplying this number by the $maxPageCount
-     *
-     * @var integer
-     */
-    private $maxPageCount = 25;
-
-    /**
-     * The number of items per page
-     *
-     * @var integer
-     */
-    private $itemsPerPage = 50;
-
-    /**
-     * Return a collection of all the repositories
+     * Get a page of items from the API route
+     * that will provide all items
      *
      * @author Benjamin Blake (sitelease.ca)
      *
+     * @param integer $page The page of items to return
+     * @param integer $limit Maximum number of items per page
+     * @param array $extraOptions An array of extra options to pass the API reoute
      * @return ApiItemCollection
      */
-    public function all()
-    {
-        $allItems = array();
-        $maxPageCount = $this->getMaxPageCount();
-        // Loop over pages until the $maxPageCount is reached
-        for ($pageNum=1; $pageNum < $maxPageCount; $pageNum++) {
-            $searchItemsCollection = $this->search("", $pageNum);
-            if ($searchItemsCollection && $searchItemsCollection->count() > 0) {
-                $searchItemsArray = $searchItemsCollection->toArray();
-                $allItems = array_merge($allItems, $searchItemsArray);
-            } else {
-                break;
-            }
-        }
-        return new ApiItemCollection($allItems);
+    public function getPageOfAllItems(int $page = 1, int $limit = null, array $extraOptions = array()) {
+        return $this->search("", $page, $limit, $extraOptions);
     }
 
     /**
@@ -67,8 +39,6 @@ class Repositories extends AbstractApi
      * @param integer $page The page of items to return
      * @param integer $limit Maximum number of items per page
      * @param array $extraOptions An array of extra options to pass the API reoute
-     * @return void
-     *
      * @return ApiItemCollection
      */
     public function search(string $keyword = "", int $page = 1, int $limit = null, array $extraOptions = array())
@@ -102,14 +72,6 @@ class Repositories extends AbstractApi
         } catch (ServerException $serverError) {
             return $repositoryCollection;
         }
-    }
-
-    public function getMaxPageCount() {
-        return $this->maxPageCount;
-    }
-
-    public function getItemsPerPage() {
-        return $this->itemsPerPage;
     }
 
 }

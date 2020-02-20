@@ -1,15 +1,17 @@
 <?php
 
-namespace Gitea\Api;
+namespace Gitea\Api\Abstracts;
 
 use Gitea\Client;
+
+use Gitea\Api\Interfaces\ApiInterface;
 
 /**
  * Abstract class for Api classes
  *
  * @author Benjamin Blake (sitelease.ca)
  */
-abstract class AbstractApi
+abstract class AbstractApi implements ApiInterface
 {
     /**
      * The client
@@ -168,27 +170,12 @@ abstract class AbstractApi
     }
 
     /**
-     * Performs a GET query and returns the response as a PSR-7 response object.
-     *
-     * @param string $path
-     * @param array $parameters
-     * @param array $requestHeaders
-     * @return ResponseInterface
-     */
-    protected function getAsResponse($path, array $parameters = array(), $requestHeaders = array())
-    {
-        $path = $this->preparePath($path, $parameters);
-
-        return $this->client->getHttpClient()->get($path, $requestHeaders);
-    }
-
-    /**
      * @param string $path
      * @param array $parameters
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function get($path, array $parameters = array(), $requestHeaders = array(), $debugRequest = false)
+    public function get($path, array $parameters = array(), $requestHeaders = array(), $debugRequest = false)
     {
       $client = $this->getClient();
       $guzzleClient = $client->getGuzzleClient();
@@ -221,7 +208,7 @@ abstract class AbstractApi
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function post($path, $body, $requestHeaders = array(), $debugRequest = false)
+    public function post($path, $body, $requestHeaders = array(), $debugRequest = false)
     {
       $client = $this->getClient();
       $guzzleClient = $client->getGuzzleClient();
@@ -259,7 +246,7 @@ abstract class AbstractApi
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function put($path, $body, $requestHeaders = array(), $debugRequest = false)
+    public function put($path, $body, $requestHeaders = array(), $debugRequest = false)
     {
       $client = $this->getClient();
       $guzzleClient = $client->getGuzzleClient();
@@ -296,7 +283,7 @@ abstract class AbstractApi
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function delete($path, $requestHeaders = array(), $debugRequest = false)
+    public function delete($path, $requestHeaders = array(), $debugRequest = false)
     {
       $client = $this->getClient();
       $guzzleClient = $client->getGuzzleClient();

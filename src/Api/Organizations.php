@@ -7,7 +7,7 @@ use GuzzleHttp\Psr7\Response;
 use Gitea\Client;
 use Gitea\Models\Organization;
 
-use Gitea\Api\AbstractApi;
+use Gitea\Api\Abstracts\AbstractApi;
 
 class Organizations extends AbstractApi
 {
