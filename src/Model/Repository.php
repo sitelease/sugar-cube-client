@@ -81,7 +81,7 @@ class Repository implements \JsonSerializable {
    * @param int $id The repository identifier.
    * @param string $fullName The full name of the repository.
    */
-  function __construct(int $id, string $fullName) {
+  function __construct(int $id, string $fullName, object $giteaClient = null) {
     $this->id = $id;
     $this->setFullName($fullName);
   }
@@ -551,5 +551,39 @@ class Repository implements \JsonSerializable {
   function setWebsite(?UriInterface $value): self {
     $this->website = $value;
     return $this;
+  }
+
+  /**
+   * Undocumented function
+   *
+   * Call:
+   * $giteaClient->projects->fetchall
+   *
+   * @author Benjamin Blake (sitelease.ca)
+   *
+   * @param Type $var
+   * @return void
+   */
+  public static function getAll(Type $var = null)
+  {
+
+  }
+
+  /**
+   * Undocumented function
+   *
+   * Example:
+   * ```
+   * $giteaClient->repositories->fetchall();
+   * ```
+   *
+   * @author Benjamin Blake (sitelease.ca)
+   *
+   * @param Type $var
+   * @return void
+   */
+  public function get(Type $var = null)
+  {
+
   }
 }

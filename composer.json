@@ -31,7 +31,7 @@
     "ext-curl": "*",
     "ext-json": "*",
     "cedx/enum": "^7.4.0",
-    "guzzlehttp/guzzle": "^6.3.3"
+    "guzzlehttp/guzzle": "~6.0"
   },
   "require-dev": {
     "cedx/coveralls": "^10.1.0",
