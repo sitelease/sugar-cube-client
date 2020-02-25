@@ -2,7 +2,7 @@
 
 namespace Gitea\Collections\Interfaces;
 
-use Gitea\Api\AbstractApi;
+use Gitea\Api\AbstractApiRequester;
 
 interface ApiCollectionInterface
 {
@@ -20,7 +20,7 @@ interface ApiCollectionInterface
      *
      * @author Benjamin Blake (sitelease.ca)
      *
-     * @param AbstractApi $apiObject
+     * @param AbstractApiRequester $apiObject
      * @param string $key
      */
     public function addItem($apiObject, $key = null);
