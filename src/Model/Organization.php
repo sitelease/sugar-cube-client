@@ -5,10 +5,12 @@ namespace Gitea\Model;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
-use \JsonSerializable;
+use \InvalidArgumentException;
+
+use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea organization. */
-class Organization implements JsonSerializable {
+class Organization extends AbstractApiModel {
 
     /** @var UriInterface|null A URL pointing to the organization's avatar. */
     private $avatarURL = '';
@@ -36,12 +38,31 @@ class Organization implements JsonSerializable {
 
     /**
      * Creates a new organization.
+     * @param object $giteaClient The Gitea client that originally made the request for this object's data
+     * @param object $apiRequester The Api requester that created this object
      * @param string $username The organization name.
      * @param string $visibility The organization visibility.
      */
-    function __construct(string $username, string $visibility = "private") {
-        $this->setUserName($username);
-        $this->setVisibility($visibility);
+    function __construct(object $giteaClient, object $apiRequester, ...$args) {
+        $this->setGiteaClient($giteaClient);
+        $this->setApiRequester($apiRequester);
+        if (count($args) >= 2) {
+            $username = $args[0];
+            $visibility = $args[1];
+            if (!is_string($username)) {
+                $argumentType = gettype($username);
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 3rd parameter to be of the string type, but a \"$argumentType\" was passed in");
+            }
+            if (!is_string($visibility)) {
+                $argumentType = gettype($visibility);
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 4th parameter to be of the string type, but a \"$argumentType\" was passed in");
+            }
+            $this->setUserName($username);
+            $this->setVisibility($visibility);
+        } else {
+            $numArgs = func_num_args();
+            throw new InvalidArgumentException("The \"__construct()\" function requires 4 parameters but only $numArgs were passed in");
+        }
     }
 
     /**
@@ -49,13 +70,20 @@ class Organization implements JsonSerializable {
      * @param object $map A JSON map representing an organization.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $map): self {
-        return (new static(isset($map->username) && is_string($map->username) ? $map->username : '', isset($map->visibility) && is_string($map->visibility) ? $map->visibility : 'private'))
-            ->setAvatarURL(isset($map->avatar_url) && is_string($map->avatar_url) ? new Uri($map->avatar_url) : null)
-            ->setDescription(isset($map->description) && is_string($map->description) ? $map->description : '')
-            ->setFullName(isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '')
-            ->setLocation(isset($map->location) && is_string($map->location) ? $map->location : '')
-            ->setWebsite(isset($map->website) && is_string($map->website) ? new Uri($map->website) : null);
+    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+        return (
+            new static(
+                $giteaClient,
+                $apiRequester,
+                isset($map->username) && is_string($map->username) ? $map->username : '',
+                isset($map->visibility) && is_string($map->visibility) ? $map->visibility : 'private'
+            )
+        )
+        ->setAvatarURL(isset($map->avatar_url) && is_string($map->avatar_url) ? new Uri($map->avatar_url) : null)
+        ->setDescription(isset($map->description) && is_string($map->description) ? $map->description : '')
+        ->setFullName(isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '')
+        ->setLocation(isset($map->location) && is_string($map->location) ? $map->location : '')
+        ->setWebsite(isset($map->website) && is_string($map->website) ? new Uri($map->website) : null);
     }
 
     /**
