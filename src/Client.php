@@ -9,8 +9,10 @@ use Gitea\Models\Repository;
 use Gitea\Models\Tag;
 use Gitea\Models\Branch;
 
-use Gitea\Api\Repositories;
 use Gitea\Api\Organizations;
+use Gitea\Api\Repositories;
+use Gitea\Api\Branches;
+use Gitea\Api\Tags;
 
 use \JsonSerializable;
 
@@ -130,6 +132,30 @@ class Client {
     public function repositories()
     {
         return new Repositories($this, $this->getAuthToken());
+    }
+
+    /**
+     * Return the Branches api object
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @return Branches
+     */
+    public function branches()
+    {
+        return new Branches($this, $this->getAuthToken());
+    }
+
+    /**
+     * Return the Tags api object
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @return Tags
+     */
+    public function tags()
+    {
+        return new Tags($this, $this->getAuthToken());
     }
 
     /**
