@@ -8,9 +8,9 @@ use Gitea\Client;
 use Gitea\Collections\ApiItemCollection;
 use Gitea\Model\Repository;
 
-use Gitea\Api\Abstracts\AbstractAllApi;
+use Gitea\Api\Abstracts\AbstractAllApiRequester;
 
-class Repositories extends AbstractAllApi
+class Repositories extends AbstractAllApiRequester
 {
     /**
      * Get a page of items from the API route
@@ -62,7 +62,11 @@ class Repositories extends AbstractAllApi
                 if ($jsonOk && count($jsonItemList) > 0) {
                     foreach ($jsonItemList as $jsonItem) {
                         $encodedItem = json_encode($jsonItem);
-                        $itemObject = Repository::fromJson(json_decode($encodedItem));
+                        $itemObject = Repository::fromJson(
+                            $this->getClient(),
+                            $this,
+                            json_decode($encodedItem)
+                        );
                         $repositoryCollection->addItem($itemObject, $itemObject->getId());
                     }
                 }
@@ -71,6 +75,102 @@ class Repositories extends AbstractAllApi
 
         } catch (ServerException $serverError) {
             return $repositoryCollection;
+        }
+    }
+
+    /**
+     * Get a repository using its name and owner
+     *
+     * Example:
+     * ```
+     * $giteaClient->repositories()->getByName($owner, $repoName);
+     * ```
+     *
+     * @param string $owner The owner of the repository
+     * @param string $repoName The name of the repository
+     * @return Repository
+     */
+    public function getByName(string $owner, string $repoName)
+    {
+        $client = $this->getClient();
+        try {
+            $response = $this->get("repos/$owner/$repoName");
+            $statusCode = $response->getStatusCode();
+            $body = (string) $response->getBody();
+            if ($statusCode == 200) {
+                return Repository::fromJson(
+                    $this->getClient(),
+                    $this,
+                    json_decode($body)
+                );
+            }
+            return false;
+
+        } catch (ServerException $serverError) {
+            return false;
+        }
+    }
+
+    /**
+     * Get the raw contents of a file stored inside a repository
+     * using the repository's name and owner
+     *
+     * Example:
+     * ```
+     * $giteaClient->repositories()->getRawFile($owner, $repoName, "README.md");
+     * ```
+     *
+     * @param string $owner The owner of the repository
+     * @param string $repoName The name of the repository
+     * @param string $filepath The path to the raw file (relative to the repository root)
+     * @return string
+     */
+    public function getRawFile(string $owner, string $repoName, string $filepath)
+    {
+        $client = $this->getClient();
+        try {
+            $response = $this->get("repos/$owner/$repoName/raw/$filepath");
+            $statusCode = $response->getStatusCode();
+            $body = (string) $response->getBody();
+            if ($statusCode == 200) {
+                return $body;
+            }
+            return false;
+
+        } catch (ServerException $serverError) {
+            return false;
+        }
+    }
+
+    /**
+     * Download an archive for a branch, tag, or commit SHA
+     *
+     * Example:
+     * ```
+     * $giteaClient->repositories()->downloadArchive($owner, $repoName, "master", ".zip");
+     * ```
+     *
+     * @param string $owner The owner of the repository
+     * @param string $repoName The name of the repository
+     * @param string $gitRef The branch, tag, or commit SHA for the archive
+     * @param string $format The format of the downloaded archive (".zip", or ".tar.gz")
+     * @return string A string that can be written to a file
+     */
+    public function downloadArchive(string $owner, string $repoName, string $gitRef, string $format = ".tar.gz")
+    {
+        $client = $this->getClient();
+        $filepath = $gitRef.$format;
+        try {
+            $response = $this->get("repos/$owner/$repoName/archive/$filepath");
+            $statusCode = $response->getStatusCode();
+            $body = (string) $response->getBody();
+            if ($statusCode == 200) {
+                return $body;
+            }
+            return false;
+
+        } catch (ServerException $serverError) {
+            return false;
         }
     }
 
