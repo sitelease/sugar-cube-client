@@ -9,7 +9,7 @@ use Gitea\Client;
  *
  * @author Benjamin Blake (sitelease.ca)
  */
-interface ApiInterface
+interface ApiRequesterInterface
 {
     /**
      * @param Client $client

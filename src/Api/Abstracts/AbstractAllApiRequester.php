@@ -8,10 +8,10 @@ use Gitea\Client;
 use Gitea\Collections\ApiItemCollection;
 use Gitea\Models\Repository;
 
-use Gitea\Api\Abstracts\AbstractApi;
-use Gitea\Api\Interfaces\AllApiInterface;
+use Gitea\Api\Abstracts\AbstractApiRequester;
+use Gitea\Api\Interfaces\AllRequesterInterface;
 
-abstract class AbstractAllApi extends AbstractApi implements AllApiInterface
+abstract class AbstractAllApiRequester extends AbstractApiRequester implements AllRequesterInterface
 {
     /**
      * The maximum number of pages to process when

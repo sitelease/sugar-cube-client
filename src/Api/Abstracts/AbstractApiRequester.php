@@ -4,14 +4,14 @@ namespace Gitea\Api\Abstracts;
 
 use Gitea\Client;
 
-use Gitea\Api\Interfaces\ApiInterface;
+use Gitea\Api\Interfaces\ApiRequesterInterface;
 
 /**
  * Abstract class for Api classes
  *
  * @author Benjamin Blake (sitelease.ca)
  */
-abstract class AbstractApi implements ApiInterface
+abstract class AbstractApiRequester implements ApiRequesterInterface
 {
     /**
      * The client

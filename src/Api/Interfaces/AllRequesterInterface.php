@@ -9,7 +9,7 @@ use Gitea\Client;
  *
  * @author Benjamin Blake (sitelease.ca)
  */
-interface AllApiInterface
+interface AllRequesterInterface
 {
     /**
      * The maximum number of pages to process when
