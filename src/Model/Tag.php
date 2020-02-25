@@ -1,0 +1,157 @@
+<?php
+
+namespace Gitea\Model;
+
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
+
+use \InvalidArgumentException;
+
+use Gitea\Model\Abstracts\AbstractApiModel;
+
+/** Represents a Gitea tag. */
+class Tag extends AbstractApiModel {
+
+    /** @var int The tag identifier. */
+    private $id = -1;
+
+    /** @var string The tag's name. */
+    private $name = '';
+
+    /** @var string The tarball URL for the tag */
+    private $tarballURL;
+
+    /** @var string The zipball URL for the tag */
+    private $zipballURL;
+
+    /** @var int The commit information for the tag */
+    private $commit = [
+        "sha" => "",
+        "url" => null,
+    ];
+
+    /**
+     * Creates a new tag
+     * @param object $giteaClient The Gitea client that originally made the request for this object's data
+     * @param object $apiRequester The Api requester that created this object
+     * @param int $id The tag identifier
+     * @param string $name The tag name
+     */
+    function __construct(object $giteaClient, object $apiRequester, ...$args) {
+        $this->setGiteaClient($giteaClient);
+        $this->setApiRequester($apiRequester);
+        if (count($args) >= 2) {
+            $id = $args[0];
+            $name = $args[1];
+            if (!is_int($id)) {
+                $argumentType = gettype($id);
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 3rd parameter to be of the integer type, but a \"$argumentType\" was passed in");
+            }
+            if (!is_string($name)) {
+                $argumentType = gettype($name);
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 4th parameter to be of the string type, but a \"$argumentType\" was passed in");
+            }
+            $this->id = $id;
+            $this->setName($name);
+        } else {
+            $numArgs = func_num_args();
+            throw new InvalidArgumentException("The \"__construct()\" function requires 4 parameters but only $numArgs were passed in");
+        }
+    }
+
+    /**
+     * Creates a new tag from the specified JSON map.
+     * @param object $giteaClient The Gitea client that originally made the request for this object's data
+     * @param object $apiRequester The Api requester that created this object
+     * @param object $map A JSON map representing an tag.
+     * @return static The instance corresponding to the specified JSON map.
+     */
+    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+        $newTag = new static(
+            $giteaClient,
+            $apiRequester,
+            isset($map->id) && is_int($map->id) ? $map->id : -1,
+            isset($map->name) && is_string($map->name) ? $map->name : ''
+        );
+        $newTag->setTarballURL(isset($map->tarball_url) && is_string($map->tarball_url) ? new Uri($map->tarball_url) : null);
+        $newTag->setZipballURL(isset($map->zipball_url) && is_string($map->zipball_url) ? new Uri($map->zipball_url) : null);
+        if (isset($map->commit)) {
+            $newTag->setCommitSha(isset($map->commit->sha) && is_string($map->commit->sha) ? $map->commit->sha : "");
+            $newTag->setCommitUrl(isset($map->commit->url) && is_string($map->commit->url) ? new Uri($map->commit->url) : null);
+        }
+        return $newTag;
+    }
+
+    /**
+     * Converts this object to a map in JSON format.
+     * @return \stdClass The map in JSON format corresponding to this object.
+     */
+    function jsonSerialize(): \stdClass {
+        return (object) [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'tarball_url' => ($url = $this->getTarballURL()) ? (string) $url : null,
+            'zipball_url' => ($url = $this->getZipballURL()) ? (string) $url : null,
+            'commit' => [
+                "sha" => $this->getCommitSha(),
+                "url" => ($url = $this->getCommitUrl()) ? (string) $url : null
+            ],
+        ];
+    }
+
+    /**
+     * Gets the tag identifier.
+     * @return int The tag identifier.
+     */
+    function getId(): int {
+        return $this->id;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function setName($name): self {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getTarballURL(): ?UriInterface {
+        return $this->tarballURL;
+    }
+
+    public function setTarballURL(?UriInterface $url): self {
+        $this->tarballURL = $url;
+        return $this;
+    }
+
+    public function getZipballURL(): ?UriInterface {
+        return $this->zipballURL;
+    }
+
+    public function setZipballURL(?UriInterface $url): self {
+        $this->zipballURL = $url;
+        return $this;
+    }
+
+    public function getCommitSha(): string {
+        $commit = $this->commit;
+        return $commit["sha"];
+    }
+
+    public function setCommitSha(string $string): self {
+        $this->commit["sha"] = $string;
+        return $this;
+    }
+
+    public function getCommitUrl(): ?uri {
+        $commit = $this->commit;
+        return $commit["url"];
+    }
+
+    public function setCommitUrl(?uri $url): self {
+        $this->commit["url"] = $url;
+        return $this;
+    }
+
+}
