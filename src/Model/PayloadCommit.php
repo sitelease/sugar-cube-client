@@ -1,11 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
 namespace Gitea\Model;
 
-use GuzzleHttp\Psr7\{Uri};
-use Psr\Http\Message\{UriInterface};
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
+
+use Gitea\Model\PayloadUser;
+use Gitea\Model\PayloadCommitVerification;
+
+use \InvalidArgumentException;
+
+use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a commit. */
-class PayloadCommit implements \JsonSerializable {
+class PayloadCommit extends AbstractApiModel {
 
     /** @var PayloadUser|null The person who authored the commit. */
     private $author;
@@ -30,26 +38,54 @@ class PayloadCommit implements \JsonSerializable {
 
     /**
      * Creates a new payload commit.
+     * @param object $giteaClient The Gitea client that originally made the request for this object's data
+     * @param object $apiRequester The Api requester that created this object
      * @param string $id The commit hash.
      * @param string $message The commit message.
      */
-    function __construct(string $id, string $message) {
-        $this->id = $id;
-        $this->setMessage($message);
+    function __construct(object $giteaClient, object $apiRequester, ...$args) {
+        $this->setGiteaClient($giteaClient);
+        $this->setApiRequester($apiRequester);
+        if (count($args) >= 2) {
+            $id = $args[0];
+            $message = $args[1];
+            if (!is_string($id)) {
+                $argumentType = gettype($id);
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 3rd parameter to be of the string type, but a \"$argumentType\" was passed in");
+            }
+            if (!is_string($message)) {
+                $argumentType = gettype($message);
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 4th parameter to be of the string type, but a \"$argumentType\" was passed in");
+            }
+            $this->id = $id;
+            $this->setMessage($message);
+        } else {
+            $numArgs = func_num_args();
+            throw new InvalidArgumentException("The \"__construct()\" function requires 4 parameters but only $numArgs were passed in");
+        }
     }
 
     /**
      * Creates a new commit from the specified JSON map.
+     * @param object $giteaClient The Gitea client that originally made the request for this object's data
+     * @param object $apiRequester The Api requester that created this object
      * @param object $map A JSON map representing a commit.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $map): self {
-        return (new static(isset($map->id) && is_string($map->id) ? $map->id : '', isset($map->message) && is_string($map->message) ? $map->message : ''))
-            ->setAuthor(isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($map->author) : null)
-            ->setCommitter(isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($map->committer) : null)
-            ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? new \DateTime($map->timestamp) : null)
-            ->setUrl(isset($map->url) && is_string($map->url) ? new Uri($map->url) : null)
-            ->setVerification(isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($map->verification) : null);
+    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+        return (
+            new static(
+                $giteaClient,
+                $apiRequester,
+                isset($map->id) && is_string($map->id) ? $map->id : '',
+                isset($map->message) && is_string($map->message) ? $map->message : ''
+            )
+        )
+        ->setAuthor(isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($giteaClient, $apiRequester, $map->author) : null)
+        ->setCommitter(isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($giteaClient, $apiRequester, $map->committer) : null)
+        ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? new \DateTime($map->timestamp) : null)
+        ->setUrl(isset($map->url) && is_string($map->url) ? new Uri($map->url) : null)
+        ->setVerification(isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($giteaClient, $apiRequester, $map->verification) : null);
     }
 
     /**

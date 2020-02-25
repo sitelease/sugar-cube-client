@@ -1,8 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
 namespace Gitea\Model;
 
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
+
+use \stdClass;
+use \InvalidArgumentException;
+
+use Gitea\Model\Abstracts\AbstractApiModel;
+
 /** Represents the author or committer of a commit. */
-class PayloadUser implements \JsonSerializable {
+class PayloadUser extends AbstractApiModel {
 
     /** @var string The mail address. */
     private $email = '';
@@ -15,21 +24,43 @@ class PayloadUser implements \JsonSerializable {
 
     /**
      * Creates a new payload user.
+     * @param object $giteaClient The Gitea client that originally made the request for this object's data
+     * @param object $apiRequester The Api requester that created this object
      * @param string $username The name of the Gitea account.
      */
-    function __construct(string $username) {
-        $this->username = $username;
+    function __construct(object $giteaClient, object $apiRequester, ...$args) {
+        $this->setGiteaClient($giteaClient);
+        $this->setApiRequester($apiRequester);
+        if (count($args) >= 1) {
+            $username = $args[0];
+            if (!is_string($username)) {
+                $argumentType = gettype($username);
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 4th parameter to be of the string type, but a \"$argumentType\" was passed in");
+            }
+            $this->username = $username;
+        } else {
+            $numArgs = func_num_args();
+            throw new InvalidArgumentException("The \"__construct()\" function requires 4 parameters but only $numArgs were passed in");
+        }
     }
 
     /**
      * Creates a new user from the specified JSON map.
+     * @param object $giteaClient The Gitea client that originally made the request for this object's data
+     * @param object $apiRequester The Api requester that created this object
      * @param object $map A JSON map representing a user.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $map): self {
-        return (new static(isset($map->username) && is_string($map->username) ? $map->username : ''))
-            ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
-            ->setName(isset($map->name) && is_string($map->name) ? $map->name : '');
+    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+        return (
+            new static(
+                $giteaClient,
+                $apiRequester,
+                isset($map->username) && is_string($map->username) ? $map->username : ''
+            )
+        )
+        ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
+        ->setName(isset($map->name) && is_string($map->name) ? $map->name : '');
     }
 
     /**
@@ -58,7 +89,7 @@ class PayloadUser implements \JsonSerializable {
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
     function jsonSerialize(): \stdClass {
         return (object) [
