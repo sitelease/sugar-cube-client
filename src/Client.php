@@ -56,6 +56,23 @@ class Client {
         $this->guzzleClient = new GuzzleClient(['base_uri' => $giteaURL]);
     }
 
+
+    /**
+     * Create a Gitea Client
+     *
+     * @param string $giteaURL
+     * @param string $authToken
+     *
+     * @return Client
+     */
+    public static function create($giteaURL, $authToken = null)
+    {
+        $client = new self($giteaURL);
+        $client->setAuthToken($authToken);
+
+        return $client;
+    }
+
     public function getGuzzleClient()
     {
         return $this->guzzleClient;
