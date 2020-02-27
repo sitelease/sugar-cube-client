@@ -1,12 +1,13 @@
 {
   "description": "Gitea client library.",
-  "homepage": "https://dev.sabcomputer.com/gitea.php",
+  "homepage": "https://github.com/mooror/gitea.php",
   "license": "MIT",
-  "name": "sab-international/gitea",
+  "name": "sitelease/gitea-php",
   "type": "library",
   "authors": [
     {"email": "contact@sabcomputer.com", "name": "SAB International", "homepage": "http://www.sabcomputer.com"},
-    {"email": "cedric@belin.io", "name": "Cédric Belin", "homepage": "https://belin.io"}
+    {"email": "cedric@belin.io", "name": "Cédric Belin", "homepage": "https://belin.io"},
+    {"email": "ben@sitelease.ca", "name": "Benjamin Blake", "homepage": "https://www.sitelease.ca"}
   ],
   "autoload": {
     "psr-4": {"Gitea\\": "src/"}
@@ -45,7 +46,7 @@
     "test": "robo test"
   },
   "support": {
-    "docs": "https://dev.sabcomputer.com/gitea.php/api",
-    "issues": "https://github.com/sab-international/gitea.php/issues"
+    "docs": "https://github.com/mooror/gitea.php",
+    "issues": "https://github.com/mooror/gitea.php/issues"
   }
 }
