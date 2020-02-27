@@ -5,6 +5,8 @@ namespace Gitea\Model;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
+use Gitea\Client;
+
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea owner. */
@@ -36,14 +38,13 @@ class Owner extends AbstractApiModel {
 
     /**
      * Creates a new owner.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param int $id The owner identifier.
      * @param string $login The name of the Gitea account.
      */
-    function __construct(object $giteaClient, object $apiRequester, ...$args) {
-        $this->setGiteaClient($giteaClient);
-        $this->setApiRequester($apiRequester);
+    public function __construct(Client &$client , ?object $caller, ...$args) {
+        parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $id = $args[0];
             $login = $args[1];
@@ -65,16 +66,16 @@ class Owner extends AbstractApiModel {
 
     /**
      * Creates a new owner from the specified JSON map.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON map representing a owner.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+    static function fromJson(object &$client , ?object $caller, object $map): self {
         return (
             new static(
-                $giteaClient,
-                $apiRequester,
+                $client,
+                $caller,
                 isset($map->id) && is_int($map->id) ? $map->id : -1,
                 isset($map->login) && is_string($map->login) ? $map->login : ''
             )

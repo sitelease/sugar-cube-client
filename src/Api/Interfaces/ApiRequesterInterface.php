@@ -13,12 +13,46 @@ interface ApiRequesterInterface
 {
     /**
      * @param Client $client
+     * @param object|null $caller
      */
-    public function __construct(Client $client, $authToken);
+    public function __construct(Client &$client , ?object $caller);
 
-    public function getClient();
+    /**
+     * Get the gitea client (by reference)
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @return Client
+     */
+    public function getClient(): Client;
 
-    public function getAuthToken();
+    /**
+     * Set the gitea client (by reference)
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     * @param Client $client
+     * @return self
+     */
+    public function setClient(Client &$client): self;
+
+    /**
+     * Get the authentication token
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @return string
+     */
+    public function getAuthToken(): string;
+
+
+    /**
+     * Set the authentication token
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     * @param string $authToken
+     * @return self
+     */
+    public function setAuthToken(string $authToken): self;
 
     /**
      * @return $this

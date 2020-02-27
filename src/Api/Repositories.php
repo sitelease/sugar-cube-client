@@ -32,7 +32,7 @@ class Repositories extends AbstractAllApiRequester
      *
      * Example:
      * ```
-     * $giteaClient->repositories()->search($keyword, $page);
+     * $client->repositories()->search($keyword, $page);
      * ```
      *
      * @param string $keyword Keyword to search by
@@ -63,7 +63,7 @@ class Repositories extends AbstractAllApiRequester
                     foreach ($jsonItemList as $jsonItem) {
                         $encodedItem = json_encode($jsonItem);
                         $itemObject = Repository::fromJson(
-                            $this->getClient(),
+                            $client,
                             $this,
                             json_decode($encodedItem)
                         );
@@ -83,7 +83,7 @@ class Repositories extends AbstractAllApiRequester
      *
      * Example:
      * ```
-     * $giteaClient->repositories()->getByName($owner, $repoName);
+     * $client->repositories()->getByName($owner, $repoName);
      * ```
      *
      * @param string $owner The owner of the repository
@@ -99,7 +99,7 @@ class Repositories extends AbstractAllApiRequester
             $body = (string) $response->getBody();
             if ($statusCode == 200) {
                 return Repository::fromJson(
-                    $this->getClient(),
+                    $client,
                     $this,
                     json_decode($body)
                 );
@@ -117,7 +117,7 @@ class Repositories extends AbstractAllApiRequester
      *
      * Example:
      * ```
-     * $giteaClient->repositories()->getRawFile($owner, $repoName, "README.md");
+     * $client->repositories()->getRawFile($owner, $repoName, "README.md");
      * ```
      *
      * @param string $owner The owner of the repository
@@ -147,7 +147,7 @@ class Repositories extends AbstractAllApiRequester
      *
      * Example:
      * ```
-     * $giteaClient->repositories()->downloadArchive($owner, $repoName, "master", ".zip");
+     * $client->repositories()->downloadArchive($owner, $repoName, "master", ".zip");
      * ```
      *
      * @param string $owner The owner of the repository

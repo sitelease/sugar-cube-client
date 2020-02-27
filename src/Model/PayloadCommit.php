@@ -5,6 +5,7 @@ namespace Gitea\Model;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
+use Gitea\Client;
 use Gitea\Model\PayloadUser;
 use Gitea\Model\PayloadCommitVerification;
 
@@ -38,14 +39,13 @@ class PayloadCommit extends AbstractApiModel {
 
     /**
      * Creates a new payload commit.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param string $id The commit hash.
      * @param string $message The commit message.
      */
-    function __construct(object $giteaClient, object $apiRequester, ...$args) {
-        $this->setGiteaClient($giteaClient);
-        $this->setApiRequester($apiRequester);
+    public function __construct(Client &$client , ?object $caller, ...$args) {
+        parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $id = $args[0];
             $message = $args[1];
@@ -67,25 +67,25 @@ class PayloadCommit extends AbstractApiModel {
 
     /**
      * Creates a new commit from the specified JSON map.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON map representing a commit.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+    static function fromJson(object &$client , ?object $caller, object $map): self {
         return (
             new static(
-                $giteaClient,
-                $apiRequester,
+                $client,
+                $caller,
                 isset($map->id) && is_string($map->id) ? $map->id : '',
                 isset($map->message) && is_string($map->message) ? $map->message : ''
             )
         )
-        ->setAuthor(isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($giteaClient, $apiRequester, $map->author) : null)
-        ->setCommitter(isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($giteaClient, $apiRequester, $map->committer) : null)
+        ->setAuthor(isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($client, null, $map->author) : null)
+        ->setCommitter(isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($client, null, $map->committer) : null)
         ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? new \DateTime($map->timestamp) : null)
         ->setUrl(isset($map->url) && is_string($map->url) ? new Uri($map->url) : null)
-        ->setVerification(isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($giteaClient, $apiRequester, $map->verification) : null);
+        ->setVerification(isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($client, null, $map->verification) : null);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Gitea\Model;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
+use Gitea\Client;
 use Gitea\Model\PayloadCommit;
 
 use \InvalidArgumentException;
@@ -32,13 +33,12 @@ class Branch extends AbstractApiModel {
 
     /**
      * Creates a new branch
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param string $name The branch name
      */
-    function __construct(object $giteaClient, object $apiRequester, ...$args) {
-        $this->setGiteaClient($giteaClient);
-        $this->setApiRequester($apiRequester);
+    public function __construct(Client &$client , ?object $caller, ...$args) {
+        parent::__construct($client, $caller, $args);
         if (count($args) >= 1) {
             $name = $args[0];
             if (!is_string($name)) {
@@ -54,20 +54,20 @@ class Branch extends AbstractApiModel {
 
     /**
      * Creates a new branch from the specified JSON map.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON map representing an branch.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+    static function fromJson(object &$client , ?object $caller, object $map): self {
         return (
             new static(
-                $giteaClient,
-                $apiRequester,
+                $client,
+                $caller,
                 isset($map->name) && is_string($map->name) ? $map->name : ''
             )
         )
-        ->setCommit(isset($map->commit) && is_object($map->commit) ? PayloadCommit::fromJson($giteaClient, $apiRequester, $map->commit) : null)
+        ->setCommit(isset($map->commit) && is_object($map->commit) ? PayloadCommit::fromJson($client, null, $map->commit) : null)
         ->setProtected(isset($map->protected) && is_bool($map->protected) ? $map->protected : true)
         ->setCanUserPush(isset($map->user_can_push) && is_bool($map->user_can_push) ? $map->user_can_push : false)
         ->setUserCanMerge(isset($map->user_can_merge) && is_bool($map->user_can_merge) ? $map->user_can_merge : false);

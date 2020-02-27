@@ -14,10 +14,15 @@ use Gitea\Api\Repositories;
 use Gitea\Api\Branches;
 use Gitea\Api\Tags;
 
-use \JsonSerializable;
+// Traits
+use Gitea\Core\Traits\RequestChainable;
+
+use Gitea\Core\Interfaces\RequestChainableInterface;
 
 /** Represents a Gitea push event. */
-class Client {
+class Client implements RequestChainableInterface
+{
+    use RequestChainable;
 
     /**
      * Stores an instance of Guzzle's Client
@@ -148,7 +153,7 @@ class Client {
      */
     public function repositories()
     {
-        return new Repositories($this, $this->getAuthToken());
+        return new Repositories($this, $this);
     }
 
     /**
@@ -160,7 +165,7 @@ class Client {
      */
     public function branches()
     {
-        return new Branches($this, $this->getAuthToken());
+        return new Branches($this, $this);
     }
 
     /**
@@ -172,7 +177,7 @@ class Client {
      */
     public function tags()
     {
-        return new Tags($this, $this->getAuthToken());
+        return new Tags($this, $this);
     }
 
     /**
@@ -184,7 +189,7 @@ class Client {
      */
     public function organizations()
     {
-        return new Organizations($this, $this->getAuthToken());
+        return new Organizations($this, $this);
     }
 
 }

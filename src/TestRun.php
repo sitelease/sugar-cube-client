@@ -43,7 +43,8 @@ $giteaClient->setAuthToken('32e609ad39539c1d0e8544800bd49b1025ac6b49');
 //     $tags = $repository->tags();
 //     if ($tags && count($tags) > 0) {
 //         foreach ($tags as $tag) {
-//             var_dump(json_encode($tag));
+//             print("Processing ".$tag->getName()."\n");
+//             // var_dump(json_encode($tag));
 //             print("\n\n");
 //         }
 //         print("Total Tags: ".count($tags)."\n");
@@ -52,20 +53,25 @@ $giteaClient->setAuthToken('32e609ad39539c1d0e8544800bd49b1025ac6b49');
 //     print("The repository could not be retrieved"."\n");
 // }
 
-// print("Getting all branches for the 'sl-product-catalog' repository \n\n");
-// $repository = $giteaClient->repositories()->getByName("Sitelease", "sl-theme-recipe");
-// if ($repository) {
-//     $branches = $repository->branches();
-//     if ($branches && count($branches) > 0) {
-//         //foreach ($branches as $branch) {
-//             var_dump($branches->getItem("master"));
-//             print("\n\n");
-//         //}
-//         print("Total Branches: ".count($branches)."\n");
-//     }
-// } else {
-//     print("The repository could not be retrieved"."\n");
-// }
+print("Getting all branches for the 'sl-product-catalog' repository \n\n");
+$repository = $giteaClient->repositories()->getByName("Sitelease", "sl-theme-recipe");
+if ($repository) {
+    $branches = $repository->branches();
+    if ($branches && count($branches) > 0) {
+        foreach ($branches as $branch) {
+            // var_dump(json_encode($branch));
+            print("Processing ".$branch->getName()."\n");
+            $debugChain = $branch->debugRequestChain();
+            if ($debugChain) {
+                print("Chain ".$debugChain."\n");
+            }
+            print("\n\n");
+        }
+        print("Total Branches: ".count($branches)."\n");
+    }
+} else {
+    print("The repository could not be retrieved"."\n");
+}
 
 // print("Getting contents of \"composer.json\" file \n\n");
 // $rawFile = $giteaClient->repositories()->getRawFile("Sitelease", "sl-theme-recipe", "composer.json");
@@ -94,17 +100,17 @@ $giteaClient->setAuthToken('32e609ad39539c1d0e8544800bd49b1025ac6b49');
 //     print("The repository could not be retrieved"."\n");
 // }
 
-print("Getting archive for the 'sl-product-catalog' repository \n\n");
-$repository = $giteaClient->repositories()->getByName("Sitelease", "sl-theme-recipe");
-if ($repository) {
-    $archive = $repository->archive("master");
-    if ($archive) {
-        print("Downloading Archive...\n");
-        file_put_contents("master.tar.gz", $archive);
-        print("Success!\n");
-    }
-} else {
-    print("The archive could not be retrieved"."\n");
-}
+// print("Getting archive for the 'sl-product-catalog' repository \n\n");
+// $repository = $giteaClient->repositories()->getByName("Sitelease", "sl-theme-recipe");
+// if ($repository) {
+//     $archive = $repository->archive("master");
+//     if ($archive) {
+//         print("Downloading Archive...\n");
+//         file_put_contents("master.tar.gz", $archive);
+//         print("Success!\n");
+//     }
+// } else {
+//     print("The archive could not be retrieved"."\n");
+// }
 
 print("Exiting script"."\n");

@@ -18,7 +18,7 @@ class Organizations extends AbstractApiRequester
      *
      * Example:
      * ```
-     * $giteaClient->organizations()->getByUsername($orgUsername);
+     * $client->organizations()->getByUsername($orgUsername);
      * ```
      *
      * @param string $username
@@ -34,7 +34,7 @@ class Organizations extends AbstractApiRequester
             $statusCode = $response->getStatusCode();
             $body = $response->getBody();
             if ($statusCode == 200) {
-                return Organization::fromJson(json_decode($body));
+                return Organization::fromJson($client, $this, json_decode($body));
             } else {
                 return $response;
             }

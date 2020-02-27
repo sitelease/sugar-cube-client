@@ -6,27 +6,40 @@ use Gitea\Client;
 use Gitea\Api\Interfaces\ApiRequesterInterface;
 
 use \stdClass;
-
-use Gitea\Model\Interfaces\ApiModelInterface;
 use \JsonSerializable;
 
-abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable
+// Traits
+use Gitea\Core\Traits\RequestChainable;
+
+use Gitea\Model\Interfaces\ApiModelInterface;
+use Gitea\Core\Interfaces\RequestChainableInterface;
+
+abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, RequestChainableInterface
 {
+
+    use RequestChainable;
+
+    /**
+     * Creates a new API model object
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
+     * @param mixed $args The organization visibility.
+     */
+    public function __construct(Client &$client , ?object $caller, ...$args) {
+        $this->setClient($client);
+        $this->setCaller($caller);
+    }
+
     /**
      * The Gitea client that originally made the
      * Api request for this object
      *
      * @var Client
      */
-    protected $giteaClient;
-
-    /**
-     * The Api request object that created
-     * this model object
-     *
-     * @var ApiRequesterInterface
-     */
-    protected $apiRequester;
+    protected $client;
 
     /**
      * Create a new API model object from a JSON map object
@@ -34,19 +47,19 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable
      * Example:
      * ```
      * ClassName::fromJson(
-     *     $giteaClient,
-     *     $apiRequester,
+     *     $client,
+     *     $this,
      *     json_decode($jsonString)
      * );
      * ```
      *
      * @author Benjamin Blake (sitelease.ca)
      *
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON data object
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map) {
+    static function fromJson(object &$client , ?object $caller, object $map) {
         trigger_error("The abstract 'fromJson()' method must be overwritten");
         return false;
     }
@@ -65,38 +78,25 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable
     }
 
     /**
-     * Get the Gitea client that originally made the
-     * Api request for this object
+     * Get the gitea client (by reference)
      *
      * @author Benjamin Blake (sitelease.ca)
      *
      * @return Client
      */
-    public function getGiteaClient() {
-        return $this->giteaClient;
-    }
-
-    public function setGiteaClient($object): self {
-        $this->giteaClient = $object;
-        return $this;
+    public function getClient(): Client {
+        return $this->client;
     }
 
     /**
-     * Get the Api request object that created
-     * this model object
+     * Set the gitea client (by reference)
      *
      * @author Benjamin Blake (sitelease.ca)
-     *
-     * @return ApiRequesterInterface
+     * @param Client $client
+     * @return self
      */
-    public function getApiRequester() {
-        return $this->apiRequester;
-    }
-
-    public function setApiRequester($object): self {
-        $this->apiRequester = $object;
+    public function setClient(Client &$client): self {
+        $this->client = $client;
         return $this;
     }
-
-
 }

@@ -19,10 +19,10 @@ class Tags extends AbstractApiRequester
      * Example:
      * ```
      * // Get all tags from a repository owned by a user
-     * $giteaClient->tags()->fromRepository("username", "test-repository");
+     * $client->tags()->fromRepository("username", "test-repository");
      *
      * // Get all tags from a repository owned by an organization
-     * $giteaClient->tags()->fromRepository("organizationName", "test-repository");
+     * $client->tags()->fromRepository("organizationName", "test-repository");
      * ```
      *
      * @param string $owner The name of the user or organization that owns the repository
@@ -46,7 +46,7 @@ class Tags extends AbstractApiRequester
                     foreach ($jsonItemList as $jsonItem) {
                         $encodedItem = json_encode($jsonItem);
                         $itemObject = Tag::fromJson(
-                            $this->getClient(),
+                            $client,
                             $this,
                             json_decode($encodedItem)
                         );

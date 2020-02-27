@@ -4,15 +4,21 @@ namespace Gitea\Api\Abstracts;
 
 use Gitea\Client;
 
+// Traits
+use Gitea\Core\Traits\RequestChainable;
+
 use Gitea\Api\Interfaces\ApiRequesterInterface;
+use Gitea\Core\Interfaces\RequestChainableInterface;
 
 /**
  * Abstract class for Api classes
  *
  * @author Benjamin Blake (sitelease.ca)
  */
-abstract class AbstractApiRequester implements ApiRequesterInterface
+abstract class AbstractApiRequester implements ApiRequesterInterface, RequestChainableInterface
 {
+    use RequestChainable;
+
     /**
      * The client
      *
@@ -42,7 +48,7 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      * @var array
      */
     protected $defaultHeaders = [
-      'Accept' => 'application/json'
+        'Accept' => 'application/json'
     ];
 
     /**
@@ -68,7 +74,7 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      * @var array
      */
     protected $postDefaultHeaders = [
-      'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json'
     ];
 
     /**
@@ -78,7 +84,7 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      * @var array
      */
     protected $putDefaultHeaders = [
-      'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json'
     ];
 
     /**
@@ -91,25 +97,66 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
 
     /**
      * @param Client $client
+     * @param object|null $caller
      */
-    public function __construct(Client $client, $authToken)
+    public function __construct(Client &$client , ?object $caller)
     {
-        $this->client = $client;
-        $this->authToken = $authToken;
+        $this->setClient($client);
+        $this->setCaller($caller);
+        $this->setAuthToken($client->getAuthToken());
 
         // Set authorization headers and parameters
+        $authToken = $client->getAuthToken();
         $this->getDefaultParameters["access_token"] = $authToken;
         $this->postDefaultHeaders["Authorization"] = "token $authToken";
         $this->putDefaultHeaders["Authorization"] = "token $authToken";
         $this->deleteDefaultHeaders["Authorization"] = "token $authToken";
     }
 
-    public function getClient() {
-      return $this->client;
+    /**
+     * Get the gitea client (by reference)
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @return Client
+     */
+    public function getClient(): Client {
+        return $this->client;
     }
 
-    public function getAuthToken() {
-      return $this->authToken;
+    /**
+     * Set the gitea client (by reference)
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     * @param Client $client
+     * @return self
+     */
+    public function setClient(Client &$client): self {
+        $this->client = $client;
+        return $this;
+    }
+
+    /**
+     * Set the authentication token
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @return string
+     */
+    public function getAuthToken(): string {
+        return $this->authToken;
+    }
+
+    /**
+     * Set the authentication token
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     * @param string $authToken
+     * @return self
+     */
+    public function setAuthToken(string $authToken): self {
+        $this->authToken = $authToken;
+        return $this;
     }
 
     /**
@@ -124,16 +171,16 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      * @return array
      */
     public function getDefaultParametersForType($type = "all") {
-      if (!$type || $type == "all") {
-        return $this->defaultParameters;
-      } else {
-        $propertyName = $type."DefaultParameters";
-        if (property_exists(__CLASS__, $propertyName) && is_array($this->$propertyName)) {
-          return array_merge($this->defaultParameters, $this->$propertyName);
+        if (!$type || $type == "all") {
+            return $this->defaultParameters;
         } else {
-          return [];
+            $propertyName = $type."DefaultParameters";
+            if (property_exists(__CLASS__, $propertyName) && is_array($this->$propertyName)) {
+                return array_merge($this->defaultParameters, $this->$propertyName);
+            } else {
+                return [];
+            }
         }
-      }
     }
 
     /**
@@ -148,16 +195,16 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      * @return array
      */
     public function getDefaultHeadersForType($type = "all") {
-      if (!$type || $type == "all") {
-        return $this->defaultHeaders;
-      } else {
-        $propertyName = $type."DefaultHeaders";
-        if (property_exists(__CLASS__, $propertyName) && is_array($this->$propertyName)) {
-          return array_merge($this->defaultParameters, $this->$propertyName);
+        if (!$type || $type == "all") {
+            return $this->defaultHeaders;
         } else {
-          return [];
+            $propertyName = $type."DefaultHeaders";
+            if (property_exists(__CLASS__, $propertyName) && is_array($this->$propertyName)) {
+                return array_merge($this->defaultParameters, $this->$propertyName);
+            } else {
+                return [];
+            }
         }
-      }
     }
 
     /**
@@ -177,29 +224,29 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      */
     public function get($path, array $parameters = array(), $requestHeaders = array(), $debugRequest = false)
     {
-      $client = $this->getClient();
-      $guzzleClient = $client->getGuzzleClient();
-      $defaultParameters = $this->getDefaultParametersForType("get");
-      $defaultHeaders = $this->getDefaultParametersForType("get");
+        $client = $this->getClient();
+        $guzzleClient = $client->getGuzzleClient();
+        $defaultParameters = $this->getDefaultParametersForType("get");
+        $defaultHeaders = $this->getDefaultParametersForType("get");
 
-      // Create request options array
-      // and populate it with defaults
-      $requestOptions = [];
-      $requestOptions['query'] = $defaultParameters;
-      $requestOptions['headers'] = $defaultHeaders;
-      if ($debugRequest) {
-        $requestOptions['debug'] = true;
-      }
+        // Create request options array
+        // and populate it with defaults
+        $requestOptions = [];
+        $requestOptions['query'] = $defaultParameters;
+        $requestOptions['headers'] = $defaultHeaders;
+        if ($debugRequest) {
+            $requestOptions['debug'] = true;
+        }
 
-      if ($parameters) {
-        $requestOptions['query'] = array_merge($defaultParameters, $parameters);
-      }
+        if ($parameters) {
+            $requestOptions['query'] = array_merge($defaultParameters, $parameters);
+        }
 
-      if ($requestHeaders) {
-        $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
-      }
+        if ($requestHeaders) {
+            $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
+        }
 
-      return $guzzleClient->request('GET', $path, $requestOptions);
+        return $guzzleClient->request('GET', $path, $requestOptions);
     }
 
     /**
@@ -210,34 +257,34 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      */
     public function post($path, $body, $requestHeaders = array(), $debugRequest = false)
     {
-      $client = $this->getClient();
-      $guzzleClient = $client->getGuzzleClient();
-      $defaultHeaders = $this->getDefaultHeadersForType("post");
+        $client = $this->getClient();
+        $guzzleClient = $client->getGuzzleClient();
+        $defaultHeaders = $this->getDefaultHeadersForType("post");
 
-      // Create request options array
-      // and populate it with defaults
-      $requestOptions = [];
-      $requestOptions['headers'] = $defaultHeaders;
-      $requestOptions['body'] = "{}";
-      if ($debugRequest) {
-        $requestOptions['debug'] = true;
-      }
-
-      if ($body) {
-        if (is_object($body)) {
-          $requestOptions['body'] = json_encode($body);
+        // Create request options array
+        // and populate it with defaults
+        $requestOptions = [];
+        $requestOptions['headers'] = $defaultHeaders;
+        $requestOptions['body'] = "{}";
+        if ($debugRequest) {
+            $requestOptions['debug'] = true;
         }
 
-        if (is_string($body)) {
-          $requestOptions['body'] = $body;
+        if ($body) {
+            if (is_object($body)) {
+                $requestOptions['body'] = json_encode($body);
+            }
+
+            if (is_string($body)) {
+                $requestOptions['body'] = $body;
+            }
         }
-      }
 
-      if ($requestHeaders) {
-        $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
-      }
+        if ($requestHeaders) {
+            $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
+        }
 
-      return $guzzleClient->request('POST', $path, $requestOptions);
+        return $guzzleClient->request('POST', $path, $requestOptions);
     }
 
     /**
@@ -248,34 +295,34 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      */
     public function put($path, $body, $requestHeaders = array(), $debugRequest = false)
     {
-      $client = $this->getClient();
-      $guzzleClient = $client->getGuzzleClient();
-      $defaultHeaders = $this->getDefaultHeadersForType("put");
+        $client = $this->getClient();
+        $guzzleClient = $client->getGuzzleClient();
+        $defaultHeaders = $this->getDefaultHeadersForType("put");
 
-      // Create request options array
-      // and populate it with defaults
-      $requestOptions = [];
-      $requestOptions['headers'] = $defaultHeaders;
-      $requestOptions['body'] = "{}";
-      if ($debugRequest) {
-        $requestOptions['debug'] = true;
-      }
-
-      if ($body) {
-        if (is_object($body)) {
-          $requestOptions['body'] = json_encode($body);
+        // Create request options array
+        // and populate it with defaults
+        $requestOptions = [];
+        $requestOptions['headers'] = $defaultHeaders;
+        $requestOptions['body'] = "{}";
+        if ($debugRequest) {
+            $requestOptions['debug'] = true;
         }
 
-        if (is_string($body)) {
-          $requestOptions['body'] = $body;
+        if ($body) {
+            if (is_object($body)) {
+                $requestOptions['body'] = json_encode($body);
+            }
+
+            if (is_string($body)) {
+                $requestOptions['body'] = $body;
+            }
         }
-      }
 
-      if ($requestHeaders) {
-        $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
-      }
+        if ($requestHeaders) {
+            $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
+        }
 
-      return $guzzleClient->request('PUT', $path, $requestOptions);
+        return $guzzleClient->request('PUT', $path, $requestOptions);
     }
 
     /**
@@ -285,22 +332,22 @@ abstract class AbstractApiRequester implements ApiRequesterInterface
      */
     public function delete($path, $requestHeaders = array(), $debugRequest = false)
     {
-      $client = $this->getClient();
-      $guzzleClient = $client->getGuzzleClient();
-      $defaultHeaders = $this->getDefaultHeadersForType("delete");
+        $client = $this->getClient();
+        $guzzleClient = $client->getGuzzleClient();
+        $defaultHeaders = $this->getDefaultHeadersForType("delete");
 
-      // Create request options array
-      // and populate it with defaults
-      $requestOptions = [];
-      $requestOptions['headers'] = $defaultHeaders;
-      if ($debugRequest) {
-        $requestOptions['debug'] = true;
-      }
+        // Create request options array
+        // and populate it with defaults
+        $requestOptions = [];
+        $requestOptions['headers'] = $defaultHeaders;
+        if ($debugRequest) {
+            $requestOptions['debug'] = true;
+        }
 
-      if ($requestHeaders) {
-        $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
-      }
+        if ($requestHeaders) {
+            $requestOptions['headers'] = array_merge($defaultHeaders, $requestHeaders);
+        }
 
-      return $guzzleClient->request('DELETE', $path, $requestOptions);
+        return $guzzleClient->request('DELETE', $path, $requestOptions);
     }
 }

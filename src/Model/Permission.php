@@ -5,6 +5,8 @@ namespace Gitea\Model;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
+use Gitea\Client;
+
 use \InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
@@ -23,15 +25,14 @@ class Permission extends AbstractApiModel {
 
     /**
      * Creates a new permission.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param bool $admin Value indicating whether administrator access is allowed.
      * @param bool $pull Value indicating whether pull is allowed.
      * @param bool $push Value indicating whether push is allowed.
      */
-    function __construct(object $giteaClient, object $apiRequester, ...$args) {
-        $this->setGiteaClient($giteaClient);
-        $this->setApiRequester($apiRequester);
+    public function __construct(Client &$client , ?object $caller, ...$args) {
+        parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $admin = $args[0];
             $pull = $args[1];
@@ -57,15 +58,15 @@ class Permission extends AbstractApiModel {
 
     /**
      * Creates a new user from the specified JSON map.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON map representing a user.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+    static function fromJson(object &$client , ?object $caller, object $map): self {
         return new static(
-            $giteaClient,
-            $apiRequester,
+            $client,
+            $caller,
             isset($map->admin) && is_bool($map->admin) ? $map->admin : false,
             isset($map->pull) && is_bool($map->pull) ? $map->pull : false,
             isset($map->push) && is_bool($map->push) ? $map->push : false

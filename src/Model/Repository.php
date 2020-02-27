@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
+
 namespace Gitea\Model;
 
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
+use Gitea\Client;
 use Gitea\Collections\ApiItemCollection;
 use Gitea\Model\Owner;
 use Gitea\Api\Repositories;
@@ -88,14 +90,13 @@ class Repository extends AbstractApiModel {
 
     /**
      * Creates a new repository.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param int $id The repository identifier.
      * @param string $fullName The full name of the repository.
      */
-    function __construct(object $giteaClient, object $apiRequester, ...$args) {
-        $this->setGiteaClient($giteaClient);
-        $this->setApiRequester($apiRequester);
+    public function __construct(Client &$client , ?object $caller, ...$args) {
+        parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $id = $args[0];
             $fullName = $args[1];
@@ -117,14 +118,16 @@ class Repository extends AbstractApiModel {
 
     /**
      * Creates a new repository from the specified JSON map.
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON map representing a repository.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+    static function fromJson(object &$client , ?object $caller, object $map): self {
         return (
             new static(
-                $giteaClient,
-                $apiRequester,
+                $client,
+                $caller,
                 isset($map->id) && is_int($map->id) ? $map->id : -1,
                 isset($map->full_name) && is_string($map->full_name) ? $map->full_name : ''
             )
@@ -140,9 +143,9 @@ class Repository extends AbstractApiModel {
         ->setMirror(isset($map->mirror) && is_bool($map->mirror) ? $map->mirror : false)
         ->setName(isset($map->name) && is_string($map->name) ? $map->name : '')
         ->setOpenIssuesCount(isset($map->open_issues_count) && is_int($map->open_issues_count) ? $map->open_issues_count : 0)
-        ->setOwner(isset($map->owner) && is_object($map->owner) ? Owner::fromJson($giteaClient, $apiRequester, $map->owner) : null)
-        ->setParent(isset($map->parent) && is_object($map->parent) ? Repository::fromJson($giteaClient, $apiRequester, $map->parent) : null)
-        ->setPermissions(isset($map->permissions) && is_object($map->permissions) ? Permission::fromJson($giteaClient, $apiRequester, $map->permissions) : null)
+        ->setOwner(isset($map->owner) && is_object($map->owner) ? Owner::fromJson($client, null, $map->owner) : null)
+        ->setParent(isset($map->parent) && is_object($map->parent) ? Repository::fromJson($client, null, $map->parent) : null)
+        ->setPermissions(isset($map->permissions) && is_object($map->permissions) ? Permission::fromJson($client, null, $map->permissions) : null)
         ->setPrivate(isset($map->private) && is_bool($map->private) ? $map->private : false)
         ->setSize(isset($map->size) && is_int($map->size) ? $map->size : 0)
         ->setSshUrl(isset($map->ssh_url) && is_string($map->ssh_url) ? new Uri($map->ssh_url) : null)
@@ -602,8 +605,8 @@ class Repository extends AbstractApiModel {
     {
         $owner = $this->getOwner();
         if ($owner) {
-            $client = $this->getGiteaClient();
-            $repositoriesApi = new Repositories($client, $client->getAuthToken());
+            $client = $this->getClient();
+            $repositoriesApi = new Repositories($client, $this);
             return $repositoriesApi->downloadArchive($owner->getUsername(), $this->getName(), $gitRef, $format);
         }
     }
@@ -619,8 +622,8 @@ class Repository extends AbstractApiModel {
     {
         $owner = $this->getOwner();
         if ($owner) {
-            $client = $this->getGiteaClient();
-            $branchesApi = new Branches($client, $client->getAuthToken());
+            $client = $this->getClient();
+            $branchesApi = new Branches($client, $this);
             return $branchesApi->fromRepository($owner->getUsername(), $this->getName());
         }
     }
@@ -636,8 +639,8 @@ class Repository extends AbstractApiModel {
     {
         $owner = $this->getOwner();
         if ($owner) {
-            $client = $this->getGiteaClient();
-            $tagsApi = new Tags($client, $client->getAuthToken());
+            $client = $this->getClient();
+            $tagsApi = new Tags($client, $this);
             return $tagsApi->fromRepository($owner->getUsername(), $this->getName());
         }
     }

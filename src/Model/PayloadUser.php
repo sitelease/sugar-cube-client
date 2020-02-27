@@ -5,6 +5,8 @@ namespace Gitea\Model;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
+use Gitea\Client;
+
 use \stdClass;
 use \InvalidArgumentException;
 
@@ -24,13 +26,12 @@ class PayloadUser extends AbstractApiModel {
 
     /**
      * Creates a new payload user.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param string $username The name of the Gitea account.
      */
-    function __construct(object $giteaClient, object $apiRequester, ...$args) {
-        $this->setGiteaClient($giteaClient);
-        $this->setApiRequester($apiRequester);
+    public function __construct(Client &$client , ?object $caller, ...$args) {
+        parent::__construct($client, $caller, $args);
         if (count($args) >= 1) {
             $username = $args[0];
             if (!is_string($username)) {
@@ -46,16 +47,16 @@ class PayloadUser extends AbstractApiModel {
 
     /**
      * Creates a new user from the specified JSON map.
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON map representing a user.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map): self {
+    static function fromJson(object &$client , ?object $caller, object $map): self {
         return (
             new static(
-                $giteaClient,
-                $apiRequester,
+                $client,
+                $caller,
                 isset($map->username) && is_string($map->username) ? $map->username : ''
             )
         )

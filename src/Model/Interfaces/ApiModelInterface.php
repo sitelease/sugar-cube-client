@@ -15,11 +15,11 @@ interface ApiModelInterface
      *
      * @author Benjamin Blake (sitelease.ca)
      *
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param mixed $args The organization visibility.
      */
-    public function __construct(object $giteaClient, object $apiRequester, ...$args);
+    public function __construct(Client &$client , ?object $caller, ...$args);
 
     /**
      * Create a new API model object from a JSON map object
@@ -27,19 +27,19 @@ interface ApiModelInterface
      * Example:
      * ```
      * ClassName::fromJson(
-     *     $giteaClient,
-     *     $apiRequester,
+     *     $client,
+     *     $this,
      *     json_decode($jsonString)
      * );
      * ```
      *
      * @author Benjamin Blake (sitelease.ca)
      *
-     * @param object $giteaClient The Gitea client that originally made the request for this object's data
-     * @param object $apiRequester The Api requester that created this object
+     * @param object $client The Gitea client that originally made the request for this object's data
+     * @param object|null $caller The object that called this method
      * @param object $map A JSON data object
      */
-    static function fromJson(object $giteaClient, object $apiRequester, object $map);
+    static function fromJson(object &$client , ?object $caller, object $map);
 
     /**
      * Convert this Api model object to a JSON map.
@@ -54,24 +54,21 @@ interface ApiModelInterface
     public function jsonSerialize(): \stdClass;
 
     /**
-     * Get the Gitea client that originally made the
-     * Api request for this object
+     * Get the gitea client (by reference)
      *
      * @author Benjamin Blake (sitelease.ca)
      *
      * @return Client
      */
-    public function getGiteaClient();
+    public function getClient(): Client;
 
     /**
-     * Get the Api request object that created
-     * this model object
+     * Set the gitea client (by reference)
      *
      * @author Benjamin Blake (sitelease.ca)
-     *
-     * @return ApiRequesterInterface
+     * @param Client $client
+     * @return self
      */
-    public function getApiRequester();
-
+    public function setClient(Client &$client): self;
 
 }
