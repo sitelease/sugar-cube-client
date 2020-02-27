@@ -2,6 +2,9 @@
 
 namespace Gitea\Core\Interfaces;
 
+use Gitea\Client;
+use Gitea\Model\Repository;
+
 /**
  * Interface that allows the tracking of request heirarchies
  *
@@ -65,4 +68,17 @@ interface RequestChainableInterface
      * @return array
      */
     public function debugRequestChain(): string;
+
+    /**
+     * Climb up the request chain searching for
+     * a repository object. If a repository is found
+     * it will be returned otherwise the method will
+     * make an API request to retrieve it
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     * @param string $owner The owner of the repository
+     * @param string $name The name of the repository
+     * @return Repository|null
+     */
+    public function findOrRequestRepository(string $owner, string $name): ?Repository;
 }

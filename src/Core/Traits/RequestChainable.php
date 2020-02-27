@@ -3,6 +3,8 @@
 namespace Gitea\Core\Traits;
 
 use Gitea\Client;
+use Gitea\Model\Repository;
+
 use Gitea\Core\Interfaces\RequestChainableInterface;
 
 /**
@@ -125,6 +127,29 @@ trait RequestChainable
         }
 
         return $requestChainDebug;
+    }
+
+    /**
+     * Climb up the request chain searching for
+     * a repository object. If a repository is found
+     * it will be returned otherwise the method will
+     * make an API request to retrieve it
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     * @param string $owner The owner of the repository
+     * @param string $name The name of the repository
+     * @return Repository|null
+     */
+    public function findOrRequestRepository(string $owner, string $name): ?Repository
+    {
+        $repository = $this->searchRequestChain(Repository::class);
+
+        if (!$repository) {
+            $client = $this->getClient();
+            $repository = $client->repositories()->getByName($owner, $name);
+        }
+
+        return $repository;
     }
 
 }
