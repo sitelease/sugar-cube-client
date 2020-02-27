@@ -5,6 +5,7 @@ namespace Gitea;
 require 'vendor/autoload.php';
 
 use Gitea\Client;
+use Gitea\Model\Repository;
 
 print("Starting Script... \n");
 print("Creating Guzzle client \n");
@@ -64,6 +65,13 @@ if ($repository) {
             $debugChain = $branch->debugRequestChain();
             if ($debugChain) {
                 print("Chain ".$debugChain."\n");
+            }
+            $foundObj = $branch->searchRequestChain(Repository::class);
+            if ($foundObj) {
+                print("Repository class found \n");
+                print("Type: ".get_class($foundObj)." \n");
+            } else{
+                print("Repository class NOT found \n");
             }
             print("\n\n");
         }

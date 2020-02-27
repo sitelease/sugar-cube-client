@@ -75,6 +75,32 @@ trait RequestChainable
     }
 
     /**
+     * Climb up the request chain searching for
+     * an object of a certain class
+     *
+     * If the object is found it will be returned,
+     * otherwise the method returns null
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     * @param string $class The class of the object you are searching for
+     * @return object|null
+     */
+    public function searchRequestChain(string $class): ?object
+    {
+        $requestChain = $this->getRequestChain();
+
+        $foundObj = null;
+        foreach ($requestChain as $callerObj) {
+            if ($class == get_class($callerObj)) {
+                $foundObj = $callerObj;
+                break;
+            }
+        }
+
+        return $foundObj;
+    }
+
+    /**
      * Return the request chain heirarchy
      * as a string of class names
      *
