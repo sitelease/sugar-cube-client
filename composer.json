@@ -16,9 +16,6 @@
     "files": ["vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"],
     "psr-4": {"Gitea\\": "test/"}
   },
-  "config": {
-    "optimize-autoloader": true
-  },
   "keywords": [
     "api",
     "client",
