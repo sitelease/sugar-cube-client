@@ -28,7 +28,7 @@ interface RequestChainableInterface
      *
      * @return self
      */
-    public function setCaller($object): self;
+    public function setCaller(?object $object);
 
     /**
      * Return the request chain heirarchy

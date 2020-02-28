@@ -40,7 +40,7 @@ trait RequestChainable
      *
      * @return self
      */
-    public function setCaller($object): self
+    public function setCaller(?object $object)
     {
         $this->caller = $object;
         return $this;
