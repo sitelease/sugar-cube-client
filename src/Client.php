@@ -47,8 +47,26 @@ class Client implements RequestChainableInterface
      */
     private $authToken;
 
+    /**
+     * The secret for the push notifications system
+     *
+     * Used to varify incoming push notifications
+     * are from your Gitea server
+     *
+     * @var string
+     */
+    private $pushEventSecret;
 
-    public function __construct($giteaURL, $authToken = null)
+    /**
+     * Construct a new Gitea API client object
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @param string $giteaURL The full URL to Gitea's API route (including the version)
+     * @param string|null $authToken A Gitlea API auth token
+     * @param string|null $pushEventSecret The secret used to varify incoming push notifications
+     */
+    public function __construct($giteaURL, $authToken = null, $pushEventSecret = null)
     {
         // Append a slash to any URL that doesn't end in '/'
         if (!$this->endsWith($giteaURL, '/')) {
@@ -56,6 +74,7 @@ class Client implements RequestChainableInterface
         }
         $this->giteaURL = $giteaURL;
         $this->authToken = $authToken;
+        $this->pushEventSecret = $pushEventSecret;
 
         // Create a new Guzzle Client
         $this->guzzleClient = new GuzzleClient(['base_uri' => $giteaURL]);
@@ -89,6 +108,17 @@ class Client implements RequestChainableInterface
 
     public function setAuthToken($value) {
         $this->authToken = $value;
+        return $this;
+    }
+
+    public function getPushEventSecret()
+    {
+        return $this->pushEventSecret;
+    }
+
+    public function setPushEventSecret(string $string): self
+    {
+        $this->pushEventSecret = $string;
         return $this;
     }
 
