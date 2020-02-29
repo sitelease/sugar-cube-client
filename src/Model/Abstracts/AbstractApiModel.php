@@ -28,7 +28,7 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      * @param object|null $caller The object that called this method
      * @param mixed $args The organization visibility.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args) {
         $this->setClient($client);
         $this->setCaller($caller);
     }
@@ -59,7 +59,7 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      * @param object|null $caller The object that called this method
      * @param object $map A JSON data object
      */
-    static function fromJson(object &$client , ?object $caller, object $map) {
+    static function fromJson(object &$client, ?object $caller, object $map) {
         trigger_error("The abstract 'fromJson()' method must be overwritten");
         return false;
     }

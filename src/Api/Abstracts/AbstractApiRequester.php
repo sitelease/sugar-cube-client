@@ -99,7 +99,7 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      * @param Client $client
      * @param object|null $caller
      */
-    public function __construct(Client &$client , ?object $caller)
+    public function __construct(Client &$client, ?object $caller)
     {
         $this->setClient($client);
         $this->setCaller($caller);

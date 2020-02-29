@@ -19,7 +19,7 @@ interface ApiModelInterface
      * @param object|null $caller The object that called this method
      * @param mixed $args The organization visibility.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args);
+    public function __construct(Client &$client, ?object $caller, ...$args);
 
     /**
      * Create a new API model object from a JSON map object
@@ -39,7 +39,7 @@ interface ApiModelInterface
      * @param object|null $caller The object that called this method
      * @param object $map A JSON data object
      */
-    static function fromJson(object &$client , ?object $caller, object $map);
+    static function fromJson(object &$client, ?object $caller, object $map);
 
     /**
      * Convert this Api model object to a JSON map.

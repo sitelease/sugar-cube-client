@@ -15,7 +15,7 @@ interface ApiRequesterInterface
      * @param Client $client
      * @param object|null $caller
      */
-    public function __construct(Client &$client , ?object $caller);
+    public function __construct(Client &$client, ?object $caller);
 
     /**
      * Get the gitea client (by reference)
