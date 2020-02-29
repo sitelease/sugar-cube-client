@@ -95,7 +95,7 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      * @param Client $client
      * @return self
      */
-    public function setClient(Client &$client): self {
+    public function setClient(Client &$client) {
         $this->client = $client;
         return $this;
     }

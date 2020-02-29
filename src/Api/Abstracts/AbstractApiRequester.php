@@ -131,7 +131,7 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      * @param Client $client
      * @return self
      */
-    public function setClient(Client &$client): self {
+    public function setClient(Client &$client) {
         $this->client = $client;
         return $this;
     }
@@ -154,7 +154,7 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      * @param string $authToken
      * @return self
      */
-    public function setAuthToken(string $authToken): self {
+    public function setAuthToken(string $authToken) {
         $this->authToken = $authToken;
         return $this;
     }

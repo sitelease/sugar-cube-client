@@ -33,7 +33,7 @@ interface ApiRequesterInterface
      * @param Client $client
      * @return self
      */
-    public function setClient(Client &$client): self;
+    public function setClient(Client &$client);
 
     /**
      * Get the authentication token
@@ -52,7 +52,7 @@ interface ApiRequesterInterface
      * @param string $authToken
      * @return self
      */
-    public function setAuthToken(string $authToken): self;
+    public function setAuthToken(string $authToken);
 
     /**
      * @return $this
