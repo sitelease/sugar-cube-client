@@ -1,12 +1,16 @@
-<?php declare(strict_types=1);
+<?php
+
 namespace Gitea;
 
 use Gitea\Models\{PayloadCommit, Repository, User};
-use GuzzleHttp\Psr7\{Uri};
-use Psr\Http\Message\{UriInterface};
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
+
+use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea push event. */
-class PushEvent implements \JsonSerializable {
+class PushEvent extends AbstractApiModel {
 
     /** @var string The hash of the new Git revision. */
     private $after = '';
@@ -36,8 +40,59 @@ class PushEvent implements \JsonSerializable {
     private $sender;
 
     /** Creates a new event. */
-    function __construct() {
+    function __construct(Client &$client, ?object $caller, ...$args) {
         $this->commits = new \ArrayObject;
+        parent::__construct($client, $caller, ...$args);
+    }
+
+    /**
+     * Checks an event's HTTP SERVER array to unsure
+     * that the request is valid
+     *
+     * NOTE: This will compare the events secret to
+     * passed in secret key to ensure they match
+     *
+     * @author Benjamin Blake (sitelease.ca)
+     *
+     * @param array $server The HTTP SERVER array for the push event
+     * @param string $body The raw data from the request body
+     * @param string $secretKey The secret key to from your server
+     * @return void
+     */
+    public static function validateRequest(array $server, string $body, string $secretKey)
+    {
+        // Validate request protocol
+        if ($server['REQUEST_METHOD'] != 'POST') {
+            throw new \RuntimeException("FAILED: Not POST - The request was not sent using the POST protocol");
+        }
+
+        // Validate content type
+        $contentType = isset($server['CONTENT_TYPE']) ? strtolower(trim($server['CONTENT_TYPE'])) : '';
+        if ($contentType != 'application/json') {
+            throw new \RuntimeException("FAILED: Wrong Type - The request's content type is not set to 'application/json'");
+        }
+
+        // Validate request body/content
+        $rawContent = trim($body);
+        if (empty($rawContent)) {
+            throw new \RuntimeException("FAILED: Empty Body - The request has an empty body");
+        }
+
+        // Validate header signature
+        $headerSignature = isset($server['HTTP_X_GITEA_SIGNATURE']) ? $server['HTTP_X_GITEA_SIGNATURE'] : '';
+        if (empty($headerSignature)) {
+            throw new \RuntimeException("FAILED: Signature Missing - The request is missing the Gitea signature");
+        }
+
+        // calculate payload signature
+        $payload_signature = hash_hmac('sha256', $rawContent, $secretKey, false);
+
+        // check payload signature against header signature
+        if ($headerSignature != $payload_signature) {
+            throw new \RuntimeException("FAILED: Access Denied - The push event's secret does not match the expected secret");
+        }
+
+        return true;
     }
 
     /**
@@ -45,17 +100,17 @@ class PushEvent implements \JsonSerializable {
      * @param object $map A JSON map representing an event.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $map): self {
+    static function fromJson(object &$client, ?object $caller, object $map): self {
         return (new static)
             ->setAfter(isset($map->after) && is_string($map->after) ? $map->after : '')
             ->setBefore(isset($map->before) && is_string($map->before) ? $map->before : '')
             ->setCompareUrl(isset($map->compare_url) && is_string($map->compare_url) ? new Uri($map->compare_url) : null)
             ->setCommits(isset($map->commits) && is_array($map->commits) ? array_map([PayloadCommit::class, 'fromJson'], $map->commits) : [])
-            ->setPusher(isset($map->pusher) && is_object($map->pusher) ? User::fromJson($map->pusher) : null)
+            ->setPusher(isset($map->pusher) && is_object($map->pusher) ? User::fromJson($client, $caller, $map->pusher) : null)
             ->setRef(isset($map->ref) && is_string($map->ref) ? $map->ref : '')
-            ->setRepository(isset($map->repository) && is_object($map->repository) ? Repository::fromJson($map->repository) : null)
+            ->setRepository(isset($map->repository) && is_object($map->repository) ? Repository::fromJson($client, $caller, $map->repository) : null)
             ->setSecret(isset($map->secret) && is_string($map->secret) ? $map->secret : '')
-            ->setSender(isset($map->sender) && is_object($map->sender) ? User::fromJson($map->sender) : null);
+            ->setSender(isset($map->sender) && is_object($map->sender) ? User::fromJson($client, $caller, $map->sender) : null);
     }
 
     /**
