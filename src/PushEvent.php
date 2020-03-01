@@ -101,7 +101,10 @@ class PushEvent extends AbstractApiModel {
      * @return static The instance corresponding to the specified JSON map.
      */
     static function fromJson(object &$client, ?object $caller, object $map): self {
-        return (new static)
+        return (new static(
+            $client,
+            $caller
+        ))
             ->setAfter(isset($map->after) && is_string($map->after) ? $map->after : '')
             ->setBefore(isset($map->before) && is_string($map->before) ? $map->before : '')
             ->setCompareUrl(isset($map->compare_url) && is_string($map->compare_url) ? new Uri($map->compare_url) : null)
