@@ -118,7 +118,7 @@ class PushEvent extends AbstractApiModel {
 
         if(isset($map->commits) && is_array($map->commits)) {
             $commitsArray = [];
-            foreach ($commits as $commit) {
+            foreach ($map->commits as $commit) {
                 $commitsArray[] = PayloadCommit::fromJson($client, null, $commit);
             }
             $newEvent->setCommits($commitsArray);
