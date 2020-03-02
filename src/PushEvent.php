@@ -2,7 +2,9 @@
 
 namespace Gitea;
 
-use Gitea\Models\{PayloadCommit, Repository, User};
+use Gitea\Model\PayloadCommit;
+use Gitea\Model\Repository;
+use Gitea\Model\User;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
@@ -101,19 +103,28 @@ class PushEvent extends AbstractApiModel {
      * @return static The instance corresponding to the specified JSON map.
      */
     static function fromJson(object &$client, ?object $caller, object $map): self {
-        return (new static(
+        $newEvent = new static(
             $client,
             $caller
-        ))
-            ->setAfter(isset($map->after) && is_string($map->after) ? $map->after : '')
-            ->setBefore(isset($map->before) && is_string($map->before) ? $map->before : '')
-            ->setCompareUrl(isset($map->compare_url) && is_string($map->compare_url) ? new Uri($map->compare_url) : null)
-            ->setCommits(isset($map->commits) && is_array($map->commits) ? array_map([PayloadCommit::class, 'fromJson'], $map->commits) : [])
-            ->setPusher(isset($map->pusher) && is_object($map->pusher) ? User::fromJson($client, $caller, $map->pusher) : null)
-            ->setRef(isset($map->ref) && is_string($map->ref) ? $map->ref : '')
-            ->setRepository(isset($map->repository) && is_object($map->repository) ? Repository::fromJson($client, $caller, $map->repository) : null)
-            ->setSecret(isset($map->secret) && is_string($map->secret) ? $map->secret : '')
-            ->setSender(isset($map->sender) && is_object($map->sender) ? User::fromJson($client, $caller, $map->sender) : null);
+        );
+        $newEvent->setAfter(isset($map->after) && is_string($map->after) ? $map->after : '')
+        ->setBefore(isset($map->before) && is_string($map->before) ? $map->before : '')
+        ->setCompareUrl(isset($map->compare_url) && is_string($map->compare_url) ? new Uri($map->compare_url) : null)
+        ->setPusher(isset($map->pusher) && is_object($map->pusher) ? User::fromJson($client, null, $map->pusher) : null)
+        ->setRef(isset($map->ref) && is_string($map->ref) ? $map->ref : '')
+        ->setRepository(isset($map->repository) && is_object($map->repository) ? Repository::fromJson($client, null, $map->repository) : null)
+        ->setSecret(isset($map->secret) && is_string($map->secret) ? $map->secret : '')
+        ->setSender(isset($map->sender) && is_object($map->sender) ? User::fromJson($client, null, $map->sender) : null);
+
+        if(isset($map->commits) && is_array($map->commits)) {
+            $commitsArray = [];
+            foreach ($commits as $commit) {
+                $commitsArray[] = PayloadCommit::fromJson($client, null, $commit);
+            }
+            $newEvent->setCommits($commitsArray);
+        }
+
+        return $newEvent;
     }
 
     /**
