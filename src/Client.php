@@ -5,10 +5,6 @@ namespace Gitea;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ServerException;
 
-use Gitea\Models\Repository;
-use Gitea\Models\Tag;
-use Gitea\Models\Branch;
-
 use Gitea\Api\Organizations;
 use Gitea\Api\Repositories;
 use Gitea\Api\Branches;
