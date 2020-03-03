@@ -1,26 +1,23 @@
 {
-  "description": "Gitea client library.",
-  "homepage": "https://github.com/mooror/gitea.php",
-  "license": "MIT",
-  "name": "sitelease/gitea-php",
+  "name": "sitelease/suger-cube-client",
+  "description": "Suger Cube Client",
+  "homepage": "https://github.com/sitelease/suger-cube-client",
   "type": "library",
+  "license": "MIT",
   "authors": [
-    {"email": "contact@sabcomputer.com", "name": "SAB International", "homepage": "http://www.sabcomputer.com"},
-    {"email": "cedric@belin.io", "name": "Cédric Belin", "homepage": "https://belin.io"},
-    {"email": "ben@sitelease.ca", "name": "Benjamin Blake", "homepage": "https://www.sitelease.ca"}
+    {"email": "contact@sabcomputer.com", "name": "SAB International (old)", "homepage": "http://www.sabcomputer.com"},
+    {"email": "cedric@belin.io", "name": "Cédric Belin (old)", "homepage": "https://belin.io"},
+    {"email": "ben@sitelease.ca", "name": "Benjamin Blake (current)", "homepage": "https://www.sitelease.ca"}
   ],
   "autoload": {
     "psr-4": {"Gitea\\": "src/"}
-  },
-  "autoload-dev": {
-    "files": ["vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"],
-    "psr-4": {"Gitea\\": "test/"}
   },
   "keywords": [
     "api",
     "client",
     "git",
     "gitea",
+    "suger",
     "scm",
     "vcs"
   ],
@@ -32,18 +29,11 @@
     "guzzlehttp/guzzle": "~6.0"
   },
   "require-dev": {
-    "cedx/coveralls": "^10.1.0",
-    "consolidation/robo": "^1.4.9",
-    "henrikbjorn/lurker": "^1.2.0",
     "phpstan/phpstan": "^0.11.5",
     "phpunit/phpunit": "^8.1.2"
   },
-  "scripts": {
-    "coverage": "robo coverage",
-    "test": "robo test"
-  },
   "support": {
-    "docs": "https://github.com/mooror/gitea.php",
-    "issues": "https://github.com/mooror/gitea.php/issues"
+    "docs": "https://github.com/sitelease/suger-cube-client",
+    "issues": "https://github.com/sitelease/suger-cube-client/issues"
   }
 }
