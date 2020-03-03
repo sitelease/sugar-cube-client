@@ -1,7 +1,7 @@
 {
-  "name": "sitelease/suger-cube-client",
-  "description": "Suger Cube Client",
-  "homepage": "https://github.com/sitelease/suger-cube-client",
+  "name": "sitelease/sugar-cube-client",
+  "description": "A sweet Gitea API client for PHP",
+  "homepage": "https://github.com/sitelease/sugar-cube-client",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -17,7 +17,7 @@
     "client",
     "git",
     "gitea",
-    "suger",
+    "sugar",
     "scm",
     "vcs"
   ],
@@ -33,7 +33,7 @@
     "phpunit/phpunit": "^8.1.2"
   },
   "support": {
-    "docs": "https://github.com/sitelease/suger-cube-client",
-    "issues": "https://github.com/sitelease/suger-cube-client/issues"
+    "docs": "https://github.com/sitelease/sugar-cube-client",
+    "issues": "https://github.com/sitelease/sugar-cube-client/issues"
   }
 }
