@@ -1,4 +1,4 @@
-Suger Cube (formerly gitea.php) is released with MIT License:
+The Suger Cube Client (formerly gitea.php) is released with MIT License:
 
 Copyright &copy; 2018 - 2019 SAB International
 Copyright &copy; 2020 siteLease Web Solutions

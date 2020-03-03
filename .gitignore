@@ -1,14 +1,6 @@
-/.*/
-!/.vscode/
+.*/
+.vscode/
+vendor/
 
-/build/
-/doc/api/
-/var/
-/vendor/
-/web/
-
-/*.code-workspace
-/*.iml
 /**/.DS_Store
-/composer.lock
-/share/**/*.private.env.json
+composer.lock
