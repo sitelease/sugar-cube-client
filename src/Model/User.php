@@ -41,7 +41,7 @@ class User implements \JsonSerializable {
      * @return static The instance corresponding to the specified JSON map.
      */
     static function fromJson(object $map): self {
-        return (new static(isset($map->id) && is_int($map->id) ? $map->id : -1, isset($map->login) && is_string($map->login) ? $map->login : ''))
+        return (new static(isset($map->id) && is_numeric($map->id) ? $map->id : -1, isset($map->login) && is_string($map->login) ? $map->login : ''))
             ->setAvatarUrl(isset($map->avatar_url) && is_string($map->avatar_url) ? new Uri($map->avatar_url) : null)
             ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
             ->setFullName(isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '')

@@ -36,7 +36,7 @@ class Tag extends AbstractApiModel {
      * Creates a new tag
      * @param object $client The Gitea client that originally made the request for this object's data
      * @param object|null $caller The object that called this method
-     * @param int $id The tag identifier
+     * @param int|string $id The tag identifier
      * @param string $name The tag name
      */
     public function __construct(Client &$client , ?object $caller, ...$args) {
@@ -44,7 +44,7 @@ class Tag extends AbstractApiModel {
         if (count($args) >= 2) {
             $id = $args[0];
             $name = $args[1];
-            if (!is_int($id)) {
+            if (!is_numeric($id)) {
                 $argumentType = gettype($id);
                 throw new InvalidArgumentException("The \"__construct()\" function requires the 3rd parameter to be of the integer type, but a \"$argumentType\" was passed in");
             }
@@ -71,7 +71,7 @@ class Tag extends AbstractApiModel {
         $newTag = new static(
             $client,
             $caller,
-            isset($map->id) && is_int($map->id) ? $map->id : -1,
+            isset($map->id) && is_numeric($map->id) ? $map->id : -1,
             isset($map->name) && is_string($map->name) ? $map->name : ''
         );
         $newTag->setTarballURL(isset($map->tarball_url) && is_string($map->tarball_url) ? new Uri($map->tarball_url) : null);

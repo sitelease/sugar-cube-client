@@ -35,10 +35,10 @@ class TrackedTime implements \JsonSerializable {
      * @return static The instance corresponding to the specified JSON map.
      */
     static function fromJson(object $map): self {
-        return (new static(isset($map->id) && is_int($map->id) ? $map->id : -1, isset($map->time) && is_int($map->time) ? $map->time : 0))
+        return (new static(isset($map->id) && is_numeric($map->id) ? $map->id : -1, isset($map->time) && is_numeric($map->time) ? $map->time : 0))
             ->setCreatedAt(isset($map->created) && is_string($map->created) ? new \DateTime($map->created) : null)
-            ->setIssueId(isset($map->issue_id) && is_int($map->issue_id) ? $map->issue_id : -1)
-            ->setUserId(isset($map->user_id) && is_int($map->user_id) ? $map->user_id : -1);
+            ->setIssueId(isset($map->issue_id) && is_numeric($map->issue_id) ? $map->issue_id : -1)
+            ->setUserId(isset($map->user_id) && is_numeric($map->user_id) ? $map->user_id : -1);
     }
 
     /**

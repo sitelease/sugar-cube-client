@@ -100,7 +100,7 @@ class Repository extends AbstractApiModel {
         if (count($args) >= 2) {
             $id = $args[0];
             $fullName = $args[1];
-            if (!is_int($id)) {
+            if (!is_numeric($id)) {
                 $argumentType = gettype($id);
                 throw new InvalidArgumentException("The \"construct()\" function requires the 3rd parameter to be of the integer type, but a \"$argumentType\" was passed in");
             }
@@ -128,7 +128,7 @@ class Repository extends AbstractApiModel {
             new static(
                 $client,
                 $caller,
-                isset($map->id) && is_int($map->id) ? $map->id : -1,
+                isset($map->id) && is_numeric($map->id) ? $map->id : -1,
                 isset($map->full_name) && is_string($map->full_name) ? $map->full_name : ''
             )
         )
@@ -138,20 +138,20 @@ class Repository extends AbstractApiModel {
         ->setDescription(isset($map->description) && is_string($map->description) ? $map->description : '')
         ->setEmpty(isset($map->empty) && is_bool($map->empty) ? $map->empty : true)
         ->setFork(isset($map->fork) && is_bool($map->fork) ? $map->fork : false)
-        ->setForksCount(isset($map->forks_count) && is_int($map->forks_count) ? $map->forks_count : 0)
+        ->setForksCount(isset($map->forks_count) && is_numeric($map->forks_count) ? $map->forks_count : 0)
         ->setHtmlUrl(isset($map->html_url) && is_string($map->html_url) ? new Uri($map->html_url) : null)
         ->setMirror(isset($map->mirror) && is_bool($map->mirror) ? $map->mirror : false)
         ->setName(isset($map->name) && is_string($map->name) ? $map->name : '')
-        ->setOpenIssuesCount(isset($map->open_issues_count) && is_int($map->open_issues_count) ? $map->open_issues_count : 0)
+        ->setOpenIssuesCount(isset($map->open_issues_count) && is_numeric($map->open_issues_count) ? $map->open_issues_count : 0)
         ->setOwner(isset($map->owner) && is_object($map->owner) ? Owner::fromJson($client, null, $map->owner) : null)
         ->setParent(isset($map->parent) && is_object($map->parent) ? Repository::fromJson($client, null, $map->parent) : null)
         ->setPermissions(isset($map->permissions) && is_object($map->permissions) ? Permission::fromJson($client, null, $map->permissions) : null)
         ->setPrivate(isset($map->private) && is_bool($map->private) ? $map->private : false)
-        ->setSize(isset($map->size) && is_int($map->size) ? $map->size : 0)
+        ->setSize(isset($map->size) && is_numeric($map->size) ? $map->size : 0)
         ->setSshUrl(isset($map->ssh_url) && is_string($map->ssh_url) ? new Uri($map->ssh_url) : null)
-        ->setStarsCount(isset($map->stars_count) && is_int($map->stars_count) ? $map->stars_count : 0)
+        ->setStarsCount(isset($map->stars_count) && is_numeric($map->stars_count) ? $map->stars_count : 0)
         ->setUpdatedAt(isset($map->updated_at) && is_string($map->updated_at) ? new \DateTime($map->updated_at) : null)
-        ->setWatchersCount(isset($map->watchers_count) && is_int($map->watchers_count) ? $map->watchers_count : 0)
+        ->setWatchersCount(isset($map->watchers_count) && is_numeric($map->watchers_count) ? $map->watchers_count : 0)
         ->setWebsite(isset($map->website) && is_string($map->website) ? new Uri($map->website) : null);
     }
 

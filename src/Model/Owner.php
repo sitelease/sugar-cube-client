@@ -48,7 +48,7 @@ class Owner extends AbstractApiModel {
         if (count($args) >= 2) {
             $id = $args[0];
             $login = $args[1];
-            if (!is_int($id)) {
+            if (!is_numeric($id)) {
                 $argumentType = gettype($id);
                 throw new InvalidArgumentException("The \"__construct()\" function requires the 3rd parameter to be of the integer type, but a \"$argumentType\" was passed in");
             }
@@ -76,7 +76,7 @@ class Owner extends AbstractApiModel {
             new static(
                 $client,
                 $caller,
-                isset($map->id) && is_int($map->id) ? $map->id : -1,
+                isset($map->id) && is_numeric($map->id) ? $map->id : -1,
                 isset($map->login) && is_string($map->login) ? $map->login : ''
             )
         )
