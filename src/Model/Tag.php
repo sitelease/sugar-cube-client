@@ -44,9 +44,9 @@ class Tag extends AbstractApiModel {
         if (count($args) >= 2) {
             $id = $args[0];
             $name = $args[1];
-            if (!is_numeric($id)) {
+            if (!is_string($id)) {
                 $argumentType = gettype($id);
-                throw new InvalidArgumentException("The \"__construct()\" function requires the 3rd parameter to be of the integer type, but a \"$argumentType\" was passed in");
+                throw new InvalidArgumentException("The \"__construct()\" function requires the 3rd parameter to be of the string type, but a \"$argumentType\" was passed in");
             }
             if (!is_string($name)) {
                 $argumentType = gettype($name);
@@ -71,7 +71,7 @@ class Tag extends AbstractApiModel {
         $newTag = new static(
             $client,
             $caller,
-            isset($map->id) && is_numeric($map->id) ? $map->id : -1,
+            isset($map->id) && is_string($map->id) ? $map->id : -1,
             isset($map->name) && is_string($map->name) ? $map->name : ''
         );
         $newTag->setTarballURL(isset($map->tarball_url) && is_string($map->tarball_url) ? new Uri($map->tarball_url) : null);
@@ -104,7 +104,7 @@ class Tag extends AbstractApiModel {
      * Gets the tag identifier.
      * @return int The tag identifier.
      */
-    function getId(): int {
+    function getId(): string {
         return $this->id;
     }
 
