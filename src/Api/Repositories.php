@@ -112,6 +112,38 @@ class Repositories extends AbstractAllApiRequester
     }
 
     /**
+     * Get a repository using its ID
+     *
+     * Example:
+     * ```
+     * $client->repositories()->getByID($repoId);
+     * ```
+     *
+     * @param string repoId The ID of the repository
+     * @return Repository
+     */
+    public function getById(int $repoId)
+    {
+        $client = $this->getClient();
+        try {
+            $response = $this->get("/repositories/$repoId");
+            $statusCode = $response->getStatusCode();
+            $body = (string) $response->getBody();
+            if ($statusCode == 200) {
+                return Repository::fromJson(
+                    $client,
+                    $this,
+                    json_decode($body)
+                );
+            }
+            return false;
+
+        } catch (ServerException $serverError) {
+            return false;
+        }
+    }
+
+    /**
      * Get the raw contents of a file stored inside a repository
      * using the repository's name and owner
      *
