@@ -126,7 +126,7 @@ class Repositories extends AbstractAllApiRequester
     {
         $client = $this->getClient();
         try {
-            $response = $this->get("/repositories/$repoId");
+            $response = $this->get("repositories/$repoId");
             $statusCode = $response->getStatusCode();
             $body = (string) $response->getBody();
             if ($statusCode == 200) {
