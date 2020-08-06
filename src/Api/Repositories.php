@@ -144,28 +144,41 @@ class Repositories extends AbstractAllApiRequester
     }
 
     /**
-     * Get the raw contents of a file stored inside a repository
+     * Get the contents of a file in a certain in repository commit/branch/tag
      * using the repository's name and owner
      *
      * Example:
      * ```
-     * $client->repositories()->getRawFile($owner, $repoName, "README.md");
+     * $client->repositories()->getRawFile($owner, $repoName, "README.md", "v2.0.0");
      * ```
      *
      * @param string $owner The owner of the repository
      * @param string $repoName The name of the repository
-     * @param string $filepath The path to the raw file (relative to the repository root)
+     * @param string $filepath The path to the file (relative to the repository root)
+     * @param string $ref The name of the commit/branch/tag. Default the repository’s default branch (usually master)
      * @return string
      */
-    public function getRawFile(string $owner, string $repoName, string $filepath)
+    public function getFileContents(string $owner, string $repoName, string $filepath, string $ref="")
     {
         $client = $this->getClient();
         try {
-            $response = $this->get("repos/$owner/$repoName/raw/$filepath");
+            if ($ref !== "") {
+                $response = $this->get("repos/$owner/$repoName/contents/$filepath",[
+                    "ref" => $ref
+                ]);
+            } else {
+                $response = $this->get("repos/$owner/$repoName/contents/$filepath");
+            }
+
             $statusCode = $response->getStatusCode();
-            $body = (string) $response->getBody();
             if ($statusCode == 200) {
-                return $body;
+                $body = (string) $response->getBody();
+                $jsonObj = json_decode($body, true);
+                if (array_key_exists("content", $jsonObj)) {
+                    $base64FileContents = $jsonObj["content"];
+                    $fileContents = base64_decode($base64FileContents);
+                    return $fileContents;
+                }
             }
             return false;
 
