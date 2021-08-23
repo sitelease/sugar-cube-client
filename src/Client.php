@@ -66,7 +66,7 @@ class Client implements RequestChainableInterface
     {
         // Append a slash to any URL that doesn't end in '/'
         if (!$this->endsWith($giteaURL, '/')) {
-            $giteaURL += "/";
+            $giteaURL .= "/";
         }
         $this->giteaURL = $giteaURL;
         $this->authToken = $authToken;
