@@ -82,7 +82,7 @@ if ($repository) {
 }
 
 // print("Getting contents of \"composer.json\" file \n\n");
-// $rawFile = $giteaClient->repositories()->getRawFile("Sitelease", "sl-theme-recipe", "composer.json");
+// $rawFile = $giteaClient->repositories()->getFileContents("Sitelease", "sl-theme-recipe", "composer.json");
 // if ($rawFile) {
 //     var_dump(json_encode($rawFile));
 //     print("\n\n");
@@ -91,7 +91,7 @@ if ($repository) {
 // }
 
 // print("Getting contents of \"composer.json\" file \n\n");
-// $rawFile = $giteaClient->repositories()->getRawFile("Sitelease", "sl-theme-recipe", "composer.json");
+// $rawFile = $giteaClient->repositories()->getFileContents("Sitelease", "sl-theme-recipe", "composer.json");
 // if ($rawFile) {
 //     var_dump($rawFile);
 //     print("\n\n");

@@ -149,7 +149,7 @@ class Repositories extends AbstractAllApiRequester
      *
      * Example:
      * ```
-     * $client->repositories()->getRawFile($owner, $repoName, "README.md", "v2.0.0");
+     * $client->repositories()->getFileContents($owner, $repoName, "README.md", "v2.0.0");
      * ```
      *
      * @param string $owner The owner of the repository
