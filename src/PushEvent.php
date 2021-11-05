@@ -59,9 +59,10 @@ class PushEvent extends AbstractApiModel {
      * @param array $server The HTTP SERVER array for the push event
      * @param string $body The raw data from the request body
      * @param string $secretKey The secret key to from your server
-     * @return void
+     * @param bool $skipSecretValidation If set to true, secret key validation will be skipped (used for newer versions of Gitea)
+     * @return bool
      */
-    public static function validateRequest(array $server, string $body, string $secretKey)
+    public static function validateRequest(array $server, string $body, string $secretKey, bool $skipSecretValidation = false)
     {
         // Validate request protocol
         if ($server['REQUEST_METHOD'] != 'POST') {
@@ -80,18 +81,20 @@ class PushEvent extends AbstractApiModel {
             throw new \RuntimeException("FAILED: Empty Body - The request has an empty body");
         }
 
-        // Validate header signature
-        $headerSignature = isset($server['HTTP_X_GITEA_SIGNATURE']) ? $server['HTTP_X_GITEA_SIGNATURE'] : '';
-        if (empty($headerSignature)) {
-            throw new \RuntimeException("FAILED: Signature Missing - The request is missing the Gitea signature");
-        }
-
-        // calculate payload signature
-        $payload_signature = hash_hmac('sha256', $rawContent, $secretKey, false);
-
-        // check payload signature against header signature
-        if ($headerSignature != $payload_signature) {
-            throw new \RuntimeException("FAILED: Access Denied - The push event's secret does not match the expected secret");
+        if (!$skipSecretValidation) {
+            // Validate header signature
+            $headerSignature = isset($server['HTTP_X_GITEA_SIGNATURE']) ? $server['HTTP_X_GITEA_SIGNATURE'] : '';
+            if (empty($headerSignature)) {
+                throw new \RuntimeException("FAILED: Signature Missing - The request is missing the Gitea signature");
+            }
+    
+            // calculate payload signature
+            $payload_signature = hash_hmac('sha256', $rawContent, $secretKey, false);
+    
+            // check payload signature against header signature
+            if ($headerSignature != $payload_signature) {
+                throw new \RuntimeException("FAILED: Access Denied - The push event's secret does not match the expected secret");
+            }
         }
 
         return true;
