@@ -1,17 +1,5 @@
 * text=auto
 
-.* text
-*.http text
-*.info text
-*.json text
-*.md text
-*.neon text
-*.php text diff=php
-*.txt text
-*.xml text
-*.yml text
-*.yaml text
-
 *.ico binary
 *.jpg binary
 *.pdf binary
