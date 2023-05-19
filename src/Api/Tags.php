@@ -59,5 +59,4 @@ class Tags extends AbstractApiRequester
             return $repositoryCollection;
         }
     }
-
 }

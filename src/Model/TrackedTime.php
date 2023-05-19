@@ -1,10 +1,16 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
+
 namespace Gitea\Model;
 
-/** Represents the worked time for an issue or pull request. */
-class TrackedTime implements \JsonSerializable {
+use stdClass;
+use DateTime;
+use JsonSerializable;
 
-    /** @var \DateTime|null The date the entry was created. */
+/** Represents the worked time for an issue or pull request. */
+class TrackedTime implements JsonSerializable
+{
+    /** @var DateTime|null The date the entry was created. */
     private $createdAt;
 
     /** @var int The entry identifier. */
@@ -24,7 +30,8 @@ class TrackedTime implements \JsonSerializable {
      * @param int $id The entry identifier.
      * @param int $time The elapsed time, in seconds.
      */
-    function __construct(int $id, int $time) {
+    public function __construct(int $id, int $time)
+    {
         $this->id = $id;
         $this->setTime($time);
     }
@@ -34,18 +41,24 @@ class TrackedTime implements \JsonSerializable {
      * @param object $map A JSON map representing an entry.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $map): self {
-        return (new static(isset($map->id) && is_numeric($map->id) ? $map->id : -1, isset($map->time) && is_numeric($map->time) ? $map->time : 0))
-            ->setCreatedAt(isset($map->created) && is_string($map->created) ? new \DateTime($map->created) : null)
-            ->setIssueId(isset($map->issue_id) && is_numeric($map->issue_id) ? $map->issue_id : -1)
-            ->setUserId(isset($map->user_id) && is_numeric($map->user_id) ? $map->user_id : -1);
+    public static function fromJson(object $map): self
+    {
+        return (
+            new static(isset($map->id)
+            && is_numeric($map->id) ? $map->id : -1, isset($map->time)
+            && is_numeric($map->time) ? $map->time : 0)
+        )
+        ->setCreatedAt(isset($map->created) && is_string($map->created) ? new DateTime($map->created) : null)
+        ->setIssueId(isset($map->issue_id) && is_numeric($map->issue_id) ? $map->issue_id : -1)
+        ->setUserId(isset($map->user_id) && is_numeric($map->user_id) ? $map->user_id : -1);
     }
 
     /**
      * Gets the date the entry was created.
-     * @return \DateTime|null The date the entry was created.
+     * @return DateTime|null The date the entry was created.
      */
-    function getCreatedAt(): ?\DateTime {
+    public function getCreatedAt(): ?DateTime
+    {
         return $this->createdAt;
     }
 
@@ -53,7 +66,8 @@ class TrackedTime implements \JsonSerializable {
      * Gets the entry identifier.
      * @return int The entry identifier.
      */
-    function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -61,7 +75,8 @@ class TrackedTime implements \JsonSerializable {
      * Gets the identifier of the associated issue or pull request.
      * @return int The identifier of the associated issue or pull request.
      */
-    function getIssueId(): int {
+    public function getIssueId(): int
+    {
         return $this->issueId;
     }
 
@@ -69,7 +84,8 @@ class TrackedTime implements \JsonSerializable {
      * Gets the elapsed time, in seconds.
      * @return int The elapsed time, in seconds.
      */
-    function getTime(): int {
+    public function getTime(): int
+    {
         return $this->time;
     }
 
@@ -77,15 +93,17 @@ class TrackedTime implements \JsonSerializable {
      * Gets the identifier of the initiating user.
      * @return int The identifier of the initiating user.
      */
-    function getUserId(): int {
+    public function getUserId(): int
+    {
         return $this->userId;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'created' => ($date = $this->getCreatedAt()) ? $date->format('c') : null,
             'id' => $this->getId(),
@@ -97,10 +115,11 @@ class TrackedTime implements \JsonSerializable {
 
     /**
      * Sets the date the entry was created.
-     * @param \DateTime|null $value The new date of creation.
+     * @param DateTime|null $value The new date of creation.
      * @return $this This instance.
      */
-    function setCreatedAt(?\DateTime $value): self {
+    public function setCreatedAt(?DateTime $value): self
+    {
         $this->createdAt = $value;
         return $this;
     }
@@ -110,7 +129,8 @@ class TrackedTime implements \JsonSerializable {
      * @param int $value The new issue identifier.
      * @return $this This instance.
      */
-    function setIssueId(int $value): self {
+    public function setIssueId(int $value): self
+    {
         $this->issueId = $value;
         return $this;
     }
@@ -120,7 +140,8 @@ class TrackedTime implements \JsonSerializable {
      * @param int $value The new elapsed time, in seconds.
      * @return $this This instance.
      */
-    function setTime(int $value): self {
+    public function setTime(int $value): self
+    {
         $this->time = $value;
         return $this;
     }
@@ -130,7 +151,8 @@ class TrackedTime implements \JsonSerializable {
      * @param int $value The new user identifier.
      * @return $this This instance.
      */
-    function setUserId(int $value): self {
+    public function setUserId(int $value): self
+    {
         $this->userId = $value;
         return $this;
     }

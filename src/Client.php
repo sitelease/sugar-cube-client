@@ -46,7 +46,7 @@ class Client implements RequestChainableInterface
     /**
      * The secret for the push notifications system
      *
-     * Used to varify incoming push notifications
+     * Used to verify incoming push notifications
      * are from your Gitea server
      *
      * @var string
@@ -59,8 +59,8 @@ class Client implements RequestChainableInterface
      * @author Benjamin Blake (sitelease.ca)
      *
      * @param string $giteaURL The full URL to Gitea's API route (including the version)
-     * @param string|null $authToken A Gitlea API auth token
-     * @param string|null $pushEventSecret The secret used to varify incoming push notifications
+     * @param string|null $authToken A Gitea API auth token
+     * @param string|null $pushEventSecret The secret used to verify incoming push notifications
      */
     public function __construct($giteaURL, $authToken = null, $pushEventSecret = null)
     {
@@ -98,11 +98,13 @@ class Client implements RequestChainableInterface
         return $this->guzzleClient;
     }
 
-    public function getAuthToken() {
+    public function getAuthToken()
+    {
         return $this->authToken;
     }
 
-    public function setAuthToken($value) {
+    public function setAuthToken($value)
+    {
         $this->authToken = $value;
         return $this;
     }
@@ -133,7 +135,7 @@ class Client implements RequestChainableInterface
      * @param string $needle
      * @return boolean
      */
-    function endsWith($haystack, $needle)
+    public function endsWith($haystack, $needle)
     {
         return substr($haystack, -strlen($needle))===$needle;
     }
@@ -147,7 +149,8 @@ class Client implements RequestChainableInterface
      *
      * @return boolean
      */
-    public function checkAuthToken($softErrors = false) {
+    public function checkAuthToken($softErrors = false)
+    {
         $authToken = $this->authToken;
         if (!$authToken) {
             if ($softErrors) {
@@ -217,5 +220,4 @@ class Client implements RequestChainableInterface
     {
         return new Organizations($this, $this);
     }
-
 }

@@ -4,25 +4,26 @@ namespace Gitea\Collections;
 
 use Gitea\Collections\Interfaces\ApiCollectionInterface;
 
-use \Countable;
-use \IteratorAggregate;
-use \ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use ArrayIterator;
 
 class ApiItemCollection implements ApiCollectionInterface, IteratorAggregate, Countable
 {
     private $items = array();
 
-    public function __construct($internalArray = array()) {
+    public function __construct($internalArray = array())
+    {
         if ($internalArray && is_array($internalArray)) {
             $this->items = $internalArray;
         }
     }
 
-    public function addItem($apiObject, $key = null) {
+    public function addItem($apiObject, $key = null)
+    {
         if ($key == null) {
             $this->items[] = $apiObject;
-        }
-        else {
+        } else {
             if (isset($this->items[$key])) {
                 return false;
             } else {
@@ -31,7 +32,8 @@ class ApiItemCollection implements ApiCollectionInterface, IteratorAggregate, Co
         }
     }
 
-    public function deleteItem($key) {
+    public function deleteItem($key)
+    {
         if (isset($this->items[$key])) {
             unset($this->items[$key]);
         } else {
@@ -39,31 +41,37 @@ class ApiItemCollection implements ApiCollectionInterface, IteratorAggregate, Co
         }
     }
 
-    public function getItem($key) {
+    public function getItem($key)
+    {
         if (isset($this->items[$key])) {
             return $this->items[$key];
         } else {
-          return false;
+            return false;
         }
     }
 
-    public function keys() {
+    public function keys()
+    {
         return array_keys($this->items);
     }
 
-    public function count() {
+    public function count()
+    {
         return count($this->items);
     }
 
-    public function keyExists($key) {
+    public function keyExists($key)
+    {
         return isset($this->items[$key]);
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return $this->items;
     }
 
-    public function getIterator() {
+    public function getIterator()
+    {
         return new ArrayIterator($this->items);
     }
 }

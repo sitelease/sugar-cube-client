@@ -7,13 +7,14 @@ use Psr\Http\Message\UriInterface;
 
 use Gitea\Client;
 
-use \InvalidArgumentException;
+use stdClass;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea organization. */
-class Organization extends AbstractApiModel {
-
+class Organization extends AbstractApiModel
+{
     /** @var UriInterface|null A URL pointing to the organization's avatar. */
     private $avatarURL = '';
 
@@ -45,7 +46,8 @@ class Organization extends AbstractApiModel {
      * @param string $username The organization name.
      * @param string $visibility The organization visibility.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $username = $args[0];
@@ -73,7 +75,8 @@ class Organization extends AbstractApiModel {
      * @param object $map A JSON map representing an organization.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return (
             new static(
                 $client,
@@ -91,9 +94,10 @@ class Organization extends AbstractApiModel {
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'avatar_url' => ($url = $this->getAvatarURL()) ? (string) $url : null,
             'description' => $this->getDescription(),
@@ -110,71 +114,85 @@ class Organization extends AbstractApiModel {
      * Gets the organization identifier.
      * @return int The organization identifier.
      */
-    function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
-    public function getAvatarURL(): ?UriInterface {
+    public function getAvatarURL(): ?UriInterface
+    {
         return $this->avatarURL;
     }
 
-    public function setAvatarURL(?UriInterface $value): self {
+    public function setAvatarURL(?UriInterface $value): self
+    {
         $this->avatarURL = $value;
         return $this;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public function setDescription(string $value): self {
+    public function setDescription(string $value): self
+    {
         $this->description = $value;
         return $this;
     }
 
-    public function getFullName() {
+    public function getFullName()
+    {
         return $this->fullName;
     }
 
-    public function setFullName(string $value): self {
+    public function setFullName(string $value): self
+    {
         $this->fullName = $value;
         return $this;
     }
 
-    public function getLocation() {
+    public function getLocation()
+    {
         return $this->location;
     }
 
-    public function setLocation(string $value): self {
+    public function setLocation(string $value): self
+    {
         $this->location = $value;
         return $this;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function setUsername(string $value): self {
+    public function setUsername(string $value): self
+    {
         $this->username = $value;
         return $this;
     }
 
-    public function getVisibility() {
+    public function getVisibility()
+    {
         return $this->visibility;
     }
 
-    public function setVisibility(string $value): self {
+    public function setVisibility(string $value): self
+    {
         $this->visibility = $value;
         return $this;
     }
 
-    public function getWebsite(): ?UriInterface {
+    public function getWebsite(): ?UriInterface
+    {
         return $this->website;
     }
 
-    public function setWebsite(?UriInterface $value): self {
+    public function setWebsite(?UriInterface $value): self
+    {
         $this->website = $value;
         return $this;
     }
-
 }

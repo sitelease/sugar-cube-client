@@ -5,11 +5,10 @@ namespace Gitea\Model\Interfaces;
 use Gitea\Client;
 use Gitea\Api\Interfaces\ApiRequesterInterface;
 
-use \stdClass;
+use stdClass;
 
 interface ApiModelInterface
 {
-
     /**
      * Creates a new API model object
      *
@@ -39,7 +38,7 @@ interface ApiModelInterface
      * @param object|null $caller The object that called this method
      * @param object $map A JSON data object
      */
-    static function fromJson(object &$client, ?object $caller, object $map);
+    public static function fromJson(object &$client, ?object $caller, object $map);
 
     /**
      * Convert this Api model object to a JSON map.
@@ -51,7 +50,7 @@ interface ApiModelInterface
      *
      * @return stdClass The map in JSON format corresponding to this object.
      */
-    public function jsonSerialize(): \stdClass;
+    public function jsonSerialize(): stdClass;
 
     /**
      * Get the gitea client (by reference)
@@ -70,5 +69,4 @@ interface ApiModelInterface
      * @return self
      */
     public function setClient(Client &$client);
-
 }

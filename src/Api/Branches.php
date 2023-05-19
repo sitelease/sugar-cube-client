@@ -59,5 +59,4 @@ class Branches extends AbstractApiRequester
             return $repositoryCollection;
         }
     }
-
 }

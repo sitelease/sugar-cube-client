@@ -17,7 +17,7 @@ trait RequestChainable
     /**
      * The object that called this object
      *
-     * @var string
+     * @var object
      */
     private $caller;
 
@@ -47,7 +47,7 @@ trait RequestChainable
     }
 
     /**
-     * Return the request chain heirarchy
+     * Return the request chain hierarchy
      * as an array of objects
      *
      * This is useful if you need to know
@@ -103,11 +103,11 @@ trait RequestChainable
     }
 
     /**
-     * Return the request chain heirarchy
+     * Return the request chain hierarchy
      * as a string of class names
      *
      * This is useful if you need to quickly print out
-     * a breadcrumb like heirarchy of callers
+     * a breadcrumb like hierarchy of callers
      *
      * @author Benjamin Blake (sitelease.ca)
      * @return array
@@ -151,5 +151,4 @@ trait RequestChainable
 
         return $repository;
     }
-
 }

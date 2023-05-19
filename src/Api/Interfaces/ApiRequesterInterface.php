@@ -61,7 +61,7 @@ interface ApiRequesterInterface
     public function configure();
 
     /**
-     * Send a GET request using an underlying reqest library
+     * Send a GET request using an underlying request library
      *
      * @param string $path
      * @param array $parameters
@@ -72,7 +72,7 @@ interface ApiRequesterInterface
     public function get($path, array $parameters = array(), $requestHeaders = array(), $debugRequest = false);
 
     /**
-     * Send a POST request using an underlying reqest library
+     * Send a POST request using an underlying request library
      *
      * @param string $path
      * @param array $body
@@ -83,7 +83,7 @@ interface ApiRequesterInterface
     public function post($path, $body, $requestHeaders = array(), $debugRequest = false);
 
     /**
-     * Send a PUT request using an underlying reqest library
+     * Send a PUT request using an underlying request library
      *
      * @param string $path
      * @param array $body
@@ -94,7 +94,7 @@ interface ApiRequesterInterface
     public function put($path, $body, $requestHeaders = array(), $debugRequest = false);
 
     /**
-     * Send a DELETE request using an underlying reqest library
+     * Send a DELETE request using an underlying request library
      *
      * @param string $path
      * @param array $requestHeaders

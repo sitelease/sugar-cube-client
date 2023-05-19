@@ -7,8 +7,8 @@ namespace Gitea\Model;
 use MyCLabs\Enum\Enum;
 
 /** Defines the state of a Gitea status. */
-final class StatusState extends Enum {
-
+final class StatusState extends Enum
+{
     /** @var string The status is an error. */
     const error = 'error';
 

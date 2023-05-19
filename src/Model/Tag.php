@@ -7,23 +7,24 @@ use Psr\Http\Message\UriInterface;
 
 use Gitea\Client;
 
-use \InvalidArgumentException;
+use stdClass;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea tag. */
-class Tag extends AbstractApiModel {
-
+class Tag extends AbstractApiModel
+{
     /** @var int The tag identifier. */
     private $id = -1;
 
     /** @var string The tag's name. */
     private $name = '';
 
-    /** @var string The tarball URL for the tag */
+    /** @var UriInterface The tarball URL for the tag */
     private $tarballURL;
 
-    /** @var string The zipball URL for the tag */
+    /** @var UriInterface The zipball URL for the tag */
     private $zipballURL;
 
     /** @var int The commit information for the tag */
@@ -39,7 +40,8 @@ class Tag extends AbstractApiModel {
      * @param int|string $id The tag identifier
      * @param string $name The tag name
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $id = $args[0];
@@ -67,7 +69,8 @@ class Tag extends AbstractApiModel {
      * @param object $map A JSON map representing an tag.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         $newTag = new static(
             $client,
             $caller,
@@ -85,9 +88,10 @@ class Tag extends AbstractApiModel {
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'id' => $this->getId(),
             'name' => $this->getName(),
@@ -104,55 +108,65 @@ class Tag extends AbstractApiModel {
      * Gets the tag identifier.
      * @return int The tag identifier.
      */
-    function getId(): string {
+    public function getId(): string
+    {
         return $this->id;
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
-    public function setName($name): self {
+    public function setName($name): self
+    {
         $this->name = $name;
         return $this;
     }
 
-    public function getTarballURL(): ?UriInterface {
+    public function getTarballURL(): ?UriInterface
+    {
         return $this->tarballURL;
     }
 
-    public function setTarballURL(?UriInterface $url): self {
+    public function setTarballURL(?UriInterface $url): self
+    {
         $this->tarballURL = $url;
         return $this;
     }
 
-    public function getZipballURL(): ?UriInterface {
+    public function getZipballURL(): ?UriInterface
+    {
         return $this->zipballURL;
     }
 
-    public function setZipballURL(?UriInterface $url): self {
+    public function setZipballURL(?UriInterface $url): self
+    {
         $this->zipballURL = $url;
         return $this;
     }
 
-    public function getCommitSha(): string {
+    public function getCommitSha(): string
+    {
         $commit = $this->commit;
         return $commit["sha"];
     }
 
-    public function setCommitSha(string $string): self {
+    public function setCommitSha(string $string): self
+    {
         $this->commit["sha"] = $string;
         return $this;
     }
 
-    public function getCommitUrl(): ?uri {
+    public function getCommitUrl(): ?uri
+    {
         $commit = $this->commit;
         return $commit["url"];
     }
 
-    public function setCommitUrl(?uri $url): self {
+    public function setCommitUrl(?uri $url): self
+    {
         $this->commit["url"] = $url;
         return $this;
     }
-
 }

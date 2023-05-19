@@ -9,11 +9,13 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
+use stdClass;
+
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea push event. */
-class PushEvent extends AbstractApiModel {
-
+class PushEvent extends AbstractApiModel
+{
     /** @var string The hash of the new Git revision. */
     private $after = '';
 
@@ -42,8 +44,9 @@ class PushEvent extends AbstractApiModel {
     private $sender;
 
     /** Creates a new event. */
-    function __construct(Client &$client, ?object $caller, ...$args) {
-        $this->commits = new \ArrayObject;
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
+        $this->commits = new \ArrayObject();
         parent::__construct($client, $caller, ...$args);
     }
 
@@ -87,13 +90,15 @@ class PushEvent extends AbstractApiModel {
             if (empty($headerSignature)) {
                 throw new \RuntimeException("FAILED: Signature Missing - The request is missing the Gitea signature");
             }
-    
+
             // calculate payload signature
             $payload_signature = hash_hmac('sha256', $rawContent, $secretKey, false);
-    
+
             // check payload signature against header signature
             if ($headerSignature != $payload_signature) {
-                throw new \RuntimeException("FAILED: Access Denied - The push event's secret does not match the expected secret");
+                throw new \RuntimeException(
+                    "FAILED: Access Denied - The push event's secret does not match the expected secret"
+                );
             }
         }
 
@@ -105,7 +110,8 @@ class PushEvent extends AbstractApiModel {
      * @param object $map A JSON map representing an event.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client, ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         $newEvent = new static(
             $client,
             $caller
@@ -119,7 +125,7 @@ class PushEvent extends AbstractApiModel {
         ->setSecret(isset($map->secret) && is_string($map->secret) ? $map->secret : '')
         ->setSender(isset($map->sender) && is_object($map->sender) ? User::fromJson($client, null, $map->sender) : null);
 
-        if(isset($map->commits) && is_array($map->commits)) {
+        if (isset($map->commits) && is_array($map->commits)) {
             $commitsArray = [];
             foreach ($map->commits as $commit) {
                 $commitsArray[] = PayloadCommit::fromJson($client, null, $commit);
@@ -134,7 +140,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the hash of the new Git revision.
      * @return string The hash of the new Git revision.
      */
-    function getAfter(): string {
+    public function getAfter(): string
+    {
         return $this->after;
     }
 
@@ -142,7 +149,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the hash of the new previous revision.
      * @return string The hash of the previous Git revision.
      */
-    function getBefore(): string {
+    public function getBefore(): string
+    {
         return $this->before;
     }
 
@@ -150,7 +158,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the revision commits.
      * @return \ArrayObject The revision commits.
      */
-    function getCommits(): \ArrayObject {
+    public function getCommits(): \ArrayObject
+    {
         return $this->commits;
     }
 
@@ -158,7 +167,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the URL for comparing the revisions.
      * @return UriInterface|null The URL for comparing the revisions.
      */
-    function getCompareUrl(): ?UriInterface {
+    public function getCompareUrl(): ?UriInterface
+    {
         return $this->compareUrl;
     }
 
@@ -166,7 +176,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the user who pushed the commits.
      * @return User|null The user who pushed the commits.
      */
-    function getPusher(): ?User {
+    public function getPusher(): ?User
+    {
         return $this->pusher;
     }
 
@@ -174,7 +185,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the Git reference.
      * @return string The Git reference.
      */
-    function getRef(): string {
+    public function getRef(): string
+    {
         return $this->ref;
     }
 
@@ -182,7 +194,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the repository where the commits were pushed.
      * @return Repository|null The repository where the commits were pushed.
      */
-    function getRepository(): ?Repository {
+    public function getRepository(): ?Repository
+    {
         return $this->repository;
     }
 
@@ -190,7 +203,8 @@ class PushEvent extends AbstractApiModel {
      * Gets the secret used to validate this event.
      * @return string The secret used to validate this event.
      */
-    function getSecret(): string {
+    public function getSecret(): string
+    {
         return $this->secret;
     }
 
@@ -198,20 +212,27 @@ class PushEvent extends AbstractApiModel {
      * Gets the user who sent this event.
      * @return User|null The user who sent this event.
      */
-    function getSender(): ?User {
+    public function getSender(): ?User
+    {
         return $this->sender;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'after' => $this->getAfter(),
             'before' => $this->getBefore(),
             'compare_url' => ($url = $this->getCompareUrl()) ? (string) $url : null,
-            'commits' => array_map(function(PayloadCommit $commit) { return $commit->jsonSerialize(); }, $this->getCommits()->getArrayCopy()),
+            'commits' => array_map(
+                function (PayloadCommit $commit) {
+                    return $commit->jsonSerialize();
+                },
+                $this->getCommits()->getArrayCopy()
+            ),
             'pusher' => ($user = $this->getPusher()) ? $user->jsonSerialize() : null,
             'ref' => $this->getRef(),
             'repository' => ($repository = $this->getRepository()) ? $repository->jsonSerialize() : null,
@@ -224,7 +245,8 @@ class PushEvent extends AbstractApiModel {
      * @param string $value The hash of the new Git revision.
      * @return $this This instance.
      */
-    function setAfter(string $value): self {
+    public function setAfter(string $value): self
+    {
         $this->after = $value;
         return $this;
     }
@@ -234,7 +256,8 @@ class PushEvent extends AbstractApiModel {
      * @param string $value The hash of the new previous revision.
      * @return $this This instance.
      */
-    function setBefore(string $value): self {
+    public function setBefore(string $value): self
+    {
         $this->before = $value;
         return $this;
     }
@@ -244,7 +267,8 @@ class PushEvent extends AbstractApiModel {
      * @param PayloadCommit[] $values The revision commits.
      * @return $this This instance.
      */
-    function setCommits(array $values): self {
+    public function setCommits(array $values): self
+    {
         $this->getCommits()->exchangeArray($values);
         return $this;
     }
@@ -254,7 +278,8 @@ class PushEvent extends AbstractApiModel {
      * @param UriInterface|null $value The URL for comparing the revisions.
      * @return $this This instance.
      */
-    function setCompareUrl(?UriInterface $value): self {
+    public function setCompareUrl(?UriInterface $value): self
+    {
         $this->compareUrl = $value;
         return $this;
     }
@@ -264,7 +289,8 @@ class PushEvent extends AbstractApiModel {
      * @param User|null $value The new pusher.
      * @return $this This instance.
      */
-    function setPusher(?User $value): self {
+    public function setPusher(?User $value): self
+    {
         $this->pusher = $value;
         return $this;
     }
@@ -274,7 +300,8 @@ class PushEvent extends AbstractApiModel {
      * @param string $value The new Git reference.
      * @return $this This instance.
      */
-    function setRef(string $value): self {
+    public function setRef(string $value): self
+    {
         $this->ref = $value;
         return $this;
     }
@@ -284,7 +311,8 @@ class PushEvent extends AbstractApiModel {
      * @param Repository|null $value The new repository.
      * @return $this This instance.
      */
-    function setRepository(?Repository $value): self {
+    public function setRepository(?Repository $value): self
+    {
         $this->repository = $value;
         return $this;
     }
@@ -294,7 +322,8 @@ class PushEvent extends AbstractApiModel {
      * @param string $value The new secret used to validate this event.
      * @return $this This instance.
      */
-    function setSecret(string $value): self {
+    public function setSecret(string $value): self
+    {
         $this->secret = $value;
         return $this;
     }
@@ -304,7 +333,8 @@ class PushEvent extends AbstractApiModel {
      * @param User|null $value The new sender.
      * @return $this This instance.
      */
-    function setSender(?User $value): self {
+    public function setSender(?User $value): self
+    {
         $this->sender = $value;
         return $this;
     }

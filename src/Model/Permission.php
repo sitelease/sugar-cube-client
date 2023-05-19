@@ -7,13 +7,14 @@ use Psr\Http\Message\UriInterface;
 
 use Gitea\Client;
 
-use \InvalidArgumentException;
+use stdClass;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a set of permissions. */
-class Permission extends AbstractApiModel {
-
+class Permission extends AbstractApiModel
+{
     /** @var bool Value indicating whether administrator access is allowed. */
     private $admin;
 
@@ -31,7 +32,8 @@ class Permission extends AbstractApiModel {
      * @param bool $pull Value indicating whether pull is allowed.
      * @param bool $push Value indicating whether push is allowed.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $admin = $args[0];
@@ -63,7 +65,8 @@ class Permission extends AbstractApiModel {
      * @param object $map A JSON map representing a user.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return new static(
             $client,
             $caller,
@@ -77,7 +80,8 @@ class Permission extends AbstractApiModel {
      * Gets a value indicating whether administrator access is allowed.
      * @return bool `true` if administrator access is allowed, otherwise `false`.
      */
-    function getAdmin(): bool {
+    public function getAdmin(): bool
+    {
         return $this->admin;
     }
 
@@ -85,7 +89,8 @@ class Permission extends AbstractApiModel {
      * Gets a value indicating whether pull is allowed.
      * @return bool `true` if pull is allowed, otherwise `false`.
      */
-    function getPull(): bool {
+    public function getPull(): bool
+    {
         return $this->pull;
     }
 
@@ -93,15 +98,17 @@ class Permission extends AbstractApiModel {
      * Gets a value indicating whether push is allowed.
      * @return bool `true` if push is allowed, otherwise `false`.
      */
-    function getPush(): bool {
+    public function getPush(): bool
+    {
         return $this->push;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'admin' => $this->getAdmin(),
             'pull' => $this->getPull(),
@@ -114,7 +121,8 @@ class Permission extends AbstractApiModel {
      * @param bool $value `true` to allow administrator access, otherwise `false`.
      * @return $this This instance.
      */
-    function setAdmin(bool $value): self {
+    public function setAdmin(bool $value): self
+    {
         $this->admin = $value;
         return $this;
     }
@@ -124,7 +132,8 @@ class Permission extends AbstractApiModel {
      * @param bool $value `true` to allow pull, otherwise `false`.
      * @return $this This instance.
      */
-    function setPull(bool $value): self {
+    public function setPull(bool $value): self
+    {
         $this->pull = $value;
         return $this;
     }
@@ -134,7 +143,8 @@ class Permission extends AbstractApiModel {
      * @param bool $value `true` to allow push, otherwise `false`.
      * @return $this This instance.
      */
-    function setPush(bool $value): self {
+    public function setPush(bool $value): self
+    {
         $this->push = $value;
         return $this;
     }

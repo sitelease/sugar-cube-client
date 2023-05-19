@@ -37,7 +37,7 @@ interface AllRequesterInterface
      *
      * @param integer $page The page of items to return
      * @param integer $limit Maximum number of items per page
-     * @param array $extraOptions An array of extra options to pass the API reoute
+     * @param array $extraOptions An array of extra options to pass the API route
      * @return ApiItemCollection
      */
     public function getPageOfAllItems(int $page = 1, int $limit = null, array $extraOptions = array());

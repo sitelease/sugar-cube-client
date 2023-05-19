@@ -1,12 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
+
 namespace Gitea\Model;
 
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
-/** Represents a Gitea user. */
-class User implements \JsonSerializable {
+use stdClass;
+use JsonSerializable;
 
+/** Represents a Gitea user. */
+class User implements JsonSerializable
+{
     /** @var UriInterface|null The URL to the user's avatar. */
     private $avatarUrl;
 
@@ -30,7 +35,8 @@ class User implements \JsonSerializable {
      * @param int $id The user identifier.
      * @param string $login The name of the Gitea account.
      */
-    function __construct(int $id, string $login) {
+    public function __construct(int $id, string $login)
+    {
         $this->id = $id;
         $this->setLogin($login);
     }
@@ -40,19 +46,25 @@ class User implements \JsonSerializable {
      * @param object $map A JSON map representing a user.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $map): self {
-        return (new static(isset($map->id) && is_numeric($map->id) ? $map->id : -1, isset($map->login) && is_string($map->login) ? $map->login : ''))
-            ->setAvatarUrl(isset($map->avatar_url) && is_string($map->avatar_url) ? new Uri($map->avatar_url) : null)
-            ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
-            ->setFullName(isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '')
-            ->setLanguage(isset($map->language) && is_string($map->language) ? $map->language : '');
+    public static function fromJson(object $map): self
+    {
+        return (
+            new static(isset($map->id)
+            && is_numeric($map->id) ? $map->id : -1, isset($map->login)
+            && is_string($map->login) ? $map->login : '')
+        )
+        ->setAvatarUrl(isset($map->avatar_url) && is_string($map->avatar_url) ? new Uri($map->avatar_url) : null)
+        ->setEmail(isset($map->email) && is_string($map->email) ? mb_strtolower($map->email) : '')
+        ->setFullName(isset($map->full_name) && is_string($map->full_name) ? $map->full_name : '')
+        ->setLanguage(isset($map->language) && is_string($map->language) ? $map->language : '');
     }
 
     /**
      * Gets the URL of the avatar image.
      * @return UriInterface|null The URL of the avatar image.
      */
-    function getAvatarUrl(): ?UriInterface {
+    public function getAvatarUrl(): ?UriInterface
+    {
         return $this->avatarUrl;
     }
 
@@ -60,7 +72,8 @@ class User implements \JsonSerializable {
      * Gets the mail address.
      * @return string The mail address.
      */
-    function getEmail(): string {
+    public function getEmail(): string
+    {
         return $this->email;
     }
 
@@ -68,7 +81,8 @@ class User implements \JsonSerializable {
      * Gets the full name.
      * @return string The full name.
      */
-    function getFullName(): string {
+    public function getFullName(): string
+    {
         return $this->fullName;
     }
 
@@ -76,7 +90,8 @@ class User implements \JsonSerializable {
      * Gets the user identifier.
      * @return int The user identifier.
      */
-    function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -84,7 +99,8 @@ class User implements \JsonSerializable {
      * Gets the user locale.
      * @return string The user locale.
      */
-    function getLanguage(): string {
+    public function getLanguage(): string
+    {
         return $this->language;
     }
 
@@ -92,15 +108,17 @@ class User implements \JsonSerializable {
      * Gets the name of the Gitea account.
      * @return string The name of the Gitea account.
      */
-    function getLogin(): string {
+    public function getLogin(): string
+    {
         return $this->login;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'avatar_url' => ($url = $this->getAvatarUrl()) ? (string) $url : null,
             'email' => $this->getEmail(),
@@ -116,7 +134,8 @@ class User implements \JsonSerializable {
      * @param UriInterface|null $value The new avatar URL.
      * @return $this This instance.
      */
-    function setAvatarUrl(?UriInterface $value): self {
+    public function setAvatarUrl(?UriInterface $value): self
+    {
         $this->avatarUrl = $value;
         return $this;
     }
@@ -126,7 +145,8 @@ class User implements \JsonSerializable {
      * @param string $value The new mail address.
      * @return $this This instance.
      */
-    function setEmail(string $value): self {
+    public function setEmail(string $value): self
+    {
         $this->email = $value;
         return $this;
     }
@@ -136,7 +156,8 @@ class User implements \JsonSerializable {
      * @param string $value The new full name.
      * @return $this This instance.
      */
-    function setFullName(string $value): self {
+    public function setFullName(string $value): self
+    {
         $this->fullName = $value;
         return $this;
     }
@@ -146,7 +167,8 @@ class User implements \JsonSerializable {
      * @param string $value The new user locale.
      * @return $this This instance.
      */
-    function setLanguage(string $value): self {
+    public function setLanguage(string $value): self
+    {
         $this->language = $value;
         return $this;
     }
@@ -156,7 +178,8 @@ class User implements \JsonSerializable {
      * @param string $value The new Gitea account.
      * @return $this This instance.
      */
-    function setLogin(string $value): self {
+    public function setLogin(string $value): self
+    {
         $this->login = $value;
         return $this;
     }

@@ -7,13 +7,14 @@ use Psr\Http\Message\UriInterface;
 
 use Gitea\Client;
 
-use \InvalidArgumentException;
+use stdClass;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents the GPG verification of a commit. */
-class PayloadCommitVerification extends AbstractApiModel {
-
+class PayloadCommitVerification extends AbstractApiModel
+{
     /** @var bool Value indicating whether the verification has succeeded. */
     private $isVerified;
 
@@ -32,7 +33,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * @param object|null $caller The object that called this method
      * @param bool $isVerified Value indicating whether the verification has succeeded.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 1) {
             $isVerified = $args[0];
@@ -54,7 +56,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * @param object $map A JSON map representing a commit.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return (
             new static(
                 $client,
@@ -71,7 +74,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * Gets the custom message sent with the verification request.
      * @return string The custom message sent with the verification request.
      */
-    function getPayload(): string {
+    public function getPayload(): string
+    {
         return $this->payload;
     }
 
@@ -79,7 +83,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * Gets the message providing details about the verification.
      * @return string The message providing details about the verification.
      */
-    function getReason(): string {
+    public function getReason(): string
+    {
         return $this->reason;
     }
 
@@ -87,7 +92,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * Gets the signing key used for the verification.
      * @return string The signing key used for the verification.
      */
-    function getSignature(): string {
+    public function getSignature(): string
+    {
         return $this->signature;
     }
 
@@ -95,15 +101,17 @@ class PayloadCommitVerification extends AbstractApiModel {
      * Gets a value indicating whether the verification has succeeded.
      * @return bool `true` if the verification has succeeded, otherwise `false`.
      */
-    function isVerified(): bool {
+    public function isVerified(): bool
+    {
         return $this->isVerified;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'payload' => $this->getPayload(),
             'reason' => $this->getReason(),
@@ -117,7 +125,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * @param string $value A new custom message.
      * @return $this This instance.
      */
-    function setPayload(string $value): self {
+    public function setPayload(string $value): self
+    {
         $this->payload = $value;
         return $this;
     }
@@ -127,7 +136,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * @param string $value A new message providing details about the verification.
      * @return $this This instance.
      */
-    function setReason(string $value): self {
+    public function setReason(string $value): self
+    {
         $this->reason = $value;
         return $this;
     }
@@ -137,7 +147,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * @param string $value The new signing key.
      * @return $this This instance.
      */
-    function setSignature(string $value): self {
+    public function setSignature(string $value): self
+    {
         $this->signature = $value;
         return $this;
     }
@@ -147,7 +158,8 @@ class PayloadCommitVerification extends AbstractApiModel {
      * @param bool $value `true` if the verification has succeeded, otherwise `false`.
      * @return $this This instance.
      */
-    function setVerified(bool $value): self {
+    public function setVerified(bool $value): self
+    {
         $this->isVerified = $value;
         return $this;
     }

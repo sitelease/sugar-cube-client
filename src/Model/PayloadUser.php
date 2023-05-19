@@ -7,14 +7,14 @@ use Psr\Http\Message\UriInterface;
 
 use Gitea\Client;
 
-use \stdClass;
-use \InvalidArgumentException;
+use stdClass;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents the author or committer of a commit. */
-class PayloadUser extends AbstractApiModel {
-
+class PayloadUser extends AbstractApiModel
+{
     /** @var string The mail address. */
     private $email = '';
 
@@ -30,7 +30,8 @@ class PayloadUser extends AbstractApiModel {
      * @param object|null $caller The object that called this method
      * @param string $username The name of the Gitea account.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 1) {
             $username = $args[0];
@@ -52,7 +53,8 @@ class PayloadUser extends AbstractApiModel {
      * @param object $map A JSON map representing a user.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return (
             new static(
                 $client,
@@ -68,7 +70,8 @@ class PayloadUser extends AbstractApiModel {
      * Gets the mail address.
      * @return string The mail address.
      */
-    function getEmail(): string {
+    public function getEmail(): string
+    {
         return $this->email;
     }
 
@@ -76,7 +79,8 @@ class PayloadUser extends AbstractApiModel {
      * Gets the full name.
      * @return string The full name.
      */
-    function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
@@ -84,7 +88,8 @@ class PayloadUser extends AbstractApiModel {
      * Gets the name of the Gitea account.
      * @return string The name of the Gitea account.
      */
-    function getUsername(): string {
+    public function getUsername(): string
+    {
         return $this->username;
     }
 
@@ -92,7 +97,8 @@ class PayloadUser extends AbstractApiModel {
      * Converts this object to a map in JSON format.
      * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'email' => $this->getEmail(),
             'name' => $this->getName(),
@@ -105,7 +111,8 @@ class PayloadUser extends AbstractApiModel {
      * @param string $value The new mail address.
      * @return $this This instance.
      */
-    function setEmail(string $value): self {
+    public function setEmail(string $value): self
+    {
         $this->email = $value;
         return $this;
     }
@@ -115,7 +122,8 @@ class PayloadUser extends AbstractApiModel {
      * @param string $value The new full name.
      * @return $this This instance.
      */
-    function setName(string $value): self {
+    public function setName(string $value): self
+    {
         $this->name = $value;
         return $this;
     }

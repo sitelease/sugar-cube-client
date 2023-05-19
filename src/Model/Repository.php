@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Gitea\Model;
 
@@ -12,17 +13,19 @@ use Gitea\Api\Repositories;
 use Gitea\Api\Branches;
 use Gitea\Api\Tags;
 
-use \InvalidArgumentException;
+use stdClass;
+use DateTime;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a repository. */
-class Repository extends AbstractApiModel {
-
+class Repository extends AbstractApiModel
+{
     /** @var UriInterface|null The HTTP-based URL for cloning this repository. */
     private $cloneUrl;
 
-    /** @var \DateTime|null The date the repository was created. */
+    /** @var DateTime|null The date the repository was created. */
     private $createdAt;
 
     /** @var string The name of the default branch. */
@@ -79,7 +82,7 @@ class Repository extends AbstractApiModel {
     /** @var int The number of stars of this repository. */
     private $starsCount = 0;
 
-    /** @var \DateTime|null The date the repository was updated. */
+    /** @var DateTime|null The date the repository was updated. */
     private $updatedAt;
 
     /** @var int The number of watchers of this repository. */
@@ -95,24 +98,34 @@ class Repository extends AbstractApiModel {
      * @param int $id The repository identifier.
      * @param string $fullName The full name of the repository.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $id = $args[0];
             $fullName = $args[1];
             if (!is_numeric($id)) {
                 $argumentType = gettype($id);
-                throw new InvalidArgumentException("The \"construct()\" function requires the 3rd parameter to be of the integer type, but a \"$argumentType\" was passed in");
+                throw new InvalidArgumentException(
+                    "The \"construct()\" function requires the 3rd parameter to be of"
+                    ." the integer type, but a \"$argumentType\" was passed in"
+                );
             }
             if (!is_string($fullName)) {
                 $argumentType = gettype($fullName);
-                throw new InvalidArgumentException("The \"construct()\" function requires the 4th parameter to be of the string type, but a \"$argumentType\" was passed in");
+                throw new InvalidArgumentException(
+                    "The \"construct()\" function requires the 4th parameter to be of"
+                    ." the string type, but a \"$argumentType\" was passed in"
+                );
             }
             $this->id = $id;
             $this->setFullName($fullName);
         } else {
             $numArgs = func_num_args();
-            throw new InvalidArgumentException("The \"construct()\" function requires 4 parameters but only $numArgs were passed in");
+            throw new InvalidArgumentException(
+                "The \"construct()\" function requires 4 parameters but only $numArgs"
+                ." were passed in"
+            );
         }
     }
 
@@ -123,7 +136,8 @@ class Repository extends AbstractApiModel {
      * @param object $map A JSON map representing a repository.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return (
             new static(
                 $client,
@@ -133,7 +147,7 @@ class Repository extends AbstractApiModel {
             )
         )
         ->setCloneUrl(isset($map->clone_url) && is_string($map->clone_url) ? new Uri($map->clone_url) : null)
-        ->setCreatedAt(isset($map->created_at) && is_string($map->created_at) ? new \DateTime($map->created_at) : null)
+        ->setCreatedAt(isset($map->created_at) && is_string($map->created_at) ? new DateTime($map->created_at) : null)
         ->setDefaultBranch(isset($map->default_branch) && is_string($map->default_branch) ? $map->default_branch : '')
         ->setDescription(isset($map->description) && is_string($map->description) ? $map->description : '')
         ->setEmpty(isset($map->empty) && is_bool($map->empty) ? $map->empty : true)
@@ -142,15 +156,27 @@ class Repository extends AbstractApiModel {
         ->setHtmlUrl(isset($map->html_url) && is_string($map->html_url) ? new Uri($map->html_url) : null)
         ->setMirror(isset($map->mirror) && is_bool($map->mirror) ? $map->mirror : false)
         ->setName(isset($map->name) && is_string($map->name) ? $map->name : '')
-        ->setOpenIssuesCount(isset($map->open_issues_count) && is_numeric($map->open_issues_count) ? $map->open_issues_count : 0)
+        ->setOpenIssuesCount(
+            isset($map->open_issues_count)
+            && is_numeric($map->open_issues_count)
+            ? $map->open_issues_count : 0
+        )
         ->setOwner(isset($map->owner) && is_object($map->owner) ? Owner::fromJson($client, null, $map->owner) : null)
-        ->setParent(isset($map->parent) && is_object($map->parent) ? Repository::fromJson($client, null, $map->parent) : null)
-        ->setPermissions(isset($map->permissions) && is_object($map->permissions) ? Permission::fromJson($client, null, $map->permissions) : null)
+        ->setParent(
+            isset($map->parent)
+            && is_object($map->parent)
+            ? Repository::fromJson($client, null, $map->parent) : null
+        )
+        ->setPermissions(
+            isset($map->permissions)
+            && is_object($map->permissions)
+            ? Permission::fromJson($client, null, $map->permissions) : null
+        )
         ->setPrivate(isset($map->private) && is_bool($map->private) ? $map->private : false)
         ->setSize(isset($map->size) && is_numeric($map->size) ? $map->size : 0)
         ->setSshUrl(isset($map->ssh_url) && is_string($map->ssh_url) ? new Uri($map->ssh_url) : null)
         ->setStarsCount(isset($map->stars_count) && is_numeric($map->stars_count) ? $map->stars_count : 0)
-        ->setUpdatedAt(isset($map->updated_at) && is_string($map->updated_at) ? new \DateTime($map->updated_at) : null)
+        ->setUpdatedAt(isset($map->updated_at) && is_string($map->updated_at) ? new DateTime($map->updated_at) : null)
         ->setWatchersCount(isset($map->watchers_count) && is_numeric($map->watchers_count) ? $map->watchers_count : 0)
         ->setWebsite(isset($map->website) && is_string($map->website) ? new Uri($map->website) : null);
     }
@@ -159,15 +185,17 @@ class Repository extends AbstractApiModel {
      * Gets the HTTP-based URL for cloning this repository.
      * @return UriInterface|null The HTTP-based URL for cloning this repository.
      */
-    function getCloneUrl(): ?UriInterface {
+    public function getCloneUrl(): ?UriInterface
+    {
         return $this->cloneUrl;
     }
 
     /**
      * Gets the date the repository was created.
-     * @return \DateTime|null The date the repository was created.
+     * @return DateTime|null The date the repository was created.
      */
-    function getCreatedAt(): ?\DateTime {
+    public function getCreatedAt(): ?DateTime
+    {
         return $this->createdAt;
     }
 
@@ -175,7 +203,8 @@ class Repository extends AbstractApiModel {
      * Gets the name of the default branch.
      * @return string The name of the default branch.
      */
-    function getDefaultBranch(): string {
+    public function getDefaultBranch(): string
+    {
         return $this->defaultBranch;
     }
 
@@ -183,7 +212,8 @@ class Repository extends AbstractApiModel {
      * Gets the repository description.
      * @return string The repository description.
      */
-    function getDescription(): string {
+    public function getDescription(): string
+    {
         return $this->description;
     }
 
@@ -191,7 +221,8 @@ class Repository extends AbstractApiModel {
      * Gets the number of forks of this repository.
      * @return int The number of forks of this repository.
      */
-    function getForksCount(): int {
+    public function getForksCount(): int
+    {
         return $this->forksCount;
     }
 
@@ -199,7 +230,8 @@ class Repository extends AbstractApiModel {
      * Gets the full name.
      * @return string The full name.
      */
-    function getFullName(): string {
+    public function getFullName(): string
+    {
         return $this->fullName;
     }
 
@@ -207,7 +239,8 @@ class Repository extends AbstractApiModel {
      * Gets the Gitea URL of this repository.
      * @return UriInterface|null The Gitea URL of this repository.
      */
-    function getHtmlUrl(): ?UriInterface {
+    public function getHtmlUrl(): ?UriInterface
+    {
         return $this->htmlUrl;
     }
 
@@ -215,7 +248,8 @@ class Repository extends AbstractApiModel {
      * Gets the repository identifier.
      * @return int The repository identifier.
      */
-    function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -223,8 +257,11 @@ class Repository extends AbstractApiModel {
      * Gets the repository name.
      * @return string The repository name.
      */
-    function getName(): string {
-        if (mb_strlen($this->name)) return $this->name;
+    public function getName(): string
+    {
+        if (mb_strlen($this->name)) {
+            return $this->name;
+        }
         return mb_strlen($fullName = $this->getFullName()) ? explode('/', $fullName)[1] : '';
     }
 
@@ -232,7 +269,8 @@ class Repository extends AbstractApiModel {
      * Gets the number of open issues of this repository.
      * @return int The number of open issues of this repository.
      */
-    function getOpenIssuesCount(): int {
+    public function getOpenIssuesCount(): int
+    {
         return $this->openIssuesCount;
     }
 
@@ -240,7 +278,8 @@ class Repository extends AbstractApiModel {
      * Gets the repository owner.
      * @return User|null The repository owner.
      */
-    function getOwner(): ?Owner {
+    public function getOwner(): ?Owner
+    {
         return $this->owner;
     }
 
@@ -248,7 +287,8 @@ class Repository extends AbstractApiModel {
      * Gets the parent repository, if this repository is a fork or a mirror.
      * @return Repository|null The parent repository, if this repository is a fork or a mirror.
      */
-    function getParent(): ?Repository {
+    public function getParent(): ?Repository
+    {
         return $this->parent;
     }
 
@@ -256,7 +296,8 @@ class Repository extends AbstractApiModel {
      * Gets the repository permissions.
      * @return Permission|null The repository permissions.
      */
-    function getPermissions(): ?Permission {
+    public function getPermissions(): ?Permission
+    {
         return $this->permissions;
     }
 
@@ -264,7 +305,8 @@ class Repository extends AbstractApiModel {
      * Gets the repository size, in kilobytes.
      * @return int The repository size, in kilobytes.
      */
-    function getSize(): int {
+    public function getSize(): int
+    {
         return $this->size;
     }
 
@@ -272,7 +314,8 @@ class Repository extends AbstractApiModel {
      * Gets the SSH-based URL for cloning this repository.
      * @return UriInterface|null The SSH-based URL for cloning this repository.
      */
-    function getSshUrl(): ?UriInterface {
+    public function getSshUrl(): ?UriInterface
+    {
         return $this->sshUrl;
     }
 
@@ -280,15 +323,17 @@ class Repository extends AbstractApiModel {
      * Gets the number of stars of this repository.
      * @return int The number of stars of this repository.
      */
-    function getStarsCount(): int {
+    public function getStarsCount(): int
+    {
         return $this->starsCount;
     }
 
     /**
      * Gets the date the repository was updated.
-     * @return \DateTime|null The date the repository was updated.
+     * @return DateTime|null The date the repository was updated.
      */
-    function getUpdatedAt(): ?\DateTime {
+    public function getUpdatedAt(): ?DateTime
+    {
         return $this->updatedAt;
     }
 
@@ -296,7 +341,8 @@ class Repository extends AbstractApiModel {
      * Gets the number of watchers of this repository.
      * @return int The number of watchers of this repository.
      */
-    function getWatchersCount(): int {
+    public function getWatchersCount(): int
+    {
         return $this->watchersCount;
     }
 
@@ -304,7 +350,8 @@ class Repository extends AbstractApiModel {
      * Gets the URL of the repository website.
      * @return UriInterface|null The URL of the repository website.
      */
-    function getWebsite(): ?UriInterface {
+    public function getWebsite(): ?UriInterface
+    {
         return $this->website;
     }
 
@@ -312,7 +359,8 @@ class Repository extends AbstractApiModel {
      * Gets a value indicating whether this repository is empty.
      * @return bool `true` if this repository is empty, otherwise `false`.
      */
-    function isEmpty(): bool {
+    public function isEmpty(): bool
+    {
         return $this->isEmpty;
     }
 
@@ -320,7 +368,8 @@ class Repository extends AbstractApiModel {
      * Gets a value indicating whether this repository is a fork.
      * @return bool `true` if this repository is a fork, otherwise `false`.
      */
-    function isFork(): bool {
+    public function isFork(): bool
+    {
         return $this->isFork;
     }
 
@@ -328,7 +377,8 @@ class Repository extends AbstractApiModel {
      * Gets a value indicating whether this repository is a mirror.
      * @return bool `true` if this repository is a mirror, otherwise `false`.
      */
-    function isMirror(): bool {
+    public function isMirror(): bool
+    {
         return $this->isMirror;
     }
 
@@ -336,15 +386,17 @@ class Repository extends AbstractApiModel {
      * Gets a value indicating whether this repository is private.
      * @return bool `true` if this repository is private, otherwise `false`.
      */
-    function isPrivate(): bool {
+    public function isPrivate(): bool
+    {
         return $this->isPrivate;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'clone_url' => ($url = $this->getCloneUrl()) ? (string) $url : null,
             'created_at' => ($date = $this->getCreatedAt()) ? $date->format('c') : null,
@@ -377,17 +429,19 @@ class Repository extends AbstractApiModel {
      * @param UriInterface|null $value The new URL for cloning this repository.
      * @return $this This instance.
      */
-    function setCloneUrl(?UriInterface $value): self {
+    public function setCloneUrl(?UriInterface $value): self
+    {
         $this->cloneUrl = $value;
         return $this;
     }
 
     /**
      * Sets the date the repository was created.
-     * @param \DateTime|null $value The new date of creation.
+     * @param DateTime|null $value The new date of creation.
      * @return $this This instance.
      */
-    function setCreatedAt(?\DateTime $value): self {
+    public function setCreatedAt(?DateTime $value): self
+    {
         $this->createdAt = $value;
         return $this;
     }
@@ -397,7 +451,8 @@ class Repository extends AbstractApiModel {
      * @param string $value The new default branch.
      * @return $this This instance.
      */
-    function setDefaultBranch(string $value): self {
+    public function setDefaultBranch(string $value): self
+    {
         $this->defaultBranch = $value;
         return $this;
     }
@@ -407,7 +462,8 @@ class Repository extends AbstractApiModel {
      * @param string $value The new repository description.
      * @return $this This instance.
      */
-    function setDescription(string $value): self {
+    public function setDescription(string $value): self
+    {
         $this->description = $value;
         return $this;
     }
@@ -417,7 +473,8 @@ class Repository extends AbstractApiModel {
      * @param bool $value `true` if this repository is empty, otherwise `false`.
      * @return $this This instance.
      */
-    function setEmpty(bool $value): self {
+    public function setEmpty(bool $value): self
+    {
         $this->isEmpty = $value;
         return $this;
     }
@@ -427,7 +484,8 @@ class Repository extends AbstractApiModel {
      * @param bool $value `true` if this repository is a fork, otherwise `false`.
      * @return $this This instance.
      */
-    function setFork(bool $value): self {
+    public function setFork(bool $value): self
+    {
         $this->isFork = $value;
         return $this;
     }
@@ -437,7 +495,8 @@ class Repository extends AbstractApiModel {
      * @param int $value The new number of forks.
      * @return $this This instance.
      */
-    function setForksCount(int $value): self {
+    public function setForksCount(int $value): self
+    {
         $this->forksCount = max(0, $value);
         return $this;
     }
@@ -447,7 +506,8 @@ class Repository extends AbstractApiModel {
      * @param string $value The new full name.
      * @return $this This instance.
      */
-    function setFullName(string $value): self {
+    public function setFullName(string $value): self
+    {
         $this->fullName = $value;
         return $this;
     }
@@ -457,7 +517,8 @@ class Repository extends AbstractApiModel {
      * @param UriInterface|null $value The new Gitea URL.
      * @return $this This instance.
      */
-    function setHtmlUrl(?UriInterface $value): self {
+    public function setHtmlUrl(?UriInterface $value): self
+    {
         $this->htmlUrl = $value;
         return $this;
     }
@@ -467,7 +528,8 @@ class Repository extends AbstractApiModel {
      * @param bool $value `true` if this repository is a mirror, otherwise `false`.
      * @return $this This instance.
      */
-    function setMirror(bool $value): self {
+    public function setMirror(bool $value): self
+    {
         $this->isMirror = $value;
         return $this;
     }
@@ -477,7 +539,8 @@ class Repository extends AbstractApiModel {
      * @param string $value The new repository name.
      * @return $this This instance.
      */
-    function setName(string $value): self {
+    public function setName(string $value): self
+    {
         $this->name = $value;
         return $this;
     }
@@ -487,7 +550,8 @@ class Repository extends AbstractApiModel {
      * @param int $value The new number of open issues.
      * @return $this This instance.
      */
-    function setOpenIssuesCount(int $value): self {
+    public function setOpenIssuesCount(int $value): self
+    {
         $this->openIssuesCount = max(0, $value);
         return $this;
     }
@@ -497,7 +561,8 @@ class Repository extends AbstractApiModel {
      * @param User|null $value The new owner.
      * @return $this This instance.
      */
-    function setOwner(?Owner $value): self {
+    public function setOwner(?Owner $value): self
+    {
         $this->owner = $value;
         return $this;
     }
@@ -507,7 +572,8 @@ class Repository extends AbstractApiModel {
      * @param Repository|null $value The new parent repository.
      * @return $this This instance.
      */
-    function setParent(?Repository $value): self {
+    public function setParent(?Repository $value): self
+    {
         $this->parent = $value;
         return $this;
     }
@@ -517,7 +583,8 @@ class Repository extends AbstractApiModel {
      * @param Permission|null $value The new permissions.
      * @return $this This instance.
      */
-    function setPermissions(?Permission $value): self {
+    public function setPermissions(?Permission $value): self
+    {
         $this->permissions = $value;
         return $this;
     }
@@ -527,7 +594,8 @@ class Repository extends AbstractApiModel {
      * @param bool $value `true` if this repository is private, otherwise `false`.
      * @return $this This instance.
      */
-    function setPrivate(bool $value): self {
+    public function setPrivate(bool $value): self
+    {
         $this->isPrivate = $value;
         return $this;
     }
@@ -537,7 +605,8 @@ class Repository extends AbstractApiModel {
      * @param int $value The new repository size, in kilobytes.
      * @return $this This instance.
      */
-    function setSize(int $value): self {
+    public function setSize(int $value): self
+    {
         $this->size = $value;
         return $this;
     }
@@ -547,7 +616,8 @@ class Repository extends AbstractApiModel {
      * @param UriInterface|null $value The new URL for cloning this repository.
      * @return $this This instance.
      */
-    function setSshUrl(?UriInterface $value): self {
+    public function setSshUrl(?UriInterface $value): self
+    {
         $this->sshUrl = $value;
         return $this;
     }
@@ -557,17 +627,19 @@ class Repository extends AbstractApiModel {
      * @param int $value The new number of stars.
      * @return $this This instance.
      */
-    function setStarsCount(int $value): self {
+    public function setStarsCount(int $value): self
+    {
         $this->starsCount = max(0, $value);
         return $this;
     }
 
     /**
      * Sets the date the repository was updated.
-     * @param \DateTime|null $value The new date of update.
+     * @param DateTime|null $value The new date of update.
      * @return $this This instance.
      */
-    function setUpdatedAt(?\DateTime $value): self {
+    public function setUpdatedAt(?DateTime $value): self
+    {
         $this->updatedAt = $value;
         return $this;
     }
@@ -577,7 +649,8 @@ class Repository extends AbstractApiModel {
      * @param int $value The new number of watchers.
      * @return $this This instance.
      */
-    function setWatchersCount(int $value): self {
+    public function setWatchersCount(int $value): self
+    {
         $this->watchersCount = max(0, $value);
         return $this;
     }
@@ -587,7 +660,8 @@ class Repository extends AbstractApiModel {
      * @param UriInterface|null $value The new repository website.
      * @return $this This instance.
      */
-    function setWebsite(?UriInterface $value): self {
+    public function setWebsite(?UriInterface $value): self
+    {
         $this->website = $value;
         return $this;
     }
@@ -644,5 +718,4 @@ class Repository extends AbstractApiModel {
             return $tagsApi->fromRepository($owner->getUsername(), $this->getName());
         }
     }
-
 }

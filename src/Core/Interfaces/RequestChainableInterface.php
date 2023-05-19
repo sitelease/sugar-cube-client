@@ -6,7 +6,7 @@ use Gitea\Client;
 use Gitea\Model\Repository;
 
 /**
- * Interface that allows the tracking of request heirarchies
+ * Interface that allows the tracking of request hierarchies
  *
  * @author Benjamin Blake (sitelease.ca)
  */
@@ -31,7 +31,7 @@ interface RequestChainableInterface
     public function setCaller(?object $object);
 
     /**
-     * Return the request chain heirarchy
+     * Return the request chain hierarchy
      * as an array of objects
      *
      * This is useful if you need to know
@@ -58,11 +58,11 @@ interface RequestChainableInterface
     public function searchRequestChain(string $class): ?object;
 
     /**
-     * Return the request chain heirarchy
+     * Return the request chain hierarchy
      * as a string of class names
      *
      * This is useful if you need to quickly print out
-     * a breadcrumb like heirarchy of callers
+     * a breadcrumb like hierarchy of callers
      *
      * @author Benjamin Blake (sitelease.ca)
      * @return array

@@ -1,11 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
+
 namespace Gitea\Model;
 
 use MyCLabs\Enum\Enum;
 
 /** Defines the permission of a team. */
-final class TeamPermission extends Enum {
-
+final class TeamPermission extends Enum
+{
     /** @var string The team has the administrator permission. */
     const admin = 'admin';
 

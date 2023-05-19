@@ -2,16 +2,18 @@
 
 namespace Gitea\Model;
 
+use Gitea\Client;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
-use Gitea\Client;
+use stdClass;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea owner. */
-class Owner extends AbstractApiModel {
-
+class Owner extends AbstractApiModel
+{
     /** @var int The owner identifier. */
     private $id;
 
@@ -43,7 +45,8 @@ class Owner extends AbstractApiModel {
      * @param int $id The owner identifier.
      * @param string $login The name of the Gitea account.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $id = $args[0];
@@ -71,7 +74,8 @@ class Owner extends AbstractApiModel {
      * @param object $map A JSON map representing a owner.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return (
             new static(
                 $client,
@@ -90,9 +94,10 @@ class Owner extends AbstractApiModel {
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'id' => $this->getId(),
             'login' => $this->getLogin(),
@@ -109,7 +114,8 @@ class Owner extends AbstractApiModel {
      * Gets the owner identifier.
      * @return int The owner identifier.
      */
-    function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -117,7 +123,8 @@ class Owner extends AbstractApiModel {
      * Gets the name of the Gitea account.
      * @return string The name of the Gitea account.
      */
-    function getLogin(): string {
+    public function getLogin(): string
+    {
         return $this->login;
     }
 
@@ -126,7 +133,8 @@ class Owner extends AbstractApiModel {
      * @param string $value The new Gitea account.
      * @return $this This instance.
      */
-    function setLogin(string $value): self {
+    public function setLogin(string $value): self
+    {
         $this->login = $value;
         return $this;
     }
@@ -135,7 +143,8 @@ class Owner extends AbstractApiModel {
      * Gets the full name.
      * @return string The full name.
      */
-    function getFullName(): string {
+    public function getFullName(): string
+    {
         return $this->fullName;
     }
 
@@ -144,7 +153,8 @@ class Owner extends AbstractApiModel {
      * @param string $value The new full name.
      * @return $this This instance.
      */
-    function setFullName(string $value): self {
+    public function setFullName(string $value): self
+    {
         $this->fullName = $value;
         return $this;
     }
@@ -153,7 +163,8 @@ class Owner extends AbstractApiModel {
      * Gets the mail address.
      * @return string The mail address.
      */
-    function getEmail(): string {
+    public function getEmail(): string
+    {
         return $this->email;
     }
 
@@ -162,7 +173,8 @@ class Owner extends AbstractApiModel {
      * @param string $value The new mail address.
      * @return $this This instance.
      */
-    function setEmail(string $value): self {
+    public function setEmail(string $value): self
+    {
         $this->email = $value;
         return $this;
     }
@@ -171,7 +183,8 @@ class Owner extends AbstractApiModel {
      * Gets the URL of the avatar image.
      * @return UriInterface|null The URL of the avatar image.
      */
-    function getAvatarUrl(): ?UriInterface {
+    public function getAvatarUrl(): ?UriInterface
+    {
         return $this->avatarUrl;
     }
 
@@ -180,7 +193,8 @@ class Owner extends AbstractApiModel {
      * @param UriInterface|null $value The new avatar URL.
      * @return $this This instance.
      */
-    function setAvatarUrl(?UriInterface $value): self {
+    public function setAvatarUrl(?UriInterface $value): self
+    {
         $this->avatarUrl = $value;
         return $this;
     }
@@ -189,7 +203,8 @@ class Owner extends AbstractApiModel {
      * Gets the owner locale.
      * @return string The owner locale.
      */
-    function getLanguage(): string {
+    public function getLanguage(): string
+    {
         return $this->language;
     }
 
@@ -198,27 +213,31 @@ class Owner extends AbstractApiModel {
      * @param string $value The new owner locale.
      * @return $this This instance.
      */
-    function setLanguage(string $value): self {
+    public function setLanguage(string $value): self
+    {
         $this->language = $value;
         return $this;
     }
 
-    public function getIsAdmin(): bool {
+    public function getIsAdmin(): bool
+    {
         return $this->isAdmin;
     }
 
-    public function setIsAdmin($boolean): self {
+    public function setIsAdmin($boolean): self
+    {
         $this->isAdmin = $boolean;
         return $this;
     }
 
-    public function getUsername(): string {
+    public function getUsername(): string
+    {
         return $this->username;
     }
 
-    public function setUsername($string): self {
+    public function setUsername($string): self
+    {
         $this->username = $string;
         return $this;
     }
-
 }

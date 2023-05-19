@@ -7,11 +7,11 @@ use GuzzleHttp\Psr7\Response;
 use Gitea\Client;
 use Gitea\Model\Organization;
 
+use GuzzleHttp\Exception\ServerException;
 use Gitea\Api\Abstracts\AbstractApiRequester;
 
 class Organizations extends AbstractApiRequester
 {
-
     /**
      * Get an organization using its username and parse
      * it's information into an organization object
@@ -42,5 +42,4 @@ class Organizations extends AbstractApiRequester
             return $response;
         }
     }
-
 }

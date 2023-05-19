@@ -9,13 +9,15 @@ use Gitea\Client;
 use Gitea\Model\PayloadUser;
 use Gitea\Model\PayloadCommitVerification;
 
-use \InvalidArgumentException;
+use stdClass;
+use DateTime;
+use InvalidArgumentException;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a commit. */
-class PayloadCommit extends AbstractApiModel {
-
+class PayloadCommit extends AbstractApiModel
+{
     /** @var PayloadUser|null The person who authored the commit. */
     private $author;
 
@@ -28,7 +30,7 @@ class PayloadCommit extends AbstractApiModel {
     /** @var string The commit message. */
     private $message;
 
-    /** @var \DateTime|null The commit date. */
+    /** @var DateTime|null The commit date. */
     private $timestamp;
 
     /** @var UriInterface|null The URL to the commit's history. */
@@ -44,7 +46,8 @@ class PayloadCommit extends AbstractApiModel {
      * @param string $id The commit hash.
      * @param string $message The commit message.
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 2) {
             $id = $args[0];
@@ -72,7 +75,8 @@ class PayloadCommit extends AbstractApiModel {
      * @param object $map A JSON map representing a commit.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return (
             new static(
                 $client,
@@ -83,7 +87,7 @@ class PayloadCommit extends AbstractApiModel {
         )
         ->setAuthor(isset($map->author) && is_object($map->author) ? PayloadUser::fromJson($client, null, $map->author) : null)
         ->setCommitter(isset($map->committer) && is_object($map->committer) ? PayloadUser::fromJson($client, null, $map->committer) : null)
-        ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? new \DateTime($map->timestamp) : null)
+        ->setTimestamp(isset($map->timestamp) && is_string($map->timestamp) ? new DateTime($map->timestamp) : null)
         ->setUrl(isset($map->url) && is_string($map->url) ? new Uri($map->url) : null)
         ->setVerification(isset($map->verification) && is_object($map->verification) ? PayloadCommitVerification::fromJson($client, null, $map->verification) : null);
     }
@@ -92,7 +96,8 @@ class PayloadCommit extends AbstractApiModel {
      * Gets the person who authored the commit.
      * @return PayloadUser|null The person who authored the commit.
      */
-    function getAuthor(): ?PayloadUser {
+    public function getAuthor(): ?PayloadUser
+    {
         return $this->author;
     }
 
@@ -100,7 +105,8 @@ class PayloadCommit extends AbstractApiModel {
      * Gets the person who committed the code.
      * @return PayloadUser|null The person who committed the code.
      */
-    function getCommitter(): ?PayloadUser {
+    public function getCommitter(): ?PayloadUser
+    {
         return $this->committer;
     }
 
@@ -108,7 +114,8 @@ class PayloadCommit extends AbstractApiModel {
      * Gets the commit hash.
      * @return string The commit hash.
      */
-    function getId(): string {
+    public function getId(): string
+    {
         return $this->id;
     }
 
@@ -116,15 +123,17 @@ class PayloadCommit extends AbstractApiModel {
      * Gets the commit message.
      * @return string The commit message.
      */
-    function getMessage(): string {
+    public function getMessage(): string
+    {
         return $this->message;
     }
 
     /**
      * Gets the commit date.
-     * @return \DateTime|null The commit date.
+     * @return DateTime|null The commit date.
      */
-    function getTimestamp(): ?\DateTime {
+    public function getTimestamp(): ?DateTime
+    {
         return $this->timestamp;
     }
 
@@ -132,7 +141,8 @@ class PayloadCommit extends AbstractApiModel {
      * Gets the URL to the commit's history.
      * @return UriInterface|null The URL to the commit's history.
      */
-    function getUrl(): ?UriInterface {
+    public function getUrl(): ?UriInterface
+    {
         return $this->url;
     }
 
@@ -140,15 +150,17 @@ class PayloadCommit extends AbstractApiModel {
      * Gets the GPG verification of this commit.
      * @return PayloadCommitVerification|null The GPG verification of this commit.
      */
-    function getVerification(): ?PayloadCommitVerification {
+    public function getVerification(): ?PayloadCommitVerification
+    {
         return $this->verification;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'author' => ($author = $this->getAuthor()) ? $author->jsonSerialize() : null,
             'committer' => ($committer = $this->getCommitter()) ? $committer->jsonSerialize() : null,
@@ -165,7 +177,8 @@ class PayloadCommit extends AbstractApiModel {
      * @param PayloadUser|null $value The new author.
      * @return $this This instance.
      */
-    function setAuthor(?PayloadUser $value): self {
+    public function setAuthor(?PayloadUser $value): self
+    {
         $this->author = $value;
         return $this;
     }
@@ -175,7 +188,8 @@ class PayloadCommit extends AbstractApiModel {
      * @param PayloadUser|null $value The new committer.
      * @return $this This instance.
      */
-    function setCommitter(?PayloadUser $value): self {
+    public function setCommitter(?PayloadUser $value): self
+    {
         $this->committer = $value;
         return $this;
     }
@@ -185,17 +199,19 @@ class PayloadCommit extends AbstractApiModel {
      * @param string $value The new message.
      * @return $this This instance.
      */
-    function setMessage(string $value): self {
+    public function setMessage(string $value): self
+    {
         $this->message = $value;
         return $this;
     }
 
     /**
      * Sets the commit date.
-     * @param \DateTime|null $value The new commit date.
+     * @param DateTime|null $value The new commit date.
      * @return $this This instance.
      */
-    function setTimestamp(?\DateTime $value): self {
+    public function setTimestamp(?DateTime $value): self
+    {
         $this->timestamp = $value;
         return $this;
     }
@@ -205,7 +221,8 @@ class PayloadCommit extends AbstractApiModel {
      * @param UriInterface|null $value The new commit URL.
      * @return $this This instance.
      */
-    function setUrl(?UriInterface $value): self {
+    public function setUrl(?UriInterface $value): self
+    {
         $this->url = $value;
         return $this;
     }
@@ -215,7 +232,8 @@ class PayloadCommit extends AbstractApiModel {
      * @param PayloadCommitVerification|null $value The new message.
      * @return $this This instance.
      */
-    function setVerification(?PayloadCommitVerification $value): self {
+    public function setVerification(?PayloadCommitVerification $value): self
+    {
         $this->verification = $value;
         return $this;
     }

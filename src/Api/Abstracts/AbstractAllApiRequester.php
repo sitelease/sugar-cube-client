@@ -2,11 +2,9 @@
 
 namespace Gitea\Api\Abstracts;
 
-use GuzzleHttp\Exception\ServerException;
-
 use Gitea\Client;
+use GuzzleHttp\Exception\ServerException;
 use Gitea\Collections\ApiItemCollection;
-
 use Gitea\Api\Abstracts\AbstractApiRequester;
 use Gitea\Api\Interfaces\AllRequesterInterface;
 
@@ -43,7 +41,8 @@ abstract class AbstractAllApiRequester extends AbstractApiRequester implements A
      * @param array $extraOptions An array of extra options to pass the API reoute
      * @return ApiItemCollection
      */
-    public function getPageOfAllItems(int $page = 1, int $limit = null, array $extraOptions = array()) {
+    public function getPageOfAllItems(int $page = 1, int $limit = null, array $extraOptions = array())
+    {
         trigger_error("The abstract 'requestAllItems()' method must be overwritten");
         return false;
     }
@@ -61,7 +60,7 @@ abstract class AbstractAllApiRequester extends AbstractApiRequester implements A
         $maxPageCount = $this->getMaxPageCount();
         $itemsPerPage = $this->getItemsPerPage();
         // Loop over pages until the $maxPageCount is reached
-        for ($pageNum=1; $pageNum < $maxPageCount; $pageNum++) {
+        for ($pageNum = 1; $pageNum < $maxPageCount; $pageNum++) {
             $searchItemsCollection = $this->getPageOfAllItems($pageNum, $itemsPerPage);
             if ($searchItemsCollection && $searchItemsCollection->count() > 0) {
                 $searchItemsArray = $searchItemsCollection->toArray();
@@ -73,12 +72,13 @@ abstract class AbstractAllApiRequester extends AbstractApiRequester implements A
         return new ApiItemCollection($allItems);
     }
 
-    public function getMaxPageCount() {
+    public function getMaxPageCount()
+    {
         return $this->maxPageCount;
     }
 
-    public function getItemsPerPage() {
+    public function getItemsPerPage()
+    {
         return $this->itemsPerPage;
     }
-
 }

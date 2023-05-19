@@ -7,6 +7,7 @@ use Gitea\Client;
 // Traits
 use Gitea\Core\Traits\RequestChainable;
 
+// Interfaces
 use Gitea\Api\Interfaces\ApiRequesterInterface;
 use Gitea\Core\Interfaces\RequestChainableInterface;
 
@@ -120,7 +121,8 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      *
      * @return Client
      */
-    public function getClient(): Client {
+    public function getClient(): Client
+    {
         return $this->client;
     }
 
@@ -131,7 +133,8 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      * @param Client $client
      * @return self
      */
-    public function setClient(Client &$client) {
+    public function setClient(Client &$client)
+    {
         $this->client = $client;
         return $this;
     }
@@ -143,7 +146,8 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      *
      * @return string
      */
-    public function getAuthToken(): string {
+    public function getAuthToken(): string
+    {
         return $this->authToken;
     }
 
@@ -154,7 +158,8 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      * @param string $authToken
      * @return self
      */
-    public function setAuthToken(string $authToken) {
+    public function setAuthToken(string $authToken)
+    {
         $this->authToken = $authToken;
         return $this;
     }
@@ -170,7 +175,8 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      * @param string $type The type of request ("all","get","post","put",etc.)
      * @return array
      */
-    public function getDefaultParametersForType($type = "all") {
+    public function getDefaultParametersForType($type = "all")
+    {
         if (!$type || $type == "all") {
             return $this->defaultParameters;
         } else {
@@ -194,7 +200,8 @@ abstract class AbstractApiRequester implements ApiRequesterInterface, RequestCha
      * @param string $type The type of request ("all", "get","post","put",etc.)
      * @return array
      */
-    public function getDefaultHeadersForType($type = "all") {
+    public function getDefaultHeadersForType($type = "all")
+    {
         if (!$type || $type == "all") {
             return $this->defaultHeaders;
         } else {

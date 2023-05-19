@@ -23,7 +23,8 @@ class Repositories extends AbstractAllApiRequester
      * @param array $extraOptions An array of extra options to pass the API reoute
      * @return ApiItemCollection
      */
-    public function getPageOfAllItems(int $page = 1, int $limit = null, array $extraOptions = array()) {
+    public function getPageOfAllItems(int $page = 1, int $limit = null, array $extraOptions = array())
+    {
         return $this->search("", $page, $limit, $extraOptions);
     }
 
@@ -48,7 +49,7 @@ class Repositories extends AbstractAllApiRequester
 
         $repositoryCollection = new ApiItemCollection();
         try {
-            $response = $this->get("repos/search",[
+            $response = $this->get("repos/search", [
                 "page" => $page,
                 "limit" => $limit
             ]);
@@ -72,7 +73,6 @@ class Repositories extends AbstractAllApiRequester
                 }
             }
             return $repositoryCollection;
-
         } catch (ServerException $serverError) {
             return $repositoryCollection;
         }
@@ -105,7 +105,6 @@ class Repositories extends AbstractAllApiRequester
                 );
             }
             return false;
-
         } catch (ServerException $serverError) {
             return false;
         }
@@ -137,7 +136,6 @@ class Repositories extends AbstractAllApiRequester
                 );
             }
             return false;
-
         } catch (ServerException $serverError) {
             return false;
         }
@@ -158,12 +156,12 @@ class Repositories extends AbstractAllApiRequester
      * @param string $ref The name of the commit/branch/tag. Default the repository’s default branch (usually master)
      * @return string
      */
-    public function getFileContents(string $owner, string $repoName, string $filepath, string $ref="")
+    public function getFileContents(string $owner, string $repoName, string $filepath, string $ref = "")
     {
         $client = $this->getClient();
         try {
             if ($ref !== "") {
-                $response = $this->get("repos/$owner/$repoName/contents/$filepath",[
+                $response = $this->get("repos/$owner/$repoName/contents/$filepath", [
                     "ref" => $ref
                 ]);
             } else {
@@ -181,7 +179,6 @@ class Repositories extends AbstractAllApiRequester
                 }
             }
             return false;
-
         } catch (ServerException $serverError) {
             return false;
         }
@@ -213,10 +210,8 @@ class Repositories extends AbstractAllApiRequester
                 return $body;
             }
             return false;
-
         } catch (ServerException $serverError) {
             return false;
         }
     }
-
 }

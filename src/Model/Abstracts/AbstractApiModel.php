@@ -5,8 +5,8 @@ namespace Gitea\Model\Abstracts;
 use Gitea\Client;
 use Gitea\Api\Interfaces\ApiRequesterInterface;
 
-use \stdClass;
-use \JsonSerializable;
+use stdClass;
+use JsonSerializable;
 
 // Traits
 use Gitea\Core\Traits\RequestChainable;
@@ -16,7 +16,6 @@ use Gitea\Core\Interfaces\RequestChainableInterface;
 
 abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, RequestChainableInterface
 {
-
     use RequestChainable;
 
     /**
@@ -28,7 +27,8 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      * @param object|null $caller The object that called this method
      * @param mixed $args The organization visibility.
      */
-    public function __construct(Client &$client, ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         $this->setClient($client);
         $this->setCaller($caller);
     }
@@ -59,7 +59,8 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      * @param object|null $caller The object that called this method
      * @param object $map A JSON data object
      */
-    static function fromJson(object &$client, ?object $caller, object $map) {
+    public static function fromJson(object &$client, ?object $caller, object $map)
+    {
         trigger_error("The abstract 'fromJson()' method must be overwritten");
         return false;
     }
@@ -72,7 +73,8 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      *
      * @return stdClass The map in JSON format corresponding to this object.
      */
-    public function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         trigger_error("The abstract 'jsonSerialize()' method must be overwritten");
         return self;
     }
@@ -84,7 +86,8 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      *
      * @return Client
      */
-    public function getClient(): Client {
+    public function getClient(): Client
+    {
         return $this->client;
     }
 
@@ -95,7 +98,8 @@ abstract class AbstractApiModel implements ApiModelInterface, JsonSerializable, 
      * @param Client $client
      * @return self
      */
-    public function setClient(Client &$client) {
+    public function setClient(Client &$client)
+    {
         $this->client = $client;
         return $this;
     }

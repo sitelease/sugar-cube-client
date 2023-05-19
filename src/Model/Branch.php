@@ -8,13 +8,14 @@ use Psr\Http\Message\UriInterface;
 use Gitea\Client;
 use Gitea\Model\PayloadCommit;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
+use stdClass;
 
 use Gitea\Model\Abstracts\AbstractApiModel;
 
 /** Represents a Gitea branch. */
-class Branch extends AbstractApiModel {
-
+class Branch extends AbstractApiModel
+{
     /** @var string The branch's name */
     private $name = '';
 
@@ -25,7 +26,7 @@ class Branch extends AbstractApiModel {
     private $protected = true;
 
     /** @var string True if the user can push to this branch */
-    private $userCanPush = false;
+    private $canUserPush = false;
 
     /** @var string True if the user can merge this branch */
     private $userCanMerge = false;
@@ -37,7 +38,8 @@ class Branch extends AbstractApiModel {
      * @param object|null $caller The object that called this method
      * @param string $name The branch name
      */
-    public function __construct(Client &$client , ?object $caller, ...$args) {
+    public function __construct(Client &$client, ?object $caller, ...$args)
+    {
         parent::__construct($client, $caller, $args);
         if (count($args) >= 1) {
             $name = $args[0];
@@ -59,7 +61,8 @@ class Branch extends AbstractApiModel {
      * @param object $map A JSON map representing an branch.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object &$client , ?object $caller, object $map): self {
+    public static function fromJson(object &$client, ?object $caller, object $map): self
+    {
         return (
             new static(
                 $client,
@@ -75,9 +78,10 @@ class Branch extends AbstractApiModel {
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'name' => $this->getName(),
             'commit' => ($commit = $this->getCommit()) ? $commit->jsonSerialize() : null,
@@ -87,49 +91,58 @@ class Branch extends AbstractApiModel {
         ];
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
-    public function setName(string $name): self {
+    public function setName(string $name): self
+    {
         $this->name = $name;
         return $this;
     }
 
-    public function getCommit(): ?PayloadCommit {
+    public function getCommit(): ?PayloadCommit
+    {
         return $this->commit;
     }
 
-    public function setCommit(?PayloadCommit $object): self {
+    public function setCommit(?PayloadCommit $object): self
+    {
         $this->commit = $object;
         return $this;
     }
 
-    public function getProtected() {
+    public function getProtected(): bool
+    {
         return $this->protected;
     }
 
-    public function setProtected(bool $boolean): self {
+    public function setProtected(bool $boolean): self
+    {
         $this->protected = $boolean;
         return $this;
     }
 
-    public function getCanUserPush() {
+    public function getCanUserPush(): bool
+    {
         return $this->canUserPush;
     }
 
-    public function setCanUserPush(bool $boolean): self {
+    public function setCanUserPush(bool $boolean): self
+    {
         $this->canUserPush = $boolean;
         return $this;
     }
 
-    public function getUserCanMerge() {
+    public function getUserCanMerge(): bool
+    {
         return $this->userCanMerge;
     }
 
-    public function setUserCanMerge(bool $boolean): self {
+    public function setUserCanMerge(bool $boolean): self
+    {
         $this->userCanMerge = $boolean;
         return $this;
     }
-
 }

@@ -1,9 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
+
 namespace Gitea\Model;
 
-/** Represents a team in an organization. */
-class Team implements \JsonSerializable {
+use stdClass;
+use JsonSerializable;
 
+/** Represents a team in an organization. */
+class Team implements JsonSerializable
+{
     /** @var string The team description. */
     private $description = '';
 
@@ -21,7 +26,8 @@ class Team implements \JsonSerializable {
      * @param int $id The team identifier.
      * @param string $name The team name.
      */
-    function __construct(int $id, string $name) {
+    public function __construct(int $id, string $name)
+    {
         $this->id = $id;
         $this->setName($name);
     }
@@ -31,7 +37,8 @@ class Team implements \JsonSerializable {
      * @param object $map A JSON map representing a user.
      * @return static The instance corresponding to the specified JSON map.
      */
-    static function fromJson(object $map): self {
+    public static function fromJson(object $map): self
+    {
         return (new static(isset($map->id) && is_numeric($map->id) ? $map->id : -1, isset($map->name) && is_string($map->name) ? $map->name : ''))
             ->setDescription(isset($map->description) && is_string($map->description) ? $map->description : '')
             ->setPermission(isset($map->permission) && is_string($map->permission) ? $map->permission : TeamPermission::none);
@@ -41,7 +48,8 @@ class Team implements \JsonSerializable {
      * Gets the team description.
      * @return string The team description.
      */
-    function getDescription(): string {
+    public function getDescription(): string
+    {
         return $this->description;
     }
 
@@ -49,7 +57,8 @@ class Team implements \JsonSerializable {
      * Gets the team identifier.
      * @return int The team identifier.
      */
-    function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -57,7 +66,8 @@ class Team implements \JsonSerializable {
      * Gets the team name.
      * @return string The team name.
      */
-    function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
@@ -65,15 +75,17 @@ class Team implements \JsonSerializable {
      * Gets the team permission.
      * @return string The team permission.
      */
-    function getPermission(): string {
+    public function getPermission(): string
+    {
         return $this->permission;
     }
 
     /**
      * Converts this object to a map in JSON format.
-     * @return \stdClass The map in JSON format corresponding to this object.
+     * @return stdClass The map in JSON format corresponding to this object.
      */
-    function jsonSerialize(): \stdClass {
+    public function jsonSerialize(): stdClass
+    {
         return (object) [
             'description' => $this->getDescription(),
             'id' => $this->getId(),
@@ -87,7 +99,8 @@ class Team implements \JsonSerializable {
      * @param string $value The new description.
      * @return $this This instance.
      */
-    function setDescription(string $value): self {
+    public function setDescription(string $value): self
+    {
         $this->description = $value;
         return $this;
     }
@@ -97,7 +110,8 @@ class Team implements \JsonSerializable {
      * @param string $value The new name.
      * @return $this This instance.
      */
-    function setName(string $value): self {
+    public function setName(string $value): self
+    {
         $this->name = $value;
         return $this;
     }
@@ -107,7 +121,8 @@ class Team implements \JsonSerializable {
      * @param string $value The new permission.
      * @return $this This instance.
      */
-    function setPermission(string $value): self {
+    public function setPermission(string $value): self
+    {
         $this->permission = TeamPermission::coerce($value, TeamPermission::none);
         return $this;
     }

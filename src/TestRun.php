@@ -70,7 +70,7 @@ if ($repository) {
             if ($foundObj) {
                 print("Repository class found \n");
                 print("Type: ".get_class($foundObj)." \n");
-            } else{
+            } else {
                 print("Repository class NOT found \n");
             }
             print("\n\n");
