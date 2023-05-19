@@ -203,7 +203,7 @@ class Owner extends AbstractApiModel {
         return $this;
     }
 
-    public function getIsAdmin(): boolean {
+    public function getIsAdmin(): bool {
         return $this->isAdmin;
     }
 
